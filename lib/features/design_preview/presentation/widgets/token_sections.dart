@@ -26,7 +26,13 @@ class ColorSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final swatches = [
-      c.background, c.surface, c.surface2, c.line, c.text, c.muted, //
+      c.background,
+      c.surface,
+      c.surface2,
+      c.selectedSurface,
+      c.line,
+      c.text,
+      c.muted, //
       c.primary, c.primaryInk, c.primarySoft, c.gold, c.goldInk, c.goldSoft,
     ];
     return PreviewSection(

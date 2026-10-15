@@ -39,6 +39,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
     required this.background,
     required this.surface,
     required this.surface2,
+    required this.selectedSurface,
     required this.line,
     required this.text,
     required this.muted,
@@ -64,6 +65,11 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
   final Color background;
   final Color surface;
   final Color surface2;
+
+  /// Selected option on a [surface2] track (SegmentedPicker). White in
+  /// light; in dark it steps above surface so the selection stays visible.
+  final Color selectedSurface;
+
   final Color line;
   final Color text;
   final Color muted;
@@ -98,6 +104,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
     background: Color(0xFFF5F3EC),
     surface: Color(0xFFFFFFFF),
     surface2: Color(0xFFEEF1EC),
+    selectedSurface: Color(0xFFFFFFFF),
     line: Color(0xFFE2E5DE),
     text: Color(0xFF11241F),
     muted: Color(0xFF56665F),
@@ -173,6 +180,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
     background: Color(0xFF0A1120),
     surface: Color(0xFF111A2C),
     surface2: Color(0xFF17223A),
+    selectedSurface: Color(0xFF26344F),
     line: Color(0xFF202C44),
     text: Color(0xFFE8EDF0),
     muted: Color(0xFF9AA7B6),
@@ -242,6 +250,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
     Color? background,
     Color? surface,
     Color? surface2,
+    Color? selectedSurface,
     Color? line,
     Color? text,
     Color? muted,
@@ -267,6 +276,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
       background: background ?? this.background,
       surface: surface ?? this.surface,
       surface2: surface2 ?? this.surface2,
+      selectedSurface: selectedSurface ?? this.selectedSurface,
       line: line ?? this.line,
       text: text ?? this.text,
       muted: muted ?? this.muted,
@@ -300,6 +310,7 @@ class HayyaColors extends ThemeExtension<HayyaColors> {
       background: c(background, other.background),
       surface: c(surface, other.surface),
       surface2: c(surface2, other.surface2),
+      selectedSurface: c(selectedSurface, other.selectedSurface),
       line: c(line, other.line),
       text: c(text, other.text),
       muted: c(muted, other.muted),
