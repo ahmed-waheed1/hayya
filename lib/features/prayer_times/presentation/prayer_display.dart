@@ -56,11 +56,10 @@ const _hijriMonths = [
 
 extension HijriDateDisplay on HijriDate {
   /// "4 Jumada al-Ula 1448 AH" / "٤ جمادى الأولى ١٤٤٨ هـ".
-  String format(Locale locale) => LocalizedFormat.digits(
+  String format(LocalizedFormat format) => format.digits(
     LocaleKeys.dates_hijri.tr(
       args: ['$day', _hijriMonths[month - 1].tr(), '$year'],
     ),
-    locale,
   );
 }
 

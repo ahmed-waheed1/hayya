@@ -87,6 +87,7 @@ class _Ready extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<PrayerTimesCubit>();
     final locale = context.locale;
+    final format = context.format;
     final schedule = state.schedule;
     final current = schedule.current.prayer;
 
@@ -94,8 +95,8 @@ class _Ready extends StatelessWidget {
       period: current.period,
       periodIcon: current.icon,
       city: state.location.cityName(locale),
-      gregorianDate: LocalizedFormat.gregorianDate(schedule.today.date, locale),
-      hijriDate: state.hijriDate.format(locale),
+      gregorianDate: format.gregorianDate(schedule.today.date),
+      hijriDate: state.hijriDate.format(format),
       locating: state.locating,
       onCityTap: cubit.refresh,
       qiblaLabel: tablet ? _qiblaLabel(context) : null,
@@ -136,10 +137,7 @@ class _Ready extends StatelessWidget {
       CompassPoint.nw => LocaleKeys.compass_nw,
     };
     return LocaleKeys.home_qibla_bearing.tr(
-      args: [
-        LocalizedFormat.number(bearing.round() % 360, context.locale),
-        point.tr(),
-      ],
+      args: [context.format.number(bearing.round() % 360), point.tr()],
     );
   }
 }
@@ -234,10 +232,9 @@ class _LocationError extends StatelessWidget {
               ? null
               : StatusNote(
                   title: last.placeLabel(locale),
-                  subtitle: LocalizedFormat.lastUpdated(
+                  subtitle: context.format.lastUpdated(
                     last.updatedAt,
                     DateTime.now(),
-                    locale,
                   ),
                 ),
           primaryLabel: LocaleKeys.location_try_again.tr(),

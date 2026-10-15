@@ -1,6 +1,7 @@
 import 'package:adhan/adhan.dart' as adhan;
 
 import '../../../core/services/user_location.dart';
+import '../domain/entities/prayer.dart';
 import '../domain/entities/prayer_calculation_settings.dart';
 import '../domain/entities/prayer_day.dart';
 import '../domain/repositories/prayer_times_repository.dart';
@@ -16,7 +17,17 @@ class AdhanPrayerTimesRepository implements PrayerTimesRepository {
     PrayerCalculationSettings settings,
   ) {
     final params = _method(settings.method).getParameters()
-      ..madhab = _madhab(settings.madhab);
+      ..madhab = _madhab(settings.madhab)
+      ..highLatitudeRule = _highLatitudeRule(settings.highLatitudeRule)
+      // Added to the method's own adjustments, not instead of them.
+      ..adjustments = adhan.PrayerAdjustments(
+        fajr: settings.adjustmentFor(Prayer.fajr),
+        sunrise: settings.adjustmentFor(Prayer.sunrise),
+        dhuhr: settings.adjustmentFor(Prayer.dhuhr),
+        asr: settings.adjustmentFor(Prayer.asr),
+        maghrib: settings.adjustmentFor(Prayer.maghrib),
+        isha: settings.adjustmentFor(Prayer.isha),
+      );
     final times = adhan.PrayerTimes(
       adhan.Coordinates(coordinates.latitude, coordinates.longitude),
       adhan.DateComponents(date.year, date.month, date.day),
@@ -56,4 +67,13 @@ class AdhanPrayerTimesRepository implements PrayerTimesRepository {
     AsrMadhab.shafi => adhan.Madhab.shafi,
     AsrMadhab.hanafi => adhan.Madhab.hanafi,
   };
+
+  static adhan.HighLatitudeRule _highLatitudeRule(HighLatitudeRule rule) =>
+      switch (rule) {
+        HighLatitudeRule.middleOfTheNight =>
+          adhan.HighLatitudeRule.middle_of_the_night,
+        HighLatitudeRule.seventhOfTheNight =>
+          adhan.HighLatitudeRule.seventh_of_the_night,
+        HighLatitudeRule.twilightAngle => adhan.HighLatitudeRule.twilight_angle,
+      };
 }

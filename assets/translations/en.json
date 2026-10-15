@@ -47,7 +47,6 @@
     "theme_dark": "Dark",
     "theme_system": "System",
     "calculation_method": "Calculation method",
-    "method_egyptian": "Egyptian General Authority",
     "adhan_notification": "Adhan notification",
     "language_english": "English",
     "language_arabic": "العربية",
@@ -62,7 +61,112 @@
     "exact_alarms_body": "Allow alarms & reminders so the adhan plays on time.",
     "allow": "Allow",
     "test_adhan": "Test adhan in 1 minute",
-    "test_adhan_scheduled": "Test adhan scheduled. Lock the phone and wait a minute."
+    "test_adhan_scheduled": "Test adhan scheduled. Lock the phone and wait a minute.",
+    "numerals": "Numerals",
+    "numerals_arabic": "١٢٣ Arabic",
+    "numerals_western": "123 Western",
+    "time_format": "Time format",
+    "time_hours": "{}-hour",
+    "prayer_times": "PRAYER TIMES",
+    "asr_calculation": "Asr calculation",
+    "madhab_shafi": "Shafi’i",
+    "madhab_shafi_sub": "Standard",
+    "madhab_hanafi": "Hanafi",
+    "madhab_hanafi_sub": "Later Asr",
+    "high_latitude": "High-latitude rule",
+    "high_latitude_sub": "For when twilight lasts most of the night",
+    "high_latitude_middle": "Middle of the night",
+    "high_latitude_middle_sub": "Fajr and Isha never pass the middle of the night",
+    "high_latitude_seventh": "Seventh of the night",
+    "high_latitude_seventh_sub": "Bounded by the first and last seventh of the night",
+    "high_latitude_angle": "Twilight angle",
+    "high_latitude_angle_sub": "A share of the night set by the method’s angles",
+    "hijri_date": "Hijri date",
+    "hijri_today": "Today: {}",
+    "hijri_days": {
+      "one": "{} day",
+      "other": "{} days"
+    },
+    "hijri_earlier": "One day earlier",
+    "hijri_later": "One day later",
+    "adjustments": "MANUAL ADJUSTMENTS (MINUTES)",
+    "adjust_minutes": "{} min",
+    "adjust_earlier": "One minute earlier: {}",
+    "adjust_later": "One minute later: {}",
+    "method_sheet_hint": "Pick the method your local mosque follows.",
+    "method_suggested_for": "Suggested for {}",
+    "method_suggested": "Suggested for your country",
+    "adhan_volume": "Adhan volume",
+    "volume_alarm": "Alarm volume",
+    "volume_alarm_sub": "Plays even on silent",
+    "volume_notification": "Notification volume",
+    "volume_notification_sub": "Follows silent mode",
+    "location": "LOCATION",
+    "location_automatic": "Automatic",
+    "location_manual": "Manual",
+    "location_detail": "{} · {}",
+    "location_chosen": "Chosen manually",
+    "location_none": "No location yet",
+    "location_none_sub": "Update your location or choose a city.",
+    "search_city": "Search city",
+    "searching": "Searching…",
+    "search_no_results": "No cities match “{}”.",
+    "search_failed": "Couldn’t search. Check the spelling or your internet connection.",
+    "about": "ABOUT",
+    "version": "Version",
+    "version_value": "{} ({})",
+    "licenses": "Licenses",
+    "licenses_sub": "Fonts, the adhan recording and open-source packages",
+    "methods": {
+      "muslim_world_league": {
+        "name": "Muslim World League",
+        "description": "Fajr 18°, Isha 17°. Europe, the Far East and parts of the Americas."
+      },
+      "egyptian": {
+        "name": "Egyptian General Authority of Survey",
+        "description": "Fajr 19.5°, Isha 17.5°. Egypt, Sudan, the Levant and Iraq."
+      },
+      "karachi": {
+        "name": "University of Islamic Sciences, Karachi",
+        "description": "Fajr 18°, Isha 18°. Pakistan, India, Bangladesh and Afghanistan."
+      },
+      "umm_al_qura": {
+        "name": "Umm al-Qura University, Makkah",
+        "description": "Fajr 18.5°, Isha 90 minutes after Maghrib. Saudi Arabia and Yemen."
+      },
+      "dubai": {
+        "name": "Dubai (Gulf region)",
+        "description": "Fajr 18.2°, Isha 18.2°. The UAE, Bahrain and Oman."
+      },
+      "moonsighting_committee": {
+        "name": "Moonsighting Committee Worldwide",
+        "description": "Fajr 18°, Isha 18°, adjusted by season. The UK and North America."
+      },
+      "north_america": {
+        "name": "Islamic Society of North America (ISNA)",
+        "description": "Fajr 15°, Isha 15°. Used by many mosques in the US and Canada."
+      },
+      "kuwait": {
+        "name": "Kuwait",
+        "description": "Fajr 18°, Isha 17.5°."
+      },
+      "qatar": {
+        "name": "Qatar",
+        "description": "Fajr 18°, Isha 90 minutes after Maghrib."
+      },
+      "singapore": {
+        "name": "Majlis Ugama Islam Singapura",
+        "description": "Fajr 20°, Isha 18°. Singapore, Malaysia, Indonesia and Brunei."
+      },
+      "turkey": {
+        "name": "Diyanet, Turkey",
+        "description": "Fajr 18°, Isha 17°, with Diyanet’s adjustments."
+      },
+      "tehran": {
+        "name": "Institute of Geophysics, University of Tehran",
+        "description": "Fajr 17.7°, Isha 14°, Maghrib 4.5°. Iran."
+      }
+    }
   },
   "home": {
     "today": "Today",
@@ -99,7 +203,13 @@
     "updated_days": {
       "one": "Last updated 1 day ago",
       "other": "Last updated {} days ago"
-    }
+    },
+    "coordinate": "{}°{}",
+    "coordinates": "{} {}",
+    "north": "N",
+    "south": "S",
+    "east": "E",
+    "west": "W"
   },
   "dates": {
     "gregorian_pattern": "EEEE, d MMMM y",
@@ -166,6 +276,8 @@
     "adhan_channel": "Adhan",
     "adhan_channel_description": "Plays the adhan when each prayer time begins.",
     "reminder_channel": "Pre-adhan reminders",
-    "reminder_channel_description": "A gentle tone before each prayer."
+    "reminder_channel_description": "A gentle tone before each prayer.",
+    "adhan_notification_volume_channel": "Adhan (notification volume)",
+    "adhan_notification_volume_channel_description": "Plays the adhan at notification volume; silent mode silences it."
   }
 }

@@ -25,12 +25,13 @@ void main() {
 
   late FakeLocationService location;
   late PrayerSettingsRepositoryImpl settings;
+  late HijriCalendarRepositoryImpl hijri;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-    settings = PrayerSettingsRepositoryImpl(
-      await SharedPreferences.getInstance(),
-    );
+    final prefs = await SharedPreferences.getInstance();
+    settings = PrayerSettingsRepositoryImpl(prefs);
+    hijri = HijriCalendarRepositoryImpl(prefs);
   });
 
   PrayerTimesCubit cubitWith(FakeLocationService fake) {
@@ -39,7 +40,8 @@ void main() {
       locationService: fake,
       settingsRepository: settings,
       getSchedule: GetPrayerSchedule(const AdhanPrayerTimesRepository()),
-      getHijriDate: const GetHijriDate(HijriCalendarRepositoryImpl()),
+      getHijriDate: GetHijriDate(hijri),
+      hijriCalendar: hijri,
       clock: () => now,
     );
     addTearDown(cubit.close);
@@ -190,5 +192,65 @@ void main() {
 
   test('the cached location survives a JSON round trip', () {
     expect(UserLocation.fromJson(cairo.toJson()), cairo);
+    expect(UserLocation.fromJson(alexandria.toJson()), alexandria);
+    expect(UserLocation.fromJson(alexandria.toJson()).countryCode, 'EG');
+  });
+
+  test('a minute adjustment moves today\'s time', () async {
+    final cubit = cubitWith(FakeLocationService(lastKnown: cairo));
+    await cubit.start();
+    final before = (cubit.state as PrayerTimesReady).schedule.today;
+
+    await settings.save(
+      const PrayerCalculationSettings().withAdjustment(Prayer.maghrib, -3),
+    );
+    await pumpEventQueue();
+
+    final after = (cubit.state as PrayerTimesReady).schedule.today;
+    expect(
+      after[Prayer.maghrib].time,
+      before[Prayer.maghrib].time.subtract(const Duration(minutes: 3)),
+    );
+    expect(after[Prayer.isha], before[Prayer.isha]);
+  });
+
+  test('a city picked elsewhere replaces the shown location', () async {
+    final fake = FakeLocationService(lastKnown: cairo);
+    final cubit = cubitWith(fake);
+    await cubit.start();
+
+    await fake.useManualLocation(alexandria);
+    await pumpEventQueue();
+
+    final state = cubit.state as PrayerTimesReady;
+    expect(state.location, alexandria);
+    // Refreshing keeps the chosen city instead of asking the device.
+    final asked = fake.permissionRequests.length;
+    await cubit.refresh();
+    expect((cubit.state as PrayerTimesReady).location, alexandria);
+    expect(fake.permissionRequests, hasLength(asked));
+  });
+
+  test('a picked city ends a location error', () async {
+    final fake = FakeLocationService(
+      results: [const LocationFailed(LocationFailure.permissionDenied)],
+    );
+    final cubit = cubitWith(fake);
+    await cubit.start();
+    expect(cubit.state, isA<PrayerTimesLocationError>());
+
+    await fake.useManualLocation(alexandria);
+    await pumpEventQueue();
+    expect((cubit.state as PrayerTimesReady).location, alexandria);
+  });
+
+  test('the Hijri adjustment changes the shown date', () async {
+    final cubit = cubitWith(FakeLocationService(lastKnown: cairo));
+    await cubit.start();
+    expect((cubit.state as PrayerTimesReady).hijriDate.day, 4);
+
+    await hijri.saveAdjustmentDays(-1);
+    await pumpEventQueue();
+    expect((cubit.state as PrayerTimesReady).hijriDate.day, 3);
   });
 }

@@ -11,6 +11,7 @@ import 'package:hayya/core/services/notification_service.dart';
 import 'package:hayya/features/notifications/domain/adhan_scheduler.dart';
 import 'package:hayya/features/notifications/domain/repositories/adhan_preferences_repository.dart';
 import 'package:hayya/features/notifications/domain/usecases/plan_adhan_notifications.dart';
+import 'package:hayya/features/prayer_times/domain/repositories/hijri_calendar_repository.dart';
 import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_repository.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
@@ -32,6 +33,14 @@ Future<void> settle(WidgetTester tester, {int rounds = 6}) async {
     );
     await tester.pump(const Duration(milliseconds: 250));
   }
+}
+
+/// Scrolls [finder] into view within its own scrollable, then taps it.
+/// Settings is longer than a phone screen.
+Future<void> tapVisible(WidgetTester tester, Finder finder) async {
+  await tester.ensureVisible(finder);
+  await tester.pump();
+  await tester.tap(finder);
 }
 
 /// Renders every bundled family and weight once so later layouts measure
@@ -112,6 +121,7 @@ Future<void> pumpHayyaApp(
         settingsRepository: getIt<PrayerSettingsRepository>(),
         getSchedule: getIt<GetPrayerSchedule>(),
         getHijriDate: getIt<GetHijriDate>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
         clock: now ?? DateTime.now,
       ),
     );

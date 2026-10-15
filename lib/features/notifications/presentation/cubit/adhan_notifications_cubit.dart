@@ -69,6 +69,9 @@ class AdhanNotificationsCubit extends Cubit<AdhanNotificationsState> {
   Future<void> setReminderMinutes(int minutes) =>
       _save(state.preferences.copyWith(reminderMinutes: minutes));
 
+  Future<void> setVolume(AdhanVolume volume) =>
+      _save(state.preferences.copyWith(volume: volume));
+
   /// "Turn on" in Settings: the system prompt if it may still show,
   /// otherwise the app's notification settings.
   Future<void> allowNotifications() async {

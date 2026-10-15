@@ -6,85 +6,186 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
-import '../../../core/preferences/language_switcher.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/hayya_spacing.dart';
 import '../../../core/theme/theme_context.dart';
-import '../../../core/theme/theme_mode_cubit.dart';
+import '../../../core/utils/responsive.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../notifications/domain/adhan_scheduler.dart';
 import '../../notifications/presentation/widgets/notification_settings_group.dart';
+import 'cubit/location_settings_cubit.dart';
+import 'cubit/prayer_settings_cubit.dart';
+import 'widgets/about_group.dart';
+import 'widgets/general_group.dart';
+import 'widgets/location_group.dart';
+import 'widgets/prayer_times_group.dart';
 
-/// Settings, so far the "General" (language, theme) and "Notifications"
-/// groups from the design. The other groups come with their features.
+/// Settings, in the design's order: General, Prayer times, Manual
+/// adjustments, Notifications, Location; then About (not in the design)
+/// and, in debug builds, Developer.
+///
+/// Phones (and narrow tablet panes) get one column; wider tablets get two.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  /// Below this width two columns would be narrower than a phone's.
+  static const _twoColumnsFrom = 760.0;
+
+  /// A single column on a tablet stays about phone-width plus a margin.
+  static const _singleColumnMaxWidth = 640.0;
+
   @override
   Widget build(BuildContext context) {
-    final type = context.type;
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsetsDirectional.fromSTEB(
-            HayyaSpacing.s4,
-            HayyaSpacing.s4,
-            HayyaSpacing.s4,
-            HayyaSpacing.s8,
-          ),
-          children: [
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: HayyaSpacing.minTouchTarget,
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: HayyaSpacing.s1,
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    LocaleKeys.settings_title.tr(),
-                    style: type
-                        .style(26, FontWeight.w800)
-                        .copyWith(color: context.colors.text),
+    // Rebuild text when the language changes.
+    context.locale;
+    final sections = <Widget>[
+      _section(LocaleKeys.settings_general, const GeneralGroup()),
+      _section(LocaleKeys.settings_prayer_times, const PrayerTimesGroup()),
+      _section(LocaleKeys.settings_adjustments, const AdjustmentsGroup()),
+      _section(
+        LocaleKeys.settings_notifications,
+        const NotificationSettingsGroup(),
+      ),
+      _section(LocaleKeys.settings_location, const LocationGroup()),
+      _section(LocaleKeys.settings_about, const AboutGroup()),
+      if (kDebugMode)
+        _section(LocaleKeys.settings_developer, const _DeveloperGroup()),
+    ];
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<PrayerSettingsCubit>()),
+        BlocProvider(create: (_) => getIt<LocationSettingsCubit>()),
+      ],
+      child: Scaffold(
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final padding = EdgeInsetsDirectional.fromSTEB(
+                HayyaSpacing.s4,
+                HayyaSpacing.s4,
+                HayyaSpacing.s4,
+                HayyaSpacing.s8,
+              );
+              final width = constraints.maxWidth - padding.horizontal;
+              if (constraints.isTablet && width >= _twoColumnsFrom) {
+                return _TwoColumns(padding: padding, sections: sections);
+              }
+              return ListView(
+                padding: padding,
+                children: [
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: constraints.isTablet
+                            ? _singleColumnMaxWidth
+                            : double.infinity,
+                      ),
+                      child: _Column(children: [const _Title(), ...sections]),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(height: 22.r),
-            _Section(
-              title: LocaleKeys.settings_general.tr(),
-              child: const _GeneralGroup(),
-            ),
-            SizedBox(height: 22.r),
-            _Section(
-              title: LocaleKeys.settings_notifications.tr(),
-              child: const NotificationSettingsGroup(),
-            ),
-            if (kDebugMode) ...[
-              SizedBox(height: 22.r),
-              _Section(
-                title: LocaleKeys.settings_developer.tr(),
-                child: Column(
-                  spacing: HayyaSpacing.s2,
-                  children: [
-                    SettingsTile(
-                      title: LocaleKeys.design_preview_title.tr(),
-                      onTap: () => context.push(AppRoutes.designPreview),
-                    ),
-                    SettingsTile(
-                      title: LocaleKeys.settings_test_adhan.tr(),
-                      onTap: () => _testAdhan(context),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
+                ],
+              );
+            },
+          ),
         ),
       ),
+    );
+  }
+
+  static Widget _section(String titleKey, Widget child) =>
+      SettingsSection(title: titleKey.tr(), child: child);
+}
+
+/// The design's 22 px between sections.
+class _Column extends StatelessWidget {
+  const _Column({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: 22.r,
+    children: children,
+  );
+}
+
+/// The first three sections (General, Prayer times, Adjustments) on the
+/// start side, the rest on the end side, scrolling together.
+class _TwoColumns extends StatelessWidget {
+  const _TwoColumns({required this.padding, required this.sections});
+
+  final EdgeInsetsDirectional padding;
+  final List<Widget> sections;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 22.r,
+        children: [
+          const _Title(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: HayyaSpacing.s6,
+            children: [
+              Expanded(child: _Column(children: sections.sublist(0, 3))),
+              Expanded(child: _Column(children: sections.sublist(3))),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title();
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: HayyaSpacing.minTouchTarget),
+      child: Padding(
+        padding: EdgeInsetsDirectional.symmetric(horizontal: HayyaSpacing.s1),
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Semantics(
+            header: true,
+            child: Text(
+              LocaleKeys.settings_title.tr(),
+              style: context.type
+                  .style(26, FontWeight.w800)
+                  .copyWith(color: context.colors.text),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DeveloperGroup extends StatelessWidget {
+  const _DeveloperGroup();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: HayyaSpacing.s2,
+      children: [
+        SettingsTile(
+          title: LocaleKeys.design_preview_title.tr(),
+          onTap: () => context.push(AppRoutes.designPreview),
+        ),
+        SettingsTile(
+          title: LocaleKeys.settings_test_adhan.tr(),
+          onTap: () => _testAdhan(context),
+        ),
+      ],
     );
   }
 }
@@ -95,152 +196,4 @@ Future<void> _testAdhan(BuildContext context) async {
   final message = LocaleKeys.settings_test_adhan_scheduled.tr();
   await getIt<AdhanScheduler>().scheduleTest();
   messenger.showSnackBar(SnackBar(content: Text(message)));
-}
-
-class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final type = context.type;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: HayyaSpacing.s2,
-      children: [
-        Padding(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: HayyaSpacing.s2),
-          child: Text(
-            title,
-            style: type
-                .style(
-                  13,
-                  FontWeight.w800,
-                  trackingEm: 0.08,
-                  height: type.isArabic ? 1.5 : 1.25,
-                )
-                .copyWith(color: context.colors.muted),
-          ),
-        ),
-        child,
-      ],
-    );
-  }
-}
-
-class _GeneralGroup extends StatelessWidget {
-  const _GeneralGroup();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    return HayyaCard(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 14.r, vertical: 6.r),
-      child: Column(
-        children: [
-          _PickerRow(
-            icon: HayyaIcons.language,
-            label: LocaleKeys.settings_language.tr(),
-            picker: SegmentedPicker<String>(
-              options: [
-                SegmentOption(
-                  value: 'en',
-                  label: LocaleKeys.settings_language_english.tr(),
-                ),
-                SegmentOption(
-                  value: 'ar',
-                  label: LocaleKeys.settings_language_arabic.tr(),
-                ),
-              ],
-              value: context.locale.languageCode,
-              onChanged: context.switchLanguage,
-            ),
-          ),
-          Divider(color: c.line),
-          _PickerRow(
-            icon: HayyaIcons.theme,
-            label: LocaleKeys.settings_theme.tr(),
-            picker: BlocBuilder<ThemeModeCubit, ThemeMode>(
-              builder: (context, mode) => SegmentedPicker<ThemeMode>(
-                options: [
-                  SegmentOption(
-                    value: ThemeMode.light,
-                    label: LocaleKeys.settings_theme_light.tr(),
-                  ),
-                  SegmentOption(
-                    value: ThemeMode.dark,
-                    label: LocaleKeys.settings_theme_dark.tr(),
-                  ),
-                  SegmentOption(
-                    value: ThemeMode.system,
-                    label: LocaleKeys.settings_theme_system.tr(),
-                  ),
-                ],
-                value: mode,
-                onChanged: context.read<ThemeModeCubit>().setMode,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Icon + label, with the segmented picker on its own line below.
-class _PickerRow extends StatelessWidget {
-  const _PickerRow({
-    required this.icon,
-    required this.label,
-    required this.picker,
-  });
-
-  final HayyaIconData icon;
-  final String label;
-  final Widget picker;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    return Padding(
-      padding: EdgeInsetsDirectional.symmetric(vertical: HayyaSpacing.s3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 10.r,
-        children: [
-          Row(
-            spacing: 10.r,
-            children: [
-              Container(
-                width: 32.r,
-                height: 32.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: c.surface2,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: HayyaIcon(
-                  icon,
-                  size: 18,
-                  color: c.primaryInk,
-                  strokeWidth: 1.9,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  label,
-                  style: context.type
-                      .style(15, FontWeight.w700)
-                      .copyWith(color: c.text),
-                ),
-              ),
-            ],
-          ),
-          picker,
-        ],
-      ),
-    );
-  }
 }

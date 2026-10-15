@@ -7,7 +7,8 @@ import '../domain/entities/adhan_preferences.dart';
 import '../domain/repositories/adhan_preferences_repository.dart';
 
 /// Stores [AdhanPreferences] in shared preferences. Unset or unknown
-/// values fall back to the defaults (every adhan on, no reminder).
+/// values fall back to the defaults (every adhan on, no reminder, alarm
+/// volume).
 class AdhanPreferencesRepositoryImpl implements AdhanPreferencesRepository {
   AdhanPreferencesRepositoryImpl(this._prefs);
 
@@ -17,6 +18,7 @@ class AdhanPreferencesRepositoryImpl implements AdhanPreferencesRepository {
   static const _enabledKey = 'adhan_prayers';
   static const _reminderOnKey = 'adhan_reminder_on';
   static const _reminderMinutesKey = 'adhan_reminder_minutes';
+  static const _volumeKey = 'adhan_volume';
   static const _promptedKey = 'notification_permission_prompted';
 
   @override
@@ -34,6 +36,9 @@ class AdhanPreferencesRepositoryImpl implements AdhanPreferencesRepository {
       reminderMinutes: AdhanPreferences.reminderOptions.contains(minutes)
           ? minutes!
           : defaults.reminderMinutes,
+      volume:
+          AdhanVolume.values.asNameMap()[_prefs.getString(_volumeKey)] ??
+          defaults.volume,
     );
   }
 
@@ -48,6 +53,7 @@ class AdhanPreferencesRepositoryImpl implements AdhanPreferencesRepository {
     ]);
     await _prefs.setBool(_reminderOnKey, preferences.reminderOn);
     await _prefs.setInt(_reminderMinutesKey, preferences.reminderMinutes);
+    await _prefs.setString(_volumeKey, preferences.volume.name);
     _changes.add(preferences);
   }
 

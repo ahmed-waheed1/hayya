@@ -2,12 +2,24 @@ import 'package:equatable/equatable.dart';
 
 import '../../../prayer_times/domain/entities/prayer.dart';
 
-/// Which prayers sound the adhan, and the optional reminder before it.
+/// Which volume the adhan plays at (Android; iOS notification sounds
+/// always follow the ring/silent switch).
+enum AdhanVolume {
+  /// Alarm volume: plays even in silent or vibrate mode.
+  alarm,
+
+  /// Notification volume: silent mode silences it.
+  notification,
+}
+
+/// Which prayers sound the adhan, how loud, and the optional reminder
+/// before it.
 class AdhanPreferences extends Equatable {
   const AdhanPreferences({
     this.enabled = defaultEnabled,
     this.reminderOn = false,
     this.reminderMinutes = defaultReminderMinutes,
+    this.volume = AdhanVolume.alarm,
   });
 
   /// Every prayer with an adhan (not Sunrise).
@@ -31,6 +43,8 @@ class AdhanPreferences extends Equatable {
   final bool reminderOn;
   final int reminderMinutes;
 
+  final AdhanVolume volume;
+
   bool isEnabled(Prayer prayer) =>
       prayer.isObligatory && enabled.contains(prayer);
 
@@ -46,12 +60,14 @@ class AdhanPreferences extends Equatable {
     Set<Prayer>? enabled,
     bool? reminderOn,
     int? reminderMinutes,
+    AdhanVolume? volume,
   }) => AdhanPreferences(
     enabled: enabled ?? this.enabled,
     reminderOn: reminderOn ?? this.reminderOn,
     reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+    volume: volume ?? this.volume,
   );
 
   @override
-  List<Object?> get props => [enabled, reminderOn, reminderMinutes];
+  List<Object?> get props => [enabled, reminderOn, reminderMinutes, volume];
 }

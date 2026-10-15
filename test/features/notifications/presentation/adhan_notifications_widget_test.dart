@@ -173,8 +173,7 @@ void main() {
   testWidgets('debug: "Test adhan in 1 minute" schedules one', (tester) async {
     await pump(tester);
     await openSettings(tester, 'Settings');
-    await tester.scrollUntilVisible(find.text('Test adhan in 1 minute'), 200);
-    await tester.tap(find.text('Test adhan in 1 minute'));
+    await tapVisible(tester, find.text('Test adhan in 1 minute'));
     await settle(tester, rounds: 2);
 
     final test = notifications.pending.singleWhere(
@@ -200,7 +199,8 @@ void main() {
       expect(find.text('Pre-adhan reminder'), findsOneWidget);
       expect(find.text('10 min'), findsNothing);
 
-      await tester.tap(
+      await tapVisible(
+        tester,
         find.descendant(
           of: find.byType(NotificationSettingsGroup),
           matching: find.byType(HayyaSwitch),
@@ -211,7 +211,7 @@ void main() {
         expect(find.text(label), findsOneWidget);
       }
 
-      await tester.tap(find.text('15 min'));
+      await tapVisible(tester, find.text('15 min'));
       await settle(tester, rounds: 2);
       final reminder = notifications.pending.firstWhere(
         (n) => n.sound == NotificationSound.reminder,
@@ -225,7 +225,8 @@ void main() {
     ) async {
       await pump(tester, lang: 'ar');
       await openSettings(tester, 'الإعدادات');
-      await tester.tap(
+      await tapVisible(
+        tester,
         find.descendant(
           of: find.byType(NotificationSettingsGroup),
           matching: find.byType(HayyaSwitch),
@@ -251,7 +252,7 @@ void main() {
       await openSettings(tester, 'Settings');
 
       expect(find.text('Notifications are off'), findsOneWidget);
-      await tester.tap(find.text('Turn on'));
+      await tapVisible(tester, find.text('Turn on'));
       await settle(tester, rounds: 2);
       // Already prompted at first launch, so the settings open instead.
       expect(notifications.settingsOpened, 1);
@@ -264,7 +265,7 @@ void main() {
       await openSettings(tester, 'Settings');
 
       expect(find.text('The adhan may be late'), findsOneWidget);
-      await tester.tap(find.text('Allow'));
+      await tapVisible(tester, find.text('Allow'));
       await settle(tester, rounds: 2);
       expect(notifications.exactRequests, 1);
     });
@@ -288,7 +289,8 @@ void main() {
           ),
         );
         await openSettings(tester, label);
-        await tester.tap(
+        await tapVisible(
+          tester,
           find.descendant(
             of: find.byType(NotificationSettingsGroup),
             matching: find.byType(HayyaSwitch),

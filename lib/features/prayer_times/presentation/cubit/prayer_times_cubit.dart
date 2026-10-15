@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/services/user_location.dart';
 import '../../domain/entities/prayer_calculation_settings.dart';
+import '../../domain/repositories/hijri_calendar_repository.dart';
 import '../../domain/repositories/prayer_settings_repository.dart';
 import '../../domain/usecases/get_hijri_date.dart';
 import '../../domain/usecases/get_prayer_schedule.dart';
@@ -15,12 +16,16 @@ import 'prayer_times_state.dart';
 /// A cached location is shown straight away and refreshed in the
 /// background; a failed background refresh keeps the cached times.
 /// Only a refresh the user asked for replaces them with an error.
+///
+/// A location chosen elsewhere (a city picked in Settings) and changes to
+/// the calculation settings or the Hijri adjustment apply straight away.
 class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   PrayerTimesCubit({
     required this._locationService,
     required this._settingsRepository,
     required this._getSchedule,
     required this._getHijriDate,
+    required this._hijriCalendar,
     this._clock = DateTime.now,
   }) : super(const PrayerTimesLoading());
 
@@ -28,20 +33,27 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   final PrayerSettingsRepository _settingsRepository;
   final GetPrayerSchedule _getSchedule;
   final GetHijriDate _getHijriDate;
+  final HijriCalendarRepository _hijriCalendar;
   final DateTime Function() _clock;
 
   Timer? _ticker;
-  StreamSubscription<PrayerCalculationSettings>? _settingsChanges;
+  final _subscriptions = <StreamSubscription<Object?>>[];
   late PrayerCalculationSettings _settings;
   UserLocation? _location;
   bool _locating = false;
 
   Future<void> start() async {
     _settings = _settingsRepository.settings;
-    _settingsChanges = _settingsRepository.changes.listen((settings) {
-      _settings = settings;
-      if (_location != null) _emitSchedule();
-    });
+    _subscriptions.addAll([
+      _settingsRepository.changes.listen((settings) {
+        _settings = settings;
+        if (_location != null) _emitSchedule();
+      }),
+      _hijriCalendar.adjustmentChanges.listen((_) {
+        if (_location != null) _emitSchedule();
+      }),
+      _locationService.changes.listen(_show),
+    ]);
 
     final cached = _locationService.lastKnown;
     if (cached != null) _show(cached);
@@ -141,7 +153,9 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   @override
   Future<void> close() async {
     _stopTicker();
-    await _settingsChanges?.cancel();
+    for (final s in _subscriptions) {
+      await s.cancel();
+    }
     return super.close();
   }
 }

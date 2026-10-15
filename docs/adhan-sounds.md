@@ -38,6 +38,14 @@ bump the channel id in `lib/core/services/notification_service.dart`
 and it sounds in silent/vibrate mode. `adhan_v1` used the notification
 stream and is retired. The reminder stays on the notification stream.
 
+Settings → Notifications → Adhan volume lets the user pick the stream.
+"Notification volume" uses a second channel, `adhan_notification_v1`
+(`NotificationSound.adhanNotificationVolume`): the same `adhan` file on
+`USAGE_NOTIFICATION`, so silent mode silences it. Both channels always
+exist; `AdhanScheduler` puts each adhan on the chosen one and reschedules
+when the choice changes. iOS has no such choice (notification sounds
+always follow the silent switch), so the setting is shown on Android only.
+
 ## Stopping the adhan
 
 Removing the notification stops its sound: tapping it (opens the app,

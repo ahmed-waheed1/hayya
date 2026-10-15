@@ -42,7 +42,6 @@ abstract class LocaleKeys {
   static const settings_theme_dark = 'settings.theme_dark';
   static const settings_theme_system = 'settings.theme_system';
   static const settings_calculation_method = 'settings.calculation_method';
-  static const settings_method_egyptian = 'settings.method_egyptian';
   static const settings_adhan_notification = 'settings.adhan_notification';
   static const settings_language_english = 'settings.language_english';
   static const settings_language_arabic = 'settings.language_arabic';
@@ -61,6 +60,121 @@ abstract class LocaleKeys {
   static const settings_allow = 'settings.allow';
   static const settings_test_adhan = 'settings.test_adhan';
   static const settings_test_adhan_scheduled = 'settings.test_adhan_scheduled';
+  static const settings_numerals = 'settings.numerals';
+  static const settings_numerals_arabic = 'settings.numerals_arabic';
+  static const settings_numerals_western = 'settings.numerals_western';
+  static const settings_time_format = 'settings.time_format';
+  static const settings_time_hours = 'settings.time_hours';
+  static const settings_prayer_times = 'settings.prayer_times';
+  static const settings_asr_calculation = 'settings.asr_calculation';
+  static const settings_madhab_shafi = 'settings.madhab_shafi';
+  static const settings_madhab_shafi_sub = 'settings.madhab_shafi_sub';
+  static const settings_madhab_hanafi = 'settings.madhab_hanafi';
+  static const settings_madhab_hanafi_sub = 'settings.madhab_hanafi_sub';
+  static const settings_high_latitude = 'settings.high_latitude';
+  static const settings_high_latitude_sub = 'settings.high_latitude_sub';
+  static const settings_high_latitude_middle = 'settings.high_latitude_middle';
+  static const settings_high_latitude_middle_sub =
+      'settings.high_latitude_middle_sub';
+  static const settings_high_latitude_seventh =
+      'settings.high_latitude_seventh';
+  static const settings_high_latitude_seventh_sub =
+      'settings.high_latitude_seventh_sub';
+  static const settings_high_latitude_angle = 'settings.high_latitude_angle';
+  static const settings_high_latitude_angle_sub =
+      'settings.high_latitude_angle_sub';
+  static const settings_hijri_date = 'settings.hijri_date';
+  static const settings_hijri_today = 'settings.hijri_today';
+  static const settings_hijri_days = 'settings.hijri_days';
+  static const settings_hijri_earlier = 'settings.hijri_earlier';
+  static const settings_hijri_later = 'settings.hijri_later';
+  static const settings_adjustments = 'settings.adjustments';
+  static const settings_adjust_minutes = 'settings.adjust_minutes';
+  static const settings_adjust_earlier = 'settings.adjust_earlier';
+  static const settings_adjust_later = 'settings.adjust_later';
+  static const settings_method_sheet_hint = 'settings.method_sheet_hint';
+  static const settings_method_suggested_for = 'settings.method_suggested_for';
+  static const settings_method_suggested = 'settings.method_suggested';
+  static const settings_adhan_volume = 'settings.adhan_volume';
+  static const settings_volume_alarm = 'settings.volume_alarm';
+  static const settings_volume_alarm_sub = 'settings.volume_alarm_sub';
+  static const settings_volume_notification = 'settings.volume_notification';
+  static const settings_volume_notification_sub =
+      'settings.volume_notification_sub';
+  static const settings_location = 'settings.location';
+  static const settings_location_automatic = 'settings.location_automatic';
+  static const settings_location_manual = 'settings.location_manual';
+  static const settings_location_detail = 'settings.location_detail';
+  static const settings_location_chosen = 'settings.location_chosen';
+  static const settings_location_none = 'settings.location_none';
+  static const settings_location_none_sub = 'settings.location_none_sub';
+  static const settings_search_city = 'settings.search_city';
+  static const settings_searching = 'settings.searching';
+  static const settings_search_no_results = 'settings.search_no_results';
+  static const settings_search_failed = 'settings.search_failed';
+  static const settings_about = 'settings.about';
+  static const settings_version = 'settings.version';
+  static const settings_version_value = 'settings.version_value';
+  static const settings_licenses = 'settings.licenses';
+  static const settings_licenses_sub = 'settings.licenses_sub';
+  static const settings_methods_muslim_world_league_name =
+      'settings.methods.muslim_world_league.name';
+  static const settings_methods_muslim_world_league_description =
+      'settings.methods.muslim_world_league.description';
+  static const settings_methods_muslim_world_league =
+      'settings.methods.muslim_world_league';
+  static const settings_methods_egyptian_name =
+      'settings.methods.egyptian.name';
+  static const settings_methods_egyptian_description =
+      'settings.methods.egyptian.description';
+  static const settings_methods_egyptian = 'settings.methods.egyptian';
+  static const settings_methods_karachi_name = 'settings.methods.karachi.name';
+  static const settings_methods_karachi_description =
+      'settings.methods.karachi.description';
+  static const settings_methods_karachi = 'settings.methods.karachi';
+  static const settings_methods_umm_al_qura_name =
+      'settings.methods.umm_al_qura.name';
+  static const settings_methods_umm_al_qura_description =
+      'settings.methods.umm_al_qura.description';
+  static const settings_methods_umm_al_qura = 'settings.methods.umm_al_qura';
+  static const settings_methods_dubai_name = 'settings.methods.dubai.name';
+  static const settings_methods_dubai_description =
+      'settings.methods.dubai.description';
+  static const settings_methods_dubai = 'settings.methods.dubai';
+  static const settings_methods_moonsighting_committee_name =
+      'settings.methods.moonsighting_committee.name';
+  static const settings_methods_moonsighting_committee_description =
+      'settings.methods.moonsighting_committee.description';
+  static const settings_methods_moonsighting_committee =
+      'settings.methods.moonsighting_committee';
+  static const settings_methods_north_america_name =
+      'settings.methods.north_america.name';
+  static const settings_methods_north_america_description =
+      'settings.methods.north_america.description';
+  static const settings_methods_north_america =
+      'settings.methods.north_america';
+  static const settings_methods_kuwait_name = 'settings.methods.kuwait.name';
+  static const settings_methods_kuwait_description =
+      'settings.methods.kuwait.description';
+  static const settings_methods_kuwait = 'settings.methods.kuwait';
+  static const settings_methods_qatar_name = 'settings.methods.qatar.name';
+  static const settings_methods_qatar_description =
+      'settings.methods.qatar.description';
+  static const settings_methods_qatar = 'settings.methods.qatar';
+  static const settings_methods_singapore_name =
+      'settings.methods.singapore.name';
+  static const settings_methods_singapore_description =
+      'settings.methods.singapore.description';
+  static const settings_methods_singapore = 'settings.methods.singapore';
+  static const settings_methods_turkey_name = 'settings.methods.turkey.name';
+  static const settings_methods_turkey_description =
+      'settings.methods.turkey.description';
+  static const settings_methods_turkey = 'settings.methods.turkey';
+  static const settings_methods_tehran_name = 'settings.methods.tehran.name';
+  static const settings_methods_tehran_description =
+      'settings.methods.tehran.description';
+  static const settings_methods_tehran = 'settings.methods.tehran';
+  static const settings_methods = 'settings.methods';
   static const settings = 'settings';
   static const home_today = 'home.today';
   static const home_remaining = 'home.remaining';
@@ -88,6 +202,12 @@ abstract class LocaleKeys {
   static const location_updated_minutes = 'location.updated_minutes';
   static const location_updated_hours = 'location.updated_hours';
   static const location_updated_days = 'location.updated_days';
+  static const location_coordinate = 'location.coordinate';
+  static const location_coordinates = 'location.coordinates';
+  static const location_north = 'location.north';
+  static const location_south = 'location.south';
+  static const location_east = 'location.east';
+  static const location_west = 'location.west';
   static const location = 'location';
   static const dates_gregorian_pattern = 'dates.gregorian_pattern';
   static const dates_hijri = 'dates.hijri';
@@ -155,5 +275,9 @@ abstract class LocaleKeys {
       'notifications.reminder_channel';
   static const notifications_reminder_channel_description =
       'notifications.reminder_channel_description';
+  static const notifications_adhan_notification_volume_channel =
+      'notifications.adhan_notification_volume_channel';
+  static const notifications_adhan_notification_volume_channel_description =
+      'notifications.adhan_notification_volume_channel_description';
   static const notifications = 'notifications';
 }

@@ -320,7 +320,7 @@ class _TilesDemo extends StatelessWidget {
     );
     final setting = SettingsTile(
       title: LocaleKeys.settings_calculation_method.tr(),
-      subtitle: LocaleKeys.settings_method_egyptian.tr(),
+      subtitle: LocaleKeys.settings_methods_egyptian_name.tr(),
       onTap: () {},
     );
     return LayoutBuilder(

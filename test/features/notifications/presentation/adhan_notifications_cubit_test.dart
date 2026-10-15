@@ -86,6 +86,22 @@ void main() {
       expect(repository.preferences.reminderMinutes, 10);
     });
 
+    test('volume: alarm by default, the choice survives a reload', () async {
+      expect(repository.preferences.volume, AdhanVolume.alarm);
+      await repository.save(
+        const AdhanPreferences(volume: AdhanVolume.notification),
+      );
+      expect(
+        AdhanPreferencesRepositoryImpl(prefs).preferences.volume,
+        AdhanVolume.notification,
+      );
+    });
+
+    test('an unknown stored volume falls back to alarm', () async {
+      await setUpWith({'adhan_volume': 'loud'});
+      expect(repository.preferences.volume, AdhanVolume.alarm);
+    });
+
     test('every prayer off is kept as off', () async {
       await repository.save(const AdhanPreferences(enabled: {}));
       expect(
@@ -113,6 +129,16 @@ void main() {
       await cubit.setReminderOn(true);
       expect(notifications.permissionRequests, 1);
       expect(cubit.state.notificationsAllowed, isTrue);
+      expect(repository.preferences.reminderOn, isTrue);
+    });
+
+    test('the volume choice is saved and keeps the other choices', () async {
+      final cubit = makeCubit();
+      await cubit.setReminderOn(true);
+      await cubit.setVolume(AdhanVolume.notification);
+
+      expect(cubit.state.preferences.volume, AdhanVolume.notification);
+      expect(repository.preferences.volume, AdhanVolume.notification);
       expect(repository.preferences.reminderOn, isTrue);
     });
 

@@ -15,7 +15,10 @@ import '../../features/prayer_times/domain/repositories/prayer_times_repository.
 import '../../features/prayer_times/domain/usecases/get_hijri_date.dart';
 import '../../features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import '../../features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
+import '../../features/settings/presentation/cubit/location_settings_cubit.dart';
+import '../../features/settings/presentation/cubit/prayer_settings_cubit.dart';
 import '../preferences/app_preferences.dart';
+import '../preferences/display_preferences.dart';
 import '../services/device_location_service.dart';
 import '../services/local_notification_service.dart';
 import '../services/location_service.dart';
@@ -31,6 +34,9 @@ Future<void> configureDependencies() async {
     ..registerLazySingleton<ThemeModeCubit>(
       () => ThemeModeCubit(getIt<AppPreferences>()),
     )
+    ..registerLazySingleton<DisplayPreferencesCubit>(
+      () => DisplayPreferencesCubit(getIt<AppPreferences>()),
+    )
     ..registerLazySingleton<LocationService>(() => DeviceLocationService(prefs))
     // Prayer times
     ..registerLazySingleton<PrayerTimesRepository>(
@@ -40,7 +46,7 @@ Future<void> configureDependencies() async {
       () => PrayerSettingsRepositoryImpl(prefs),
     )
     ..registerLazySingleton<HijriCalendarRepository>(
-      () => const HijriCalendarRepositoryImpl(),
+      () => HijriCalendarRepositoryImpl(prefs),
     )
     ..registerFactory<GetPrayerSchedule>(
       () => GetPrayerSchedule(getIt<PrayerTimesRepository>()),
@@ -54,7 +60,18 @@ Future<void> configureDependencies() async {
         settingsRepository: getIt<PrayerSettingsRepository>(),
         getSchedule: getIt<GetPrayerSchedule>(),
         getHijriDate: getIt<GetHijriDate>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
       ),
+    )
+    ..registerFactory<PrayerSettingsCubit>(
+      () => PrayerSettingsCubit(
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
+        locationService: getIt<LocationService>(),
+      ),
+    )
+    ..registerFactory<LocationSettingsCubit>(
+      () => LocationSettingsCubit(getIt<LocationService>()),
     )
     // Adhan notifications
     ..registerLazySingleton<NotificationService>(LocalNotificationService.new)
