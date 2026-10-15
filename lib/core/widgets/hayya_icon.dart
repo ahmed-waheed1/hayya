@@ -91,6 +91,20 @@ abstract final class HayyaIcons {
     'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
   );
   static const retry = HayyaIconData('M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5');
+
+  /// Clockwise turn. Flip it for a left turn by the turn's direction,
+  /// never by the locale.
+  static const turn = HayyaIconData('M4 12a8 8 0 0 1 14-5.3M18 3v4h-4');
+
+  /// Struck-out dial: the compass can't be read.
+  static const compassOff = HayyaIconData(
+    'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 3l18 18',
+  );
+
+  /// Struck-out Qibla compass: no compass sensor.
+  static const qiblaOff = HayyaIconData(
+    'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2 5-5 2 2-5zM3 3l18 18',
+  );
   static const add = HayyaIconData('M12 5v14M5 12h14');
   static const minus = HayyaIconData('M5 12h14');
   static const numerals = HayyaIconData(
@@ -103,7 +117,7 @@ abstract final class HayyaIcons {
     home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
     bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, search, //
     language, theme, sound, streak, calibrate, reminder, retry, add, minus,
-    numerals, back, chevron,
+    numerals, turn, compassOff, qiblaOff, back, chevron,
   ];
 }
 

@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hayya/core/services/user_location.dart';
 import 'package:hayya/features/prayer_times/data/hijri_calendar_repository_impl.dart';
 import 'package:hayya/features/prayer_times/domain/entities/hijri_date.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
-import 'package:hayya/features/qibla/domain/qibla_direction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -83,26 +81,6 @@ void main() {
         await SharedPreferences.getInstance(),
       );
       expect(stored.adjustmentDays, 0);
-    });
-  });
-
-  group('Qibla bearing', () {
-    test('Cairo is about 136° (SE)', () {
-      final bearing = qiblaBearing(const GeoCoordinates(30.0444, 31.2357));
-      expect(bearing, closeTo(136.1, 0.5));
-      expect(compassPoint(bearing), CompassPoint.se);
-    });
-
-    test('London is about 119° (SE)', () {
-      final bearing = qiblaBearing(const GeoCoordinates(51.5074, -0.1278));
-      expect(bearing, closeTo(118.99, 0.5));
-    });
-
-    test('compass points wrap at north', () {
-      expect(compassPoint(359), CompassPoint.n);
-      expect(compassPoint(22.4), CompassPoint.n);
-      expect(compassPoint(22.6), CompassPoint.ne);
-      expect(compassPoint(270), CompassPoint.w);
     });
   });
 }

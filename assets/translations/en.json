@@ -279,5 +279,41 @@
     "reminder_channel_description": "A gentle tone before each prayer.",
     "adhan_notification_volume_channel": "Adhan (notification volume)",
     "adhan_notification_volume_channel_description": "Plays the adhan at notification volume; silent mode silences it."
+  },
+  "qibla": {
+    "title": "Qibla",
+    "loading": "Finding your location…",
+    "dial": {
+      "n": "N",
+      "e": "E",
+      "s": "S",
+      "w": "W"
+    },
+    "dial_label": "Qibla compass: the Qibla is {}° from north",
+    "dial_label_heading": "Qibla compass: the Qibla is {}° from north, you are facing {}°",
+    "degrees": "{}°",
+    "turn_right": "Turn right {}°",
+    "turn_left": "Turn left {}°",
+    "facing": "Facing the Qibla",
+    "checking": "Finding north…",
+    "needs_calibration": "Needs calibration",
+    "static_direction": "Static direction · no sensor",
+    "direction_label": "Qibla direction",
+    "direction_sub": "from true North · {}",
+    "distance_label": "Distance to Mecca",
+    "distance_value": "{} km",
+    "distance_sub": "Great-circle",
+    "hint_seek": "Hold your phone flat. The gold arc shows how far to turn.",
+    "hint_aligned": "Hold your phone flat. It vibrates gently when aligned.",
+    "calibrate_title": "Calibrate your compass",
+    "calibrate_body": "Move your phone in a figure-8 a few times, away from magnets and metal.",
+    "accuracy": {
+      "low": "Accuracy: low",
+      "medium": "Accuracy: medium",
+      "high": "Accuracy: high"
+    },
+    "no_sensor_title": "No compass sensor",
+    "no_sensor_body": "Your device can’t detect direction. Face North, then turn {}° clockwise — the Kaaba is along the gold line.",
+    "retry": "Retry"
   }
 }
