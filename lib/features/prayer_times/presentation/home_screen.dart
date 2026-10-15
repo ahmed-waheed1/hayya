@@ -23,6 +23,7 @@ import 'widgets/home_skeleton.dart';
 import 'widgets/location_status_view.dart';
 import 'widgets/next_prayer_card.dart';
 import 'widgets/prayer_list.dart';
+import 'widgets/timetable_link.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -186,6 +187,9 @@ class _LocationError extends StatelessWidget {
   }
 }
 
+/// "Today" with the timetable link at the end. The link's 44 px tap
+/// height takes the place of the design's 36 px link and 4 px of the
+/// padding above and below it.
 class _TodayTitle extends StatelessWidget {
   const _TodayTitle();
 
@@ -194,18 +198,25 @@ class _TodayTitle extends StatelessWidget {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(
         HayyaSpacing.s1,
-        18.r,
+        14.r,
+        0,
         HayyaSpacing.s1,
-        HayyaSpacing.s2,
       ),
-      child: Semantics(
-        header: true,
-        child: Text(
-          LocaleKeys.home_today.tr(),
-          style: context.type
-              .style(18, FontWeight.w800)
-              .copyWith(color: context.colors.text),
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: Text(
+                LocaleKeys.home_today.tr(),
+                style: context.type
+                    .style(18, FontWeight.w800)
+                    .copyWith(color: context.colors.text),
+              ),
+            ),
+          ),
+          const TimetableLink(),
+        ],
       ),
     );
   }

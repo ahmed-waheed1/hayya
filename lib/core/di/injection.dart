@@ -21,6 +21,8 @@ import '../../features/qibla/domain/compass_sensor.dart';
 import '../../features/qibla/presentation/cubit/qibla_cubit.dart';
 import '../../features/settings/presentation/cubit/location_settings_cubit.dart';
 import '../../features/settings/presentation/cubit/prayer_settings_cubit.dart';
+import '../../features/timetable/domain/usecases/get_month_timetable.dart';
+import '../../features/timetable/presentation/cubit/timetable_cubit.dart';
 import '../../features/tracker/data/hive_tracker_repository.dart';
 import '../../features/tracker/domain/repositories/tracker_repository.dart';
 import '../../features/tracker/domain/usecases/get_tracking_position.dart';
@@ -84,6 +86,21 @@ Future<void> configureDependencies({
     )
     ..registerFactory<LocationSettingsCubit>(
       () => LocationSettingsCubit(getIt<LocationService>()),
+    )
+    // Timetable
+    ..registerFactory<GetMonthTimetable>(
+      () => GetMonthTimetable(
+        getIt<PrayerTimesRepository>(),
+        getIt<HijriCalendarRepository>(),
+      ),
+    )
+    ..registerFactory<TimetableCubit>(
+      () => TimetableCubit(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
+        getTimetable: getIt<GetMonthTimetable>(),
+      ),
     )
     // Qibla
     ..registerLazySingleton<CompassSensor>(() => const FlutterCompassSensor())

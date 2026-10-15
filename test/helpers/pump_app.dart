@@ -17,6 +17,9 @@ import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart'
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import 'package:hayya/features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:hayya/features/qibla/domain/compass_sensor.dart';
+import 'package:hayya/features/settings/presentation/cubit/prayer_settings_cubit.dart';
+import 'package:hayya/features/timetable/domain/usecases/get_month_timetable.dart';
+import 'package:hayya/features/timetable/presentation/cubit/timetable_cubit.dart';
 import 'package:hayya/features/tracker/domain/usecases/get_tracking_position.dart';
 import 'package:hive_ce/hive_ce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,11 +79,12 @@ Future<void> loadFonts(WidgetTester tester) async {
 /// Boots the full app (DI, preferences, translations, router) at [size].
 ///
 /// Location comes from [location] (by default Cairo, cached and found).
-/// [now] fixes the clock Home and the adhan schedule use. Notifications go to
-/// [notifications] (by default a fresh fake), never the plugin. The compass
-/// is [compass] (by default a fake that never sends anything). The tracker
-/// box lives in memory and starts with [tracker] (see
-/// `HiveTrackerRepository` for the keys).
+/// [now] fixes the clock Home, Settings, the timetable and the adhan
+/// schedule use. Notifications go to [notifications] (by default a fresh
+/// fake), never the plugin. The compass is [compass] (by default a fake
+/// that never sends anything). The tracker box lives in memory and starts
+/// with [tracker]
+/// (see `HiveTrackerRepository` for the keys).
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
@@ -135,6 +139,25 @@ Future<void> pumpHayyaApp(
         getSchedule: getIt<GetPrayerSchedule>(),
         getHijriDate: getIt<GetHijriDate>(),
         hijriCalendar: getIt<HijriCalendarRepository>(),
+        clock: now ?? DateTime.now,
+      ),
+    )
+    ..unregister<PrayerSettingsCubit>()
+    ..registerFactory<PrayerSettingsCubit>(
+      () => PrayerSettingsCubit(
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
+        locationService: getIt<LocationService>(),
+        clock: now ?? DateTime.now,
+      ),
+    )
+    ..unregister<TimetableCubit>()
+    ..registerFactory<TimetableCubit>(
+      () => TimetableCubit(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        hijriCalendar: getIt<HijriCalendarRepository>(),
+        getTimetable: getIt<GetMonthTimetable>(),
         clock: now ?? DateTime.now,
       ),
     )

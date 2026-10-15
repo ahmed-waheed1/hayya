@@ -284,7 +284,8 @@
       "shawwal": "Shawwal",
       "dhu_al_qadah": "Dhu al-Qa’dah",
       "dhu_al_hijjah": "Dhu al-Hijjah"
-    }
+    },
+    "month_pattern": "MMMM y"
   },
   "compass": {
     "n": "N",
@@ -370,5 +371,32 @@
     "no_sensor_title": "No compass sensor",
     "no_sensor_body": "Your device can’t detect direction. Face North, then turn {}° clockwise — the Kaaba is along the gold line.",
     "retry": "Retry"
+  },
+  "timetable": {
+    "title": "Monthly timetable",
+    "back": "Back to Home",
+    "previous_month": "Previous month",
+    "next_month": "Next month",
+    "day": "Day",
+    "hijri": "Hijri",
+    "hijri_month": "{} {}",
+    "hijri_range_same_year": "{} – {} {}",
+    "hijri_range": "{} {} – {} {}",
+    "meta": "{} · {} · {}",
+    "row_label": "{}, {}",
+    "row_label_today": "Today, {}, {}",
+    "time_label": "{} {}",
+    "list_separator": ", ",
+    "no_location_title": "No location yet",
+    "no_location_body": "Open Home to find your location, then come back for the month’s times.",
+    "weekdays": {
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr",
+      "sat": "Sa",
+      "sun": "Su"
+    }
   }
 }
