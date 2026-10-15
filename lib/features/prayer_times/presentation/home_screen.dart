@@ -8,14 +8,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/router/app_router.dart';
-import '../../../core/services/location_service.dart';
 import '../../../core/theme/hayya_spacing.dart';
 import '../../../core/theme/theme_context.dart';
 import '../../../core/utils/localized_format.dart';
 import '../../../core/utils/responsive.dart';
-import '../../../core/widgets/widgets.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../qibla/domain/qibla_direction.dart';
+import '../../qibla/presentation/qibla_display.dart';
 import 'cubit/prayer_times_cubit.dart';
 import 'cubit/prayer_times_state.dart';
 import 'prayer_display.dart';
@@ -126,18 +125,11 @@ class _Ready extends StatelessWidget {
 
   String _qiblaLabel(BuildContext context) {
     final bearing = qiblaBearing(state.location.coordinates);
-    final point = switch (compassPoint(bearing)) {
-      CompassPoint.n => LocaleKeys.compass_n,
-      CompassPoint.ne => LocaleKeys.compass_ne,
-      CompassPoint.e => LocaleKeys.compass_e,
-      CompassPoint.se => LocaleKeys.compass_se,
-      CompassPoint.s => LocaleKeys.compass_s,
-      CompassPoint.sw => LocaleKeys.compass_sw,
-      CompassPoint.w => LocaleKeys.compass_w,
-      CompassPoint.nw => LocaleKeys.compass_nw,
-    };
     return LocaleKeys.home_qibla_bearing.tr(
-      args: [context.format.number(bearing.round() % 360), point.tr()],
+      args: [
+        context.format.number(bearing.round() % 360),
+        compassPoint(bearing).label,
+      ],
     );
   }
 }
@@ -184,65 +176,13 @@ class _LocationError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<PrayerTimesCubit>();
-    final locale = context.locale;
-    final reason = state.reason;
-    final last = state.lastKnown;
-    final useLast = last == null
-        ? null
-        : (LocaleKeys.location_use_last_location.tr(), cubit.useLastKnown);
-
-    switch (reason) {
-      case LocationFailure.permissionDenied ||
-          LocationFailure.permissionDeniedForever:
-        final forever = reason == LocationFailure.permissionDeniedForever;
-        return LocationStatusView(
-          icon: HayyaIcons.pinOff,
-          tone: StatusTone.danger,
-          title: LocaleKeys.location_denied_title.tr(),
-          body: forever
-              ? LocaleKeys.location_denied_forever_body.tr()
-              : LocaleKeys.location_denied_body.tr(),
-          primaryLabel: forever
-              ? LocaleKeys.location_open_settings.tr()
-              : LocaleKeys.onboarding_allow_location.tr(),
-          onPrimary: forever
-              ? () => cubit.openSettingsFor(reason)
-              : cubit.refresh,
-          secondaryLabel: useLast?.$1,
-          onSecondary: useLast?.$2,
-        );
-
-      case LocationFailure.serviceDisabled || LocationFailure.unavailable:
-        final secondary =
-            useLast ??
-            (reason == LocationFailure.serviceDisabled
-                ? (
-                    LocaleKeys.location_location_settings.tr(),
-                    () => cubit.openSettingsFor(reason),
-                  )
-                : null);
-        return LocationStatusView(
-          icon: HayyaIcons.gpsOff,
-          tone: StatusTone.gold,
-          title: LocaleKeys.location_unavailable_title.tr(),
-          body: last == null
-              ? LocaleKeys.location_unavailable_body.tr()
-              : LocaleKeys.location_unavailable_body_cached.tr(),
-          note: last == null
-              ? null
-              : StatusNote(
-                  title: last.placeLabel(locale),
-                  subtitle: context.format.lastUpdated(
-                    last.updatedAt,
-                    DateTime.now(),
-                  ),
-                ),
-          primaryLabel: LocaleKeys.location_try_again.tr(),
-          onPrimary: cubit.refresh,
-          secondaryLabel: secondary?.$1,
-          onSecondary: secondary?.$2,
-        );
-    }
+    return LocationErrorView(
+      reason: state.reason,
+      lastKnown: state.lastKnown,
+      onRetry: cubit.refresh,
+      onUseLastKnown: cubit.useLastKnown,
+      onOpenSettings: () => cubit.openSettingsFor(state.reason),
+    );
   }
 }
 

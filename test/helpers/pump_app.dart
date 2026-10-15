@@ -16,8 +16,10 @@ import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_
 import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import 'package:hayya/features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
+import 'package:hayya/features/qibla/domain/compass_sensor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fake_compass_sensor.dart';
 import 'fake_location_service.dart';
 import 'fake_notification_service.dart';
 
@@ -73,7 +75,8 @@ Future<void> loadFonts(WidgetTester tester) async {
 ///
 /// Location comes from [location] (by default Cairo, cached and found).
 /// [now] fixes the clock Home and the adhan schedule use. Notifications go to
-/// [notifications] (by default a fresh fake), never the plugin.
+/// [notifications] (by default a fresh fake), never the plugin. The compass
+/// is [compass] (by default a fake that never sends anything).
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
@@ -81,6 +84,7 @@ Future<void> pumpHayyaApp(
   LocationService? location,
   DateTime Function()? now,
   NotificationService? notifications,
+  CompassSensor? compass,
   AssetLoader? assetLoader,
 }) async {
   tester.view
@@ -103,6 +107,8 @@ Future<void> pumpHayyaApp(
     ..registerSingleton<NotificationService>(
       notifications ?? FakeNotificationService(),
     )
+    ..unregister<CompassSensor>()
+    ..registerSingleton<CompassSensor>(compass ?? FakeCompassSensor())
     ..unregister<AdhanScheduler>()
     ..registerLazySingleton<AdhanScheduler>(
       () => AdhanScheduler(

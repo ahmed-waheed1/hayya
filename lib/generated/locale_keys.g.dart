@@ -280,4 +280,37 @@ abstract class LocaleKeys {
   static const notifications_adhan_notification_volume_channel_description =
       'notifications.adhan_notification_volume_channel_description';
   static const notifications = 'notifications';
+  static const qibla_title = 'qibla.title';
+  static const qibla_loading = 'qibla.loading';
+  static const qibla_dial_n = 'qibla.dial.n';
+  static const qibla_dial_e = 'qibla.dial.e';
+  static const qibla_dial_s = 'qibla.dial.s';
+  static const qibla_dial_w = 'qibla.dial.w';
+  static const qibla_dial = 'qibla.dial';
+  static const qibla_dial_label = 'qibla.dial_label';
+  static const qibla_dial_label_heading = 'qibla.dial_label_heading';
+  static const qibla_degrees = 'qibla.degrees';
+  static const qibla_turn_right = 'qibla.turn_right';
+  static const qibla_turn_left = 'qibla.turn_left';
+  static const qibla_facing = 'qibla.facing';
+  static const qibla_checking = 'qibla.checking';
+  static const qibla_needs_calibration = 'qibla.needs_calibration';
+  static const qibla_static_direction = 'qibla.static_direction';
+  static const qibla_direction_label = 'qibla.direction_label';
+  static const qibla_direction_sub = 'qibla.direction_sub';
+  static const qibla_distance_label = 'qibla.distance_label';
+  static const qibla_distance_value = 'qibla.distance_value';
+  static const qibla_distance_sub = 'qibla.distance_sub';
+  static const qibla_hint_seek = 'qibla.hint_seek';
+  static const qibla_hint_aligned = 'qibla.hint_aligned';
+  static const qibla_calibrate_title = 'qibla.calibrate_title';
+  static const qibla_calibrate_body = 'qibla.calibrate_body';
+  static const qibla_accuracy_low = 'qibla.accuracy.low';
+  static const qibla_accuracy_medium = 'qibla.accuracy.medium';
+  static const qibla_accuracy_high = 'qibla.accuracy.high';
+  static const qibla_accuracy = 'qibla.accuracy';
+  static const qibla_no_sensor_title = 'qibla.no_sensor_title';
+  static const qibla_no_sensor_body = 'qibla.no_sensor_body';
+  static const qibla_retry = 'qibla.retry';
+  static const qibla = 'qibla';
 }

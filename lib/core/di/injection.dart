@@ -15,6 +15,9 @@ import '../../features/prayer_times/domain/repositories/prayer_times_repository.
 import '../../features/prayer_times/domain/usecases/get_hijri_date.dart';
 import '../../features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import '../../features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
+import '../../features/qibla/data/flutter_compass_sensor.dart';
+import '../../features/qibla/domain/compass_sensor.dart';
+import '../../features/qibla/presentation/cubit/qibla_cubit.dart';
 import '../../features/settings/presentation/cubit/location_settings_cubit.dart';
 import '../../features/settings/presentation/cubit/prayer_settings_cubit.dart';
 import '../preferences/app_preferences.dart';
@@ -72,6 +75,14 @@ Future<void> configureDependencies() async {
     )
     ..registerFactory<LocationSettingsCubit>(
       () => LocationSettingsCubit(getIt<LocationService>()),
+    )
+    // Qibla
+    ..registerLazySingleton<CompassSensor>(() => const FlutterCompassSensor())
+    ..registerFactory<QiblaCubit>(
+      () => QiblaCubit(
+        locationService: getIt<LocationService>(),
+        compass: getIt<CompassSensor>(),
+      ),
     )
     // Adhan notifications
     ..registerLazySingleton<NotificationService>(LocalNotificationService.new)

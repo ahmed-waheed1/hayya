@@ -1,14 +1,101 @@
 import 'dart:math' as math;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/services/location_service.dart';
+import '../../../../core/services/user_location.dart';
 import '../../../../core/theme/hayya_spacing.dart';
 import '../../../../core/theme/theme_context.dart';
+import '../../../../core/utils/localized_format.dart';
 import '../../../../core/widgets/widgets.dart';
+import '../../../../generated/locale_keys.g.dart';
+import '../prayer_display.dart';
 import 'home_header.dart';
 
 enum StatusTone { danger, gold }
+
+/// Why there's no location, and what the user can do about it: allow
+/// access, open the settings, try again, or fall back to [lastKnown].
+/// Shared by every screen that needs the location (Home, Qibla).
+class LocationErrorView extends StatelessWidget {
+  const LocationErrorView({
+    super.key,
+    required this.reason,
+    required this.lastKnown,
+    required this.onRetry,
+    required this.onUseLastKnown,
+    required this.onOpenSettings,
+  });
+
+  final LocationFailure reason;
+  final UserLocation? lastKnown;
+
+  /// Asks for the location again (showing the permission prompt).
+  final VoidCallback onRetry;
+  final VoidCallback onUseLastKnown;
+
+  /// Opens the app's or the location settings, as fits [reason].
+  final VoidCallback onOpenSettings;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = context.locale;
+    final last = lastKnown;
+    final useLast = last == null
+        ? null
+        : (LocaleKeys.location_use_last_location.tr(), onUseLastKnown);
+
+    switch (reason) {
+      case LocationFailure.permissionDenied ||
+          LocationFailure.permissionDeniedForever:
+        final forever = reason == LocationFailure.permissionDeniedForever;
+        return LocationStatusView(
+          icon: HayyaIcons.pinOff,
+          tone: StatusTone.danger,
+          title: LocaleKeys.location_denied_title.tr(),
+          body: forever
+              ? LocaleKeys.location_denied_forever_body.tr()
+              : LocaleKeys.location_denied_body.tr(),
+          primaryLabel: forever
+              ? LocaleKeys.location_open_settings.tr()
+              : LocaleKeys.onboarding_allow_location.tr(),
+          onPrimary: forever ? onOpenSettings : onRetry,
+          secondaryLabel: useLast?.$1,
+          onSecondary: useLast?.$2,
+        );
+
+      case LocationFailure.serviceDisabled || LocationFailure.unavailable:
+        final secondary =
+            useLast ??
+            (reason == LocationFailure.serviceDisabled
+                ? (LocaleKeys.location_location_settings.tr(), onOpenSettings)
+                : null);
+        return LocationStatusView(
+          icon: HayyaIcons.gpsOff,
+          tone: StatusTone.gold,
+          title: LocaleKeys.location_unavailable_title.tr(),
+          body: last == null
+              ? LocaleKeys.location_unavailable_body.tr()
+              : LocaleKeys.location_unavailable_body_cached.tr(),
+          note: last == null
+              ? null
+              : StatusNote(
+                  title: last.placeLabel(locale),
+                  subtitle: context.format.lastUpdated(
+                    last.updatedAt,
+                    DateTime.now(),
+                  ),
+                ),
+          primaryLabel: LocaleKeys.location_try_again.tr(),
+          onPrimary: onRetry,
+          secondaryLabel: secondary?.$1,
+          onSecondary: secondary?.$2,
+        );
+    }
+  }
+}
 
 /// The fallback note under the body: a gold clock tile with two lines.
 class StatusNote {

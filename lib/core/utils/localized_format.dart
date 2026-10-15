@@ -46,6 +46,16 @@ class LocalizedFormat extends Equatable {
 
   String number(num value) => digits(value.toString());
 
+  /// [value] with thousands separators and [fractionDigits] decimals:
+  /// "1,287" / "٧٬٩٢٠" / "1.1".
+  String grouped(num value, {int fractionDigits = 0}) {
+    final text = NumberFormat.decimalPatternDigits(
+      locale: 'en',
+      decimalDigits: fractionDigits,
+    ).format(value);
+    return digits(_usesArabicIndic ? text.replaceAll(',', '٬') : text);
+  }
+
   /// "+5" / "−3" / "0": an adjustment, with a real minus sign.
   String signed(int value) => digits(switch (value) {
     > 0 => '+$value',
