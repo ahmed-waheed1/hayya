@@ -105,6 +105,11 @@ abstract final class HayyaIcons {
   static const qiblaOff = HayyaIconData(
     'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2 5-5 2 2-5zM3 3l18 18',
   );
+
+  /// Sunrise with a spark: a tip in the tracker.
+  static const insight = HayyaIconData(
+    'M3 17h18M7 17a5 5 0 0 1 10 0M6 21h12M17 3.5l.7 1.6 1.6.7-1.6.7L17 8.1l-.7-1.6-1.6-.7 1.6-.7z',
+  );
   static const add = HayyaIconData('M12 5v14M5 12h14');
   static const minus = HayyaIconData('M5 12h14');
   static const numerals = HayyaIconData(
@@ -117,7 +122,7 @@ abstract final class HayyaIcons {
     home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
     bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, search, //
     language, theme, sound, streak, calibrate, reminder, retry, add, minus,
-    numerals, turn, compassOff, qiblaOff, back, chevron,
+    numerals, turn, compassOff, qiblaOff, back, chevron, insight,
   ];
 }
 

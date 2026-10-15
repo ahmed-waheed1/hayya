@@ -61,7 +61,6 @@ dependencies:
   skeletonizer: ^3.0.0
   percent_indicator: ^4.2.5
   fl_chart: ^1.2.0
-  flutter_heatmap_calendar: ^1.0.5
   package_info_plus: ^10.1.0
 
 dev_dependencies:

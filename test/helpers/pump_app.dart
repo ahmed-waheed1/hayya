@@ -17,6 +17,8 @@ import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart'
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import 'package:hayya/features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:hayya/features/qibla/domain/compass_sensor.dart';
+import 'package:hayya/features/tracker/domain/usecases/get_tracking_position.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_compass_sensor.dart';
@@ -76,7 +78,9 @@ Future<void> loadFonts(WidgetTester tester) async {
 /// Location comes from [location] (by default Cairo, cached and found).
 /// [now] fixes the clock Home and the adhan schedule use. Notifications go to
 /// [notifications] (by default a fresh fake), never the plugin. The compass
-/// is [compass] (by default a fake that never sends anything).
+/// is [compass] (by default a fake that never sends anything). The tracker
+/// box lives in memory and starts with [tracker] (see
+/// `HiveTrackerRepository` for the keys).
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
@@ -86,6 +90,7 @@ Future<void> pumpHayyaApp(
   NotificationService? notifications,
   CompassSensor? compass,
   AssetLoader? assetLoader,
+  Map<String, Object> tracker = const {},
 }) async {
   tester.view
     ..physicalSize = size
@@ -97,7 +102,9 @@ Future<void> pumpHayyaApp(
   rootBundle.clear();
   SharedPreferences.setMockInitialValues(prefs);
   await getIt.reset();
-  await configureDependencies();
+  await configureDependencies(
+    openTrackerBox: () => openMemoryTrackerBox(tracker),
+  );
   getIt
     ..unregister<LocationService>()
     ..registerSingleton<LocationService>(
@@ -130,6 +137,15 @@ Future<void> pumpHayyaApp(
         hijriCalendar: getIt<HijriCalendarRepository>(),
         clock: now ?? DateTime.now,
       ),
+    )
+    ..unregister<GetTrackingPosition>()
+    ..registerFactory<GetTrackingPosition>(
+      () => GetTrackingPosition(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        getSchedule: getIt<GetPrayerSchedule>(),
+        clock: now ?? DateTime.now,
+      ),
     );
   await EasyLocalization.ensureInitialized();
 
@@ -141,4 +157,19 @@ Future<void> pumpHayyaApp(
     ),
   );
   await settle(tester);
+}
+
+var _memoryBoxes = 0;
+
+/// A fresh in-memory tracker box holding [contents]. Each call gets its
+/// own name, so no state leaks between tests.
+Future<Box<dynamic>> openMemoryTrackerBox([
+  Map<String, Object> contents = const {},
+]) async {
+  final box = await Hive.openBox<dynamic>(
+    'tracker_test_${_memoryBoxes++}',
+    bytes: Uint8List(0),
+  );
+  await box.putAll(contents);
+  return box;
 }
