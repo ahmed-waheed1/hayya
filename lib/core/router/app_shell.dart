@@ -44,6 +44,7 @@ class AppShell extends StatelessWidget {
       ),
       tablet: (context) => Scaffold(
         body: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HayyaNavRail(
               items: _items,

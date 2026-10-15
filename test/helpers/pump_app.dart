@@ -6,7 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hayya/app.dart';
 import 'package:hayya/core/di/injection.dart';
 import 'package:hayya/core/preferences/app_preferences.dart';
+import 'package:hayya/core/services/location_service.dart';
+import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_repository.dart';
+import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
+import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
+import 'package:hayya/features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'fake_location_service.dart';
 
 const phoneSize = Size(390, 844);
 const tabletSize = Size(1194, 834);
@@ -49,10 +56,15 @@ Future<void> loadFonts(WidgetTester tester) async {
 }
 
 /// Boots the full app (DI, preferences, translations, router) at [size].
+///
+/// Location comes from [location] (by default Cairo, cached and found).
+/// [now] fixes the clock Home calculates with.
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
   Map<String, Object> prefs = const {},
+  LocationService? location,
+  DateTime Function()? now,
 }) async {
   tester.view
     ..physicalSize = size
@@ -65,6 +77,21 @@ Future<void> pumpHayyaApp(
   SharedPreferences.setMockInitialValues(prefs);
   await getIt.reset();
   await configureDependencies();
+  getIt
+    ..unregister<LocationService>()
+    ..registerSingleton<LocationService>(
+      location ?? FakeLocationService(lastKnown: cairo),
+    )
+    ..unregister<PrayerTimesCubit>()
+    ..registerFactory<PrayerTimesCubit>(
+      () => PrayerTimesCubit(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        getSchedule: getIt<GetPrayerSchedule>(),
+        getHijriDate: getIt<GetHijriDate>(),
+        clock: now ?? DateTime.now,
+      ),
+    );
   await EasyLocalization.ensureInitialized();
 
   await loadFonts(tester);

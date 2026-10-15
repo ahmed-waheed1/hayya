@@ -52,6 +52,73 @@
     "language_english": "English",
     "language_arabic": "العربية"
   },
+  "home": {
+    "today": "Today",
+    "remaining": "remaining",
+    "tomorrow": "tomorrow",
+    "countdown_label": "{} in {}",
+    "current_location": "Current location",
+    "update_location": "Update location",
+    "qibla_bearing": "Qibla {}° {}",
+    "loading_title": "Loading prayer times",
+    "loading_body": "Calculating today’s times for your location…"
+  },
+  "location": {
+    "denied_title": "Location access is off",
+    "denied_body": "Hayya needs your location to calculate prayer times and the Qibla.",
+    "denied_forever_body": "Hayya needs your location to calculate prayer times and the Qibla. You can turn it on in Settings.",
+    "open_settings": "Open Settings",
+    "unavailable_title": "Can’t find your location",
+    "unavailable_body": "Your GPS signal is weak or switched off. Turn on location and try again.",
+    "unavailable_body_cached": "Your GPS signal is weak or switched off. You can keep using your last known location.",
+    "try_again": "Try again",
+    "use_last_location": "Use last location",
+    "location_settings": "Location settings",
+    "place": "{}, {}",
+    "updated_just_now": "Updated just now",
+    "updated_minutes": {
+      "one": "Last updated 1 minute ago",
+      "other": "Last updated {} minutes ago"
+    },
+    "updated_hours": {
+      "one": "Last updated 1 hour ago",
+      "other": "Last updated {} hours ago"
+    },
+    "updated_days": {
+      "one": "Last updated 1 day ago",
+      "other": "Last updated {} days ago"
+    }
+  },
+  "dates": {
+    "gregorian_pattern": "EEEE, d MMMM y",
+    "hijri": "{} {} {} AH",
+    "am": "AM",
+    "pm": "PM",
+    "hijri_months": {
+      "muharram": "Muharram",
+      "safar": "Safar",
+      "rabi_al_awwal": "Rabi al-Awwal",
+      "rabi_al_thani": "Rabi al-Thani",
+      "jumada_al_ula": "Jumada al-Ula",
+      "jumada_al_akhirah": "Jumada al-Akhirah",
+      "rajab": "Rajab",
+      "shaban": "Sha’ban",
+      "ramadan": "Ramadan",
+      "shawwal": "Shawwal",
+      "dhu_al_qadah": "Dhu al-Qa’dah",
+      "dhu_al_hijjah": "Dhu al-Hijjah"
+    }
+  },
+  "compass": {
+    "n": "N",
+    "ne": "NE",
+    "e": "E",
+    "se": "SE",
+    "s": "S",
+    "sw": "SW",
+    "w": "W",
+    "nw": "NW"
+  },
   "common": {
     "disabled": "Disabled",
     "on": "On",

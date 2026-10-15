@@ -60,6 +60,9 @@ abstract final class HayyaIcons {
   static const location = HayyaIconData(
     'M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
   );
+  static const pinOff = HayyaIconData(
+    'M9.2 4.2A7 7 0 0 1 19 9.5c0 2-1 4.1-2.3 5.9M14.6 17.8C13.3 19.6 12 21 12 21s-7-6.2-7-11.5c0-1.2.3-2.3.8-3.3M3 3l18 18',
+  );
   static const gpsOff = HayyaIconData(
     'M12 2v3M12 19v3M2 12h3M19 12h3M8 8a6 6 0 0 0 8.5 8.5M10 6.3A6 6 0 0 1 17.7 14M3 3l18 18',
   );
@@ -94,7 +97,7 @@ abstract final class HayyaIcons {
 
   static const all = [
     home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
-    bell, bellOff, check, kaaba, location, gpsOff, calendar, search, //
+    bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, search, //
     language, theme, sound, streak, calibrate, reminder, retry, add, back,
     chevron,
   ];

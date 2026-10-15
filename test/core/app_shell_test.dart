@@ -4,7 +4,7 @@ import 'package:hayya/core/di/injection.dart';
 import 'package:hayya/core/preferences/app_preferences.dart';
 import 'package:hayya/core/widgets/widgets.dart';
 import 'package:hayya/features/design_preview/presentation/design_preview_screen.dart';
-import 'package:hayya/features/home/presentation/home_screen.dart';
+import 'package:hayya/features/prayer_times/presentation/home_screen.dart';
 import 'package:hayya/features/qibla/presentation/qibla_screen.dart';
 import 'package:hayya/features/settings/presentation/settings_screen.dart';
 import 'package:hayya/features/tracker/presentation/tracker_screen.dart';

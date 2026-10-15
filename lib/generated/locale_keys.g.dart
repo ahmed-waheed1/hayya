@@ -47,6 +47,66 @@ abstract class LocaleKeys {
   static const settings_language_english = 'settings.language_english';
   static const settings_language_arabic = 'settings.language_arabic';
   static const settings = 'settings';
+  static const home_today = 'home.today';
+  static const home_remaining = 'home.remaining';
+  static const home_tomorrow = 'home.tomorrow';
+  static const home_countdown_label = 'home.countdown_label';
+  static const home_current_location = 'home.current_location';
+  static const home_update_location = 'home.update_location';
+  static const home_qibla_bearing = 'home.qibla_bearing';
+  static const home_loading_title = 'home.loading_title';
+  static const home_loading_body = 'home.loading_body';
+  static const home = 'home';
+  static const location_denied_title = 'location.denied_title';
+  static const location_denied_body = 'location.denied_body';
+  static const location_denied_forever_body = 'location.denied_forever_body';
+  static const location_open_settings = 'location.open_settings';
+  static const location_unavailable_title = 'location.unavailable_title';
+  static const location_unavailable_body = 'location.unavailable_body';
+  static const location_unavailable_body_cached =
+      'location.unavailable_body_cached';
+  static const location_try_again = 'location.try_again';
+  static const location_use_last_location = 'location.use_last_location';
+  static const location_location_settings = 'location.location_settings';
+  static const location_place = 'location.place';
+  static const location_updated_just_now = 'location.updated_just_now';
+  static const location_updated_minutes = 'location.updated_minutes';
+  static const location_updated_hours = 'location.updated_hours';
+  static const location_updated_days = 'location.updated_days';
+  static const location = 'location';
+  static const dates_gregorian_pattern = 'dates.gregorian_pattern';
+  static const dates_hijri = 'dates.hijri';
+  static const dates_am = 'dates.am';
+  static const dates_pm = 'dates.pm';
+  static const dates_hijri_months_muharram = 'dates.hijri_months.muharram';
+  static const dates_hijri_months_safar = 'dates.hijri_months.safar';
+  static const dates_hijri_months_rabi_al_awwal =
+      'dates.hijri_months.rabi_al_awwal';
+  static const dates_hijri_months_rabi_al_thani =
+      'dates.hijri_months.rabi_al_thani';
+  static const dates_hijri_months_jumada_al_ula =
+      'dates.hijri_months.jumada_al_ula';
+  static const dates_hijri_months_jumada_al_akhirah =
+      'dates.hijri_months.jumada_al_akhirah';
+  static const dates_hijri_months_rajab = 'dates.hijri_months.rajab';
+  static const dates_hijri_months_shaban = 'dates.hijri_months.shaban';
+  static const dates_hijri_months_ramadan = 'dates.hijri_months.ramadan';
+  static const dates_hijri_months_shawwal = 'dates.hijri_months.shawwal';
+  static const dates_hijri_months_dhu_al_qadah =
+      'dates.hijri_months.dhu_al_qadah';
+  static const dates_hijri_months_dhu_al_hijjah =
+      'dates.hijri_months.dhu_al_hijjah';
+  static const dates_hijri_months = 'dates.hijri_months';
+  static const dates = 'dates';
+  static const compass_n = 'compass.n';
+  static const compass_ne = 'compass.ne';
+  static const compass_e = 'compass.e';
+  static const compass_se = 'compass.se';
+  static const compass_s = 'compass.s';
+  static const compass_sw = 'compass.sw';
+  static const compass_w = 'compass.w';
+  static const compass_nw = 'compass.nw';
+  static const compass = 'compass';
   static const common_disabled = 'common.disabled';
   static const common_on = 'common.on';
   static const common_off = 'common.off';

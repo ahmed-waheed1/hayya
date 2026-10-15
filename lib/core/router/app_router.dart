@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/design_preview/presentation/design_preview_screen.dart';
-import '../../features/home/presentation/home_screen.dart';
+import '../../features/prayer_times/presentation/home_screen.dart';
 import '../../features/qibla/presentation/qibla_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/tracker/presentation/tracker_screen.dart';

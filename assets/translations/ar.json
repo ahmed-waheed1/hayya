@@ -55,6 +55,82 @@
     "language_english": "English",
     "language_arabic": "العربية"
   },
+  "home": {
+    "today": "اليوم",
+    "remaining": "متبقية",
+    "tomorrow": "غدًا",
+    "countdown_label": "{} بعد {}",
+    "current_location": "موقعك الحالي",
+    "update_location": "تحديث الموقع",
+    "qibla_bearing": "القبلة {}° {}",
+    "loading_title": "جارٍ تحميل المواقيت",
+    "loading_body": "نحسب مواقيت اليوم لموقعك…"
+  },
+  "location": {
+    "denied_title": "الوصول إلى الموقع متوقف",
+    "denied_body": "يحتاج «حيّ» إلى موقعك لحساب مواقيت الصلاة واتجاه القبلة.",
+    "denied_forever_body": "يحتاج «حيّ» إلى موقعك لحساب مواقيت الصلاة واتجاه القبلة. يمكنك تفعيله من الإعدادات.",
+    "open_settings": "فتح الإعدادات",
+    "unavailable_title": "تعذّر تحديد موقعك",
+    "unavailable_body": "إشارة GPS ضعيفة أو متوقفة. فعّل الموقع وحاول مرة أخرى.",
+    "unavailable_body_cached": "إشارة GPS ضعيفة أو متوقفة. يمكنك متابعة استخدام آخر موقع معروف.",
+    "try_again": "حاول مرة أخرى",
+    "use_last_location": "استخدام آخر موقع",
+    "location_settings": "إعدادات الموقع",
+    "place": "{}، {}",
+    "updated_just_now": "آخر تحديث الآن",
+    "updated_minutes": {
+      "one": "آخر تحديث قبل دقيقة",
+      "two": "آخر تحديث قبل دقيقتين",
+      "few": "آخر تحديث قبل {} دقائق",
+      "many": "آخر تحديث قبل {} دقيقة",
+      "other": "آخر تحديث قبل {} دقيقة"
+    },
+    "updated_hours": {
+      "one": "آخر تحديث قبل ساعة",
+      "two": "آخر تحديث قبل ساعتين",
+      "few": "آخر تحديث قبل {} ساعات",
+      "many": "آخر تحديث قبل {} ساعة",
+      "other": "آخر تحديث قبل {} ساعة"
+    },
+    "updated_days": {
+      "one": "آخر تحديث قبل يوم",
+      "two": "آخر تحديث قبل يومين",
+      "few": "آخر تحديث قبل {} أيام",
+      "many": "آخر تحديث قبل {} يومًا",
+      "other": "آخر تحديث قبل {} يوم"
+    }
+  },
+  "dates": {
+    "gregorian_pattern": "EEEE، d MMMM y",
+    "hijri": "{} {} {} هـ",
+    "am": "ص",
+    "pm": "م",
+    "hijri_months": {
+      "muharram": "محرم",
+      "safar": "صفر",
+      "rabi_al_awwal": "ربيع الأول",
+      "rabi_al_thani": "ربيع الآخر",
+      "jumada_al_ula": "جمادى الأولى",
+      "jumada_al_akhirah": "جمادى الآخرة",
+      "rajab": "رجب",
+      "shaban": "شعبان",
+      "ramadan": "رمضان",
+      "shawwal": "شوال",
+      "dhu_al_qadah": "ذو القعدة",
+      "dhu_al_hijjah": "ذو الحجة"
+    }
+  },
+  "compass": {
+    "n": "شمال",
+    "ne": "شمال شرق",
+    "e": "شرق",
+    "se": "جنوب شرق",
+    "s": "جنوب",
+    "sw": "جنوب غرب",
+    "w": "غرب",
+    "nw": "شمال غرب"
+  },
   "common": {
     "disabled": "معطّل",
     "on": "تشغيل",
