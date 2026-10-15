@@ -1,5 +1,6 @@
-// GENERATED from NOAA's WMM2025_TestValues.txt (shipped with the WMM2025
-// coefficients). Declinations are given to 0.01°.
+// GENERATED from NOAA's WMM2025_TestValues.txt (shipped with the
+// WMM2025 coefficients) by tool/generate_wmm.py. Declinations are
+// given to 0.01°. See docs/magnetic-declination.md.
 
 /// (decimal year, altitude km, geodetic latitude, longitude, declination).
 const wmm2025TestValues = <(double, double, double, double, double)>[

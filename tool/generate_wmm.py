@@ -1,5 +1,7 @@
 """Generates the WMM Dart sources from NOAA's coefficient download.
 
+When and how to replace the model: docs/magnetic-declination.md.
+
 Usage (from the repo root, after unzipping WMM20xxCOF.zip):
   python3 tool/generate_wmm.py WMM.COF WMM20xx_TestValues.txt \
       lib/features/qibla/domain/wmm2025_coefficients.dart \
@@ -10,6 +12,7 @@ cof, tv, out_lib, out_test = sys.argv[1:5]
 raw = open(cof, 'rb').read()
 lines = raw.decode().splitlines()
 epoch, name, released = lines[0].split()
+model_year = name.split('-')[1]  # 'WMM-2025' -> '2025'
 rows = []
 for l in lines[1:]:
     p = l.split()
@@ -22,7 +25,7 @@ with open(out_lib, 'w') as f:
 // {released}, sha256 {hashlib.sha256(raw).hexdigest()[:16]}…), from
 // https://www.ncei.noaa.gov/products/world-magnetic-model/wmm-coefficients
 // Do not edit by hand. The model is valid {epoch}–{float(epoch) + 5:.1f};
-// replace it with the next WMM before then (see CLAUDE.md).
+// replace it with the next WMM before then (docs/magnetic-declination.md).
 
 /// Epoch of the coefficients, in decimal years.
 const wmmEpoch = {epoch};
@@ -43,11 +46,12 @@ for l in open(tv):
     p = l.split()
     pts.append((p[0], p[1], p[2], p[3], p[4]))
 with open(out_test, 'w') as f:
-    f.write("""// GENERATED from NOAA's WMM2025_TestValues.txt (shipped with the WMM2025
-// coefficients). Declinations are given to 0.01°.
+    f.write(f"""// GENERATED from NOAA's WMM{model_year}_TestValues.txt (shipped with the
+// WMM{model_year} coefficients) by tool/generate_wmm.py. Declinations are
+// given to 0.01°. See docs/magnetic-declination.md.
 
 /// (decimal year, altitude km, geodetic latitude, longitude, declination).
-const wmm2025TestValues = <(double, double, double, double, double)>[
+const wmm{model_year}TestValues = <(double, double, double, double, double)>[
 """)
     for y, a, la, lo, d in pts:
         f.write(f"  ({float(y)}, {float(a)}, {float(la)}, {float(lo)}, {float(d)}),\n")

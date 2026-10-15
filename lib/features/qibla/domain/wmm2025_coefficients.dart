@@ -2,7 +2,7 @@
 // 11/13/2024, sha256 dfa8597825af4e0b…), from
 // https://www.ncei.noaa.gov/products/world-magnetic-model/wmm-coefficients
 // Do not edit by hand. The model is valid 2025.0–2030.0;
-// replace it with the next WMM before then (see CLAUDE.md).
+// replace it with the next WMM before then (docs/magnetic-declination.md).
 
 /// Epoch of the coefficients, in decimal years.
 const wmmEpoch = 2025.0;
