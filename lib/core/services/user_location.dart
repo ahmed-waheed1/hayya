@@ -34,6 +34,7 @@ class UserLocation extends Equatable {
     required this.coordinates,
     required this.updatedAt,
     this.placeNames = const {},
+    this.countryCode,
   });
 
   final GeoCoordinates coordinates;
@@ -42,6 +43,9 @@ class UserLocation extends Equatable {
   /// Reverse-geocoded names keyed by language code ('en', 'ar'). Empty
   /// when geocoding failed (offline).
   final Map<String, PlaceName> placeNames;
+
+  /// ISO 3166-1 alpha-2 code ("EG") from geocoding; null when offline.
+  final String? countryCode;
 
   /// The name in [languageCode], falling back to any language we have.
   PlaceName? placeName(String languageCode) =>
@@ -55,6 +59,7 @@ class UserLocation extends Equatable {
       for (final MapEntry(:key, :value) in placeNames.entries)
         key: value.toJson(),
     },
+    if (countryCode != null) 'countryCode': countryCode,
   };
 
   factory UserLocation.fromJson(Map<String, Object?> json) => UserLocation(
@@ -70,8 +75,9 @@ class UserLocation extends Equatable {
           (value as Map).cast<String, Object?>(),
         ),
     },
+    countryCode: json['countryCode'] as String?,
   );
 
   @override
-  List<Object?> get props => [coordinates, updatedAt, placeNames];
+  List<Object?> get props => [coordinates, updatedAt, placeNames, countryCode];
 }

@@ -1,0 +1,8 @@
+TODO before release: credit for the adhan recording.
+
+Replace this text with the recording's credit and license: the muezzin,
+where it was recorded or published, the source URL and the license terms
+(or a note that it is used with permission).
+
+Used for the adhan notification sound (android/app/src/main/res/raw/adhan.mp3,
+ios/Runner/adhan.caf), made from assets/sounds/adhan.mp3.

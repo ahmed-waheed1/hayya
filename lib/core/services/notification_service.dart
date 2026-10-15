@@ -13,6 +13,13 @@ enum NotificationSound {
   /// volume or silent mode doesn't mute it.
   adhan(channelId: 'adhan_v2', fileName: 'adhan', alarmStream: true),
 
+  /// The same adhan on the notification stream, for users who want silent
+  /// mode to silence it too (Settings → Adhan volume).
+  adhanNotificationVolume(
+    channelId: 'adhan_notification_v1',
+    fileName: 'adhan',
+  ),
+
   /// The pre-adhan reminder, with the system's default tone on the normal
   /// notification stream.
   reminder(channelId: 'reminder_v1');

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,10 +8,18 @@ import '../theme/theme_context.dart';
 
 @immutable
 class SegmentOption<T> {
-  const SegmentOption({required this.value, required this.label});
+  const SegmentOption({
+    required this.value,
+    required this.label,
+    this.sublabel,
+  });
 
   final T value;
   final String label;
+
+  /// A smaller second line ("Later Asr"). With any, every segment is 44
+  /// tall instead of 40.
+  final String? sublabel;
 }
 
 /// `SegmentedPicker<T>`: surface-2 track, selected segment lifts to
@@ -41,6 +51,10 @@ class SegmentedPicker<T> extends StatelessWidget {
     final idleStyle = type
         .style(14, FontWeight.w600, height: 1.2)
         .copyWith(color: c.muted);
+    final subStyle = type
+        .style(11, FontWeight.w600, height: 1.2)
+        .copyWith(color: c.muted);
+    final twoLines = options.any((o) => o.sublabel != null);
     final trackPadding = 4.r;
     final gap = 4.r;
     final segmentPadding = 16.r;
@@ -52,6 +66,7 @@ class SegmentedPicker<T> extends StatelessWidget {
                 context,
                 // Measure bold so the selection never changes the layout.
                 style: selectedStyle,
+                subStyle: subStyle,
                 padding: segmentPadding,
                 available:
                     constraints.maxWidth -
@@ -78,6 +93,9 @@ class SegmentedPicker<T> extends StatelessWidget {
                     onTap: () => onChanged(option.value),
                     selectedStyle: selectedStyle,
                     idleStyle: idleStyle,
+                    sublabel: option.sublabel,
+                    subStyle: subStyle,
+                    height: twoLines ? 44.r : 40.r,
                     selectedColor: c.selectedSurface,
                     padding: segmentPadding,
                   ),
@@ -92,12 +110,19 @@ class SegmentedPicker<T> extends StatelessWidget {
   List<double> _segmentWidths(
     BuildContext context, {
     required TextStyle style,
+    required TextStyle subStyle,
     required double padding,
     required double available,
   }) {
     final natural = [
       for (final option in options)
-        _textWidth(context, option.label, style) + 2 * padding,
+        math.max(
+              _textWidth(context, option.label, style),
+              option.sublabel == null
+                  ? 0.0
+                  : _textWidth(context, option.sublabel!, subStyle),
+            ) +
+            2 * padding,
     ];
     final n = natural.length;
     final total = natural.fold<double>(0, (a, b) => a + b);
@@ -132,6 +157,9 @@ class _Segment extends StatelessWidget {
     required this.onTap,
     required this.selectedStyle,
     required this.idleStyle,
+    required this.sublabel,
+    required this.subStyle,
+    required this.height,
     required this.selectedColor,
     required this.padding,
   });
@@ -141,6 +169,9 @@ class _Segment extends StatelessWidget {
   final VoidCallback onTap;
   final TextStyle selectedStyle;
   final TextStyle idleStyle;
+  final String? sublabel;
+  final TextStyle subStyle;
+  final double height;
   final Color selectedColor;
   final double padding;
 
@@ -155,7 +186,7 @@ class _Segment extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          height: 40.r,
+          height: height,
           padding: EdgeInsetsDirectional.symmetric(horizontal: padding),
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -171,11 +202,23 @@ class _Segment extends StatelessWidget {
                   ]
                 : null,
           ),
-          child: Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: selected ? selectedStyle : idleStyle,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: selected ? selectedStyle : idleStyle,
+              ),
+              if (sublabel != null)
+                Text(
+                  sublabel!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: subStyle,
+                ),
+            ],
           ),
         ),
       ),

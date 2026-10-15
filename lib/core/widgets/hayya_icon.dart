@@ -92,14 +92,18 @@ abstract final class HayyaIcons {
   );
   static const retry = HayyaIconData('M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5');
   static const add = HayyaIconData('M12 5v14M5 12h14');
+  static const minus = HayyaIconData('M5 12h14');
+  static const numerals = HayyaIconData(
+    'M5 9h14M5 15h14M10 4l-2 16M16 4l-2 16',
+  );
   static const back = HayyaIconData('M15 5l-7 7 7 7', mirrorInRtl: true);
   static const chevron = HayyaIconData('M9 5l7 7-7 7', mirrorInRtl: true);
 
   static const all = [
     home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
     bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, search, //
-    language, theme, sound, streak, calibrate, reminder, retry, add, back,
-    chevron,
+    language, theme, sound, streak, calibrate, reminder, retry, add, minus,
+    numerals, back, chevron,
   ];
 }
 

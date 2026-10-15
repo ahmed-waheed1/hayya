@@ -252,6 +252,94 @@ void main() {
       expect(firstAdhan(Prayer.asr).isAfter(shafiAsr), isTrue);
     });
 
+    test('a minute adjustment moves that adhan by exactly that much', () async {
+      final fajr = firstAdhan(Prayer.fajr);
+      final isha = firstAdhan(Prayer.isha);
+      await settings.save(
+        const PrayerCalculationSettings().withAdjustment(Prayer.fajr, 7),
+      );
+      await settle();
+
+      expect(notifications.replaceCalls, 2);
+      expect(firstAdhan(Prayer.fajr), fajr.add(const Duration(minutes: 7)));
+      expect(firstAdhan(Prayer.isha), isha);
+    });
+
+    test('a manually chosen city moves the times', () async {
+      final cairoMaghrib = firstAdhan(Prayer.maghrib);
+      await location.useManualLocation(
+        UserLocation(
+          coordinates: const GeoCoordinates(21.4225, 39.8262),
+          updatedAt: now,
+        ),
+      );
+      await settle();
+
+      expect(notifications.replaceCalls, 2);
+      expect(firstAdhan(Prayer.maghrib), isNot(cairoMaghrib));
+    });
+
+    test('the adhan plays on the alarm channel by default', () async {
+      final adhans = notifications.pending.where(
+        (n) => n.title.startsWith('en adhan'),
+      );
+      expect(adhans, isNotEmpty);
+      expect(adhans.map((n) => n.sound).toSet(), {NotificationSound.adhan});
+    });
+
+    test('notification volume moves every adhan to its own channel, and '
+        'back', () async {
+      await preferences.save(
+        const AdhanPreferences(
+          reminderOn: true,
+          volume: AdhanVolume.notification,
+        ),
+      );
+      await settle();
+
+      expect(notifications.replaceCalls, 2);
+      final adhans = notifications.pending.where(
+        (n) => n.title.startsWith('en adhan'),
+      );
+      expect(adhans.map((n) => n.sound).toSet(), {
+        NotificationSound.adhanNotificationVolume,
+      });
+      // Reminders keep their own channel.
+      final reminders = notifications.pending.where(
+        (n) => n.title.startsWith('en reminder'),
+      );
+      expect(reminders.map((n) => n.sound).toSet(), {
+        NotificationSound.reminder,
+      });
+      // Every channel exists, so switching never waits on one.
+      expect(
+        notifications.channels.keys.toSet(),
+        NotificationSound.values.toSet(),
+      );
+
+      await preferences.save(const AdhanPreferences(reminderOn: true));
+      await settle();
+      expect(notifications.replaceCalls, 3);
+      expect(
+        notifications.pending
+            .where((n) => n.title.startsWith('en adhan'))
+            .map((n) => n.sound)
+            .toSet(),
+        {NotificationSound.adhan},
+      );
+    });
+
+    test('the test adhan follows the volume choice', () async {
+      await preferences.save(
+        const AdhanPreferences(volume: AdhanVolume.notification),
+      );
+      await scheduler.scheduleTest();
+      final test = notifications.pending.singleWhere(
+        (n) => n.id == AdhanScheduler.testId,
+      );
+      expect(test.sound, NotificationSound.adhanNotificationVolume);
+    });
+
     test('switching a prayer off removes its adhan', () async {
       await preferences.save(
         const AdhanPreferences().withPrayer(Prayer.maghrib, on: false),

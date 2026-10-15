@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/di/injection.dart';
+import 'core/preferences/display_preferences.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/hayya_theme.dart';
 import 'core/theme/theme_mode_cubit.dart';
@@ -57,36 +58,42 @@ class _HayyaAppState extends State<HayyaApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: getIt<ThemeModeCubit>()),
+        BlocProvider.value(value: getIt<DisplayPreferencesCubit>()),
         BlocProvider.value(value: getIt<AdhanNotificationsCubit>()),
       ],
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final base = constraints.isTablet ? _tabletDesign : _phoneDesign;
-          final landscape = constraints.maxWidth > constraints.maxHeight;
-          return ScreenUtilInit(
-            designSize: landscape ? base.flipped : base,
-            minTextAdapt: true,
-            builder: (context, _) => BlocBuilder<ThemeModeCubit, ThemeMode>(
-              builder: (context, themeMode) => MaterialApp.router(
-                onGenerateTitle: (_) => LocaleKeys.app_name.tr(),
-                debugShowCheckedModeBanner: false,
-                theme: HayyaTheme.light(context.locale),
-                darkTheme: HayyaTheme.dark(context.locale),
-                themeMode: themeMode,
-                locale: context.locale,
-                supportedLocales: context.supportedLocales,
-                localizationsDelegates: context.localizationDelegates,
-                routerConfig: _router,
-                // Inside the app's Localizations, which only build their
-                // child once the translations are loaded.
-                builder: (context, child) => AdhanNotificationsSync(
-                  scheduler: getIt<AdhanScheduler>(),
-                  child: child!,
-                ),
-              ),
-            ),
-          );
-        },
+      child: BlocBuilder<DisplayPreferencesCubit, DisplayPreferences>(
+        builder: (context, display) => DisplayPreferencesScope(
+          preferences: display,
+          child: LayoutBuilder(builder: _build),
+        ),
+      ),
+    );
+  }
+
+  Widget _build(BuildContext context, BoxConstraints constraints) {
+    final base = constraints.isTablet ? _tabletDesign : _phoneDesign;
+    final landscape = constraints.maxWidth > constraints.maxHeight;
+    return ScreenUtilInit(
+      designSize: landscape ? base.flipped : base,
+      minTextAdapt: true,
+      builder: (context, _) => BlocBuilder<ThemeModeCubit, ThemeMode>(
+        builder: (context, themeMode) => MaterialApp.router(
+          onGenerateTitle: (_) => LocaleKeys.app_name.tr(),
+          debugShowCheckedModeBanner: false,
+          theme: HayyaTheme.light(context.locale),
+          darkTheme: HayyaTheme.dark(context.locale),
+          themeMode: themeMode,
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          routerConfig: _router,
+          // Inside the app's Localizations, which only build their
+          // child once the translations are loaded.
+          builder: (context, child) => AdhanNotificationsSync(
+            scheduler: getIt<AdhanScheduler>(),
+            child: child!,
+          ),
+        ),
       ),
     );
   }

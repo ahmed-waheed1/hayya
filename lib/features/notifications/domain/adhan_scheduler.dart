@@ -6,6 +6,7 @@ import '../../../core/services/location_service.dart';
 import '../../../core/services/notification_service.dart';
 import '../../prayer_times/domain/entities/prayer.dart';
 import '../../prayer_times/domain/repositories/prayer_settings_repository.dart';
+import 'entities/adhan_preferences.dart';
 import 'entities/planned_notification.dart';
 import 'repositories/adhan_preferences_repository.dart';
 import 'usecases/plan_adhan_notifications.dart';
@@ -21,7 +22,8 @@ abstract interface class NotificationTexts {
 ///
 /// Nothing is scheduled until [useTexts] supplies the app's language.
 /// After [start] it reschedules on its own when the location, the
-/// calculation settings or the adhan preferences change. The app also
+/// calculation settings or the adhan preferences (including the volume,
+/// which picks the adhan's channel) change. The app also
 /// calls [reschedule] on open and on resume, and [useTexts] after a
 /// language change.
 class AdhanScheduler {
@@ -118,13 +120,14 @@ class AdhanScheduler {
       final testAt = _testAt;
       if (testAt != null && !testAt.isAfter(now)) _testAt = null;
       final location = _locationService.lastKnown;
+      final preferences = _preferencesRepository.preferences;
       final planned = location == null
           ? const <PlannedNotification>[]
           : _plan(
               now: now,
               coordinates: location.coordinates,
               settings: _settingsRepository.settings,
-              preferences: _preferencesRepository.preferences,
+              preferences: preferences,
               // Leave room for the test adhan under iOS's cap.
               limit: _notifications.maxPending - (_testAt == null ? 0 : 1),
             );
@@ -136,7 +139,7 @@ class AdhanScheduler {
               at: n.at,
               title: title,
               body: body,
-              sound: _soundFor(n.kind),
+              sound: _soundFor(n.kind, preferences.volume),
             ),
         if (_testAt case final at?)
           if (texts.forNotification(
@@ -153,7 +156,7 @@ class AdhanScheduler {
               at: at,
               title: title,
               body: body,
-              sound: NotificationSound.adhan,
+              sound: _soundFor(NotificationKind.adhan, preferences.volume),
             ),
       ];
       final channels = {
@@ -181,9 +184,16 @@ class AdhanScheduler {
     }
   }
 
-  static NotificationSound _soundFor(NotificationKind kind) => switch (kind) {
-    NotificationKind.adhan => NotificationSound.adhan,
-    NotificationKind.reminder => NotificationSound.reminder,
+  /// The adhan's channel follows the volume choice, since Android fixes a
+  /// channel's audio stream when it is created.
+  static NotificationSound _soundFor(
+    NotificationKind kind,
+    AdhanVolume volume,
+  ) => switch ((kind, volume)) {
+    (NotificationKind.adhan, AdhanVolume.alarm) => NotificationSound.adhan,
+    (NotificationKind.adhan, AdhanVolume.notification) =>
+      NotificationSound.adhanNotificationVolume,
+    (NotificationKind.reminder, _) => NotificationSound.reminder,
   };
 
   Future<void> dispose() async {

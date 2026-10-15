@@ -30,8 +30,7 @@ class PrayerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale;
-    final use24Hour = MediaQuery.alwaysUse24HourFormatOf(context);
+    final format = context.format;
     final adhan = context.select<AdhanNotificationsCubit, AdhanPreferences>(
       (cubit) => cubit.state.preferences,
     );
@@ -39,11 +38,7 @@ class PrayerList extends StatelessWidget {
 
     Widget row(PrayerTime entry) {
       final prayer = entry.prayer;
-      final clock = LocalizedFormat.clock(
-        entry.time,
-        locale,
-        use24Hour: use24Hour,
-      );
+      final clock = format.clock(entry.time);
       return PrayerRow(
         icon: prayer.icon,
         name: prayer.localizedName,

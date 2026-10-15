@@ -50,7 +50,6 @@
     "theme_dark": "داكن",
     "theme_system": "النظام",
     "calculation_method": "طريقة الحساب",
-    "method_egyptian": "الهيئة المصرية العامة للمساحة",
     "adhan_notification": "إشعار الأذان",
     "language_english": "English",
     "language_arabic": "العربية",
@@ -65,7 +64,116 @@
     "exact_alarms_body": "اسمح بالمنبّهات والتذكيرات ليُرفع الأذان في وقته.",
     "allow": "سماح",
     "test_adhan": "تجربة الأذان بعد دقيقة",
-    "test_adhan_scheduled": "تمت جدولة تجربة الأذان. اقفل الهاتف وانتظر دقيقة."
+    "test_adhan_scheduled": "تمت جدولة تجربة الأذان. اقفل الهاتف وانتظر دقيقة.",
+    "numerals": "الأرقام",
+    "numerals_arabic": "١٢٣ عربية",
+    "numerals_western": "123 غربية",
+    "time_format": "تنسيق الوقت",
+    "time_hours": "{} ساعة",
+    "prayer_times": "مواقيت الصلاة",
+    "asr_calculation": "حساب العصر",
+    "madhab_shafi": "الشافعي",
+    "madhab_shafi_sub": "الجمهور",
+    "madhab_hanafi": "الحنفي",
+    "madhab_hanafi_sub": "عصر متأخر",
+    "high_latitude": "قاعدة خطوط العرض العليا",
+    "high_latitude_sub": "حين يمتد الشفق معظم الليل",
+    "high_latitude_middle": "منتصف الليل",
+    "high_latitude_middle_sub": "لا يتجاوز الفجر والعشاء منتصف الليل",
+    "high_latitude_seventh": "سُبع الليل",
+    "high_latitude_seventh_sub": "في حدود السُّبع الأول والأخير من الليل",
+    "high_latitude_angle": "زاوية الشفق",
+    "high_latitude_angle_sub": "جزء من الليل تحدده زوايا طريقة الحساب",
+    "hijri_date": "التاريخ الهجري",
+    "hijri_today": "اليوم: {}",
+    "hijri_days": {
+      "zero": "{} يوم",
+      "one": "{} يوم",
+      "two": "{} يوم",
+      "few": "{} أيام",
+      "many": "{} يوم",
+      "other": "{} يوم"
+    },
+    "hijri_earlier": "تقديم يوم",
+    "hijri_later": "تأخير يوم",
+    "adjustments": "تعديل يدوي (بالدقائق)",
+    "adjust_minutes": "{} د",
+    "adjust_earlier": "تقديم دقيقة: {}",
+    "adjust_later": "تأخير دقيقة: {}",
+    "method_sheet_hint": "اختر الطريقة التي يتبعها مسجدك.",
+    "method_suggested_for": "الأنسب في {}",
+    "method_suggested": "الأنسب في بلدك",
+    "adhan_volume": "مستوى صوت الأذان",
+    "volume_alarm": "مستوى صوت المنبّه",
+    "volume_alarm_sub": "يعمل حتى في الوضع الصامت",
+    "volume_notification": "مستوى صوت الإشعارات",
+    "volume_notification_sub": "يتبع الوضع الصامت",
+    "location": "الموقع",
+    "location_automatic": "تلقائي",
+    "location_manual": "يدوي",
+    "location_detail": "{} · {}",
+    "location_chosen": "تم اختيارها يدويًا",
+    "location_none": "لم يُحدَّد الموقع بعد",
+    "location_none_sub": "حدّث موقعك أو اختر مدينة.",
+    "search_city": "ابحث عن مدينة",
+    "searching": "جارٍ البحث…",
+    "search_no_results": "لا توجد مدينة باسم «{}».",
+    "search_failed": "تعذّر البحث. تحقّق من الاسم أو من اتصالك بالإنترنت.",
+    "about": "حول التطبيق",
+    "version": "الإصدار",
+    "version_value": "{} ({})",
+    "licenses": "التراخيص",
+    "licenses_sub": "الخطوط وتسجيل الأذان والحزم مفتوحة المصدر",
+    "methods": {
+      "muslim_world_league": {
+        "name": "رابطة العالم الإسلامي",
+        "description": "الفجر 18°، العشاء 17°. أوروبا والشرق الأقصى وأجزاء من الأمريكتين."
+      },
+      "egyptian": {
+        "name": "الهيئة المصرية العامة للمساحة",
+        "description": "الفجر 19.5°، العشاء 17.5°. مصر والسودان والشام والعراق."
+      },
+      "karachi": {
+        "name": "جامعة العلوم الإسلامية، كراتشي",
+        "description": "الفجر 18°، العشاء 18°. باكستان والهند وبنغلاديش وأفغانستان."
+      },
+      "umm_al_qura": {
+        "name": "جامعة أم القرى، مكة المكرمة",
+        "description": "الفجر 18.5°، العشاء بعد المغرب بـ 90 دقيقة. السعودية واليمن."
+      },
+      "dubai": {
+        "name": "دبي (منطقة الخليج)",
+        "description": "الفجر 18.2°، العشاء 18.2°. الإمارات والبحرين وعُمان."
+      },
+      "moonsighting_committee": {
+        "name": "لجنة رؤية الهلال العالمية",
+        "description": "الفجر 18°، العشاء 18°، مع تعديل حسب الفصل. بريطانيا وأمريكا الشمالية."
+      },
+      "north_america": {
+        "name": "الجمعية الإسلامية لأمريكا الشمالية (ISNA)",
+        "description": "الفجر 15°، العشاء 15°. تتبعها مساجد كثيرة في أمريكا وكندا."
+      },
+      "kuwait": {
+        "name": "الكويت",
+        "description": "الفجر 18°، العشاء 17.5°."
+      },
+      "qatar": {
+        "name": "قطر",
+        "description": "الفجر 18°، العشاء بعد المغرب بـ 90 دقيقة."
+      },
+      "singapore": {
+        "name": "المجلس الإسلامي في سنغافورة",
+        "description": "الفجر 20°، العشاء 18°. سنغافورة وماليزيا وإندونيسيا وبروناي."
+      },
+      "turkey": {
+        "name": "رئاسة الشؤون الدينية، تركيا",
+        "description": "الفجر 18°، العشاء 17°، مع تعديلات الرئاسة."
+      },
+      "tehran": {
+        "name": "معهد الجيوفيزياء، جامعة طهران",
+        "description": "الفجر 17.7°، العشاء 14°، المغرب 4.5°. إيران."
+      }
+    }
   },
   "home": {
     "today": "اليوم",
@@ -111,7 +219,13 @@
       "few": "آخر تحديث قبل {} أيام",
       "many": "آخر تحديث قبل {} يومًا",
       "other": "آخر تحديث قبل {} يوم"
-    }
+    },
+    "coordinate": "{}° {}",
+    "coordinates": "{} {}",
+    "north": "شمالًا",
+    "south": "جنوبًا",
+    "east": "شرقًا",
+    "west": "غربًا"
   },
   "dates": {
     "gregorian_pattern": "EEEE، d MMMM y",
@@ -181,6 +295,8 @@
     "adhan_channel": "الأذان",
     "adhan_channel_description": "يُرفع الأذان عند دخول وقت كل صلاة.",
     "reminder_channel": "التذكير قبل الأذان",
-    "reminder_channel_description": "نغمة هادئة قبل كل صلاة."
+    "reminder_channel_description": "نغمة هادئة قبل كل صلاة.",
+    "adhan_notification_volume_channel": "الأذان (مستوى صوت الإشعارات)",
+    "adhan_notification_volume_channel_description": "يرفع الأذان بمستوى صوت الإشعارات، ويُسكته الوضع الصامت."
   }
 }

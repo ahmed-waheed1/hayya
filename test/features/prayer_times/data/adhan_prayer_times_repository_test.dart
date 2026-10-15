@@ -100,4 +100,89 @@ void main() {
       expect(day.times, hasLength(6), reason: method.name);
     }
   });
+
+  group('minute adjustments', () {
+    test('move each time by exactly its minutes, and nothing else', () {
+      final plain = times(cairo);
+      final adjusted = times(
+        cairo,
+        const PrayerCalculationSettings()
+            .withAdjustment(Prayer.fajr, 5)
+            .withAdjustment(Prayer.sunrise, -2)
+            .withAdjustment(Prayer.maghrib, 30)
+            .withAdjustment(Prayer.isha, -30),
+      );
+      Duration moved(Prayer p) => adjusted[p].time.difference(plain[p].time);
+
+      expect(moved(Prayer.fajr), const Duration(minutes: 5));
+      expect(moved(Prayer.sunrise), const Duration(minutes: -2));
+      expect(moved(Prayer.dhuhr), Duration.zero);
+      expect(moved(Prayer.asr), Duration.zero);
+      expect(moved(Prayer.maghrib), const Duration(minutes: 30));
+      expect(moved(Prayer.isha), const Duration(minutes: -30));
+    });
+
+    test('add to a method\'s own adjustments (Dubai: Dhuhr +3)', () {
+      const dubai = PrayerCalculationSettings(method: CalculationMethod.dubai);
+      final plain = times(makkah, dubai);
+      final adjusted = times(makkah, dubai.withAdjustment(Prayer.dhuhr, 2));
+      expect(
+        adjusted[Prayer.dhuhr].time.difference(plain[Prayer.dhuhr].time),
+        const Duration(minutes: 2),
+      );
+    });
+
+    test('are clamped to ±30 and zero entries are dropped', () {
+      const base = PrayerCalculationSettings();
+      expect(base.withAdjustment(Prayer.asr, 45).adjustmentFor(Prayer.asr), 30);
+      expect(
+        base.withAdjustment(Prayer.asr, -99).adjustmentFor(Prayer.asr),
+        -30,
+      );
+      // Back to zero compares equal to never adjusted.
+      expect(
+        base.withAdjustment(Prayer.asr, 4).withAdjustment(Prayer.asr, 0),
+        base,
+      );
+    });
+  });
+
+  group('high-latitude rule', () {
+    const oslo = GeoCoordinates(59.9139, 10.7522);
+    final midsummer = DateTime(2026, 6, 21);
+
+    PrayerDay osloOn(HighLatitudeRule rule) => repository.timesFor(
+      midsummer,
+      oslo,
+      PrayerCalculationSettings(
+        method: CalculationMethod.muslimWorldLeague,
+        highLatitudeRule: rule,
+      ),
+    );
+
+    test('decides Fajr and Isha where twilight never ends', () {
+      final middle = osloOn(HighLatitudeRule.middleOfTheNight);
+      final seventh = osloOn(HighLatitudeRule.seventhOfTheNight);
+      final angle = osloOn(HighLatitudeRule.twilightAngle);
+
+      expect(seventh[Prayer.fajr].time, isNot(middle[Prayer.fajr].time));
+      expect(seventh[Prayer.isha].time, isNot(middle[Prayer.isha].time));
+      expect(angle[Prayer.fajr].time, isNot(middle[Prayer.fajr].time));
+      // The rule only bounds Fajr and Isha.
+      for (final p in [Prayer.sunrise, Prayer.dhuhr, Prayer.maghrib]) {
+        expect(seventh[p].time, middle[p].time, reason: p.name);
+      }
+    });
+
+    test('makes no difference in Cairo', () {
+      final middle = times(cairo);
+      final angle = times(
+        cairo,
+        const PrayerCalculationSettings(
+          highLatitudeRule: HighLatitudeRule.twilightAngle,
+        ),
+      );
+      expect(angle.times, middle.times);
+    });
+  });
 }

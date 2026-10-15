@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils/localized_format.dart';
+
 import '../domain/adhan_scheduler.dart';
 import 'cubit/adhan_notifications_cubit.dart';
 import 'localized_notification_texts.dart';
@@ -30,7 +32,7 @@ class AdhanNotificationsSync extends StatefulWidget {
 
 class _AdhanNotificationsSyncState extends State<AdhanNotificationsSync> {
   late final AppLifecycleListener _lifecycle;
-  (Locale, bool)? _textsKey;
+  LocalizedFormat? _textsFormat;
 
   @override
   void initState() {
@@ -52,15 +54,17 @@ class _AdhanNotificationsSyncState extends State<AdhanNotificationsSync> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final key = (
+    // The loaded language (not easy_localization's, which can run ahead
+    // of the translations), with the user's digits and clock.
+    final format = context.format;
+    final texts = LocalizedFormat(
       Localizations.localeOf(context),
-      MediaQuery.alwaysUse24HourFormatOf(context),
+      numerals: format.numerals,
+      use24Hour: format.use24Hour,
     );
-    if (key == _textsKey) return;
-    _textsKey = key;
-    widget.scheduler.useTexts(
-      LocalizedNotificationTexts(key.$1, use24Hour: key.$2),
-    );
+    if (texts == _textsFormat) return;
+    _textsFormat = texts;
+    widget.scheduler.useTexts(LocalizedNotificationTexts(texts));
   }
 
   @override

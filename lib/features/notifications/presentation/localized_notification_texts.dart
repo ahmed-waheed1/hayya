@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../core/services/notification_service.dart';
@@ -11,13 +9,12 @@ import '../domain/entities/planned_notification.dart';
 
 /// [NotificationTexts] from the loaded translations.
 ///
-/// The locale must be the language those translations are in; it picks the
-/// digits and the clock's AM/PM marker.
+/// [_format]'s locale must be the language those translations are in; it
+/// picks the digits and the clock's AM/PM marker.
 class LocalizedNotificationTexts implements NotificationTexts {
-  LocalizedNotificationTexts(this._locale, {required this._use24Hour});
+  LocalizedNotificationTexts(this._format);
 
-  final Locale _locale;
-  final bool _use24Hour;
+  final LocalizedFormat _format;
 
   @override
   ({String title, String body}) forNotification(PlannedNotification n) {
@@ -30,19 +27,14 @@ class LocalizedNotificationTexts implements NotificationTexts {
         );
       case NotificationKind.reminder:
         final minutes = n.prayerTime.difference(n.at).inMinutes;
-        final clock = LocalizedFormat.clock(
-          n.prayerTime,
-          _locale,
-          use24Hour: _use24Hour,
-        );
+        final clock = _format.clock(n.prayerTime);
         return (
-          title: LocalizedFormat.digits(
+          title: _format.digits(
             LocaleKeys.notifications_reminder_title.plural(
               minutes,
               name: 'minutes',
               namedArgs: {'prayer': name},
             ),
-            _locale,
           ),
           body: LocaleKeys.notifications_reminder_body.tr(
             args: [
@@ -58,6 +50,12 @@ class LocalizedNotificationTexts implements NotificationTexts {
     NotificationSound.adhan => (
       name: LocaleKeys.notifications_adhan_channel.tr(),
       description: LocaleKeys.notifications_adhan_channel_description.tr(),
+    ),
+    NotificationSound.adhanNotificationVolume => (
+      name: LocaleKeys.notifications_adhan_notification_volume_channel.tr(),
+      description: LocaleKeys
+          .notifications_adhan_notification_volume_channel_description
+          .tr(),
     ),
     NotificationSound.reminder => (
       name: LocaleKeys.notifications_reminder_channel.tr(),

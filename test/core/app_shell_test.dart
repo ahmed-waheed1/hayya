@@ -88,7 +88,7 @@ void main() {
       await tester.tap(find.text('Settings'));
       await settle(tester, rounds: 2);
 
-      await tester.tap(find.text('Design system'));
+      await tapVisible(tester, find.text('Design system'));
       await settle(tester);
       expect(find.byType(DesignPreviewScreen), findsOneWidget);
       // Full screen: the bar is covered.

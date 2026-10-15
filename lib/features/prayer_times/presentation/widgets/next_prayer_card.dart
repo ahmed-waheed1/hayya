@@ -27,15 +27,11 @@ class NextPrayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale;
+    final format = context.format;
     final next = schedule.next;
     final name = next.prayer.localizedName;
-    final clock = LocalizedFormat.clock(
-      next.time,
-      locale,
-      use24Hour: MediaQuery.alwaysUse24HourFormatOf(context),
-    );
-    final countdown = LocalizedFormat.countdown(schedule.remaining, locale);
+    final clock = format.clock(next.time);
+    final countdown = format.countdown(schedule.remaining);
     final view = _NextPrayerView(
       name: name,
       tomorrow: schedule.nextIsTomorrow,
