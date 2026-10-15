@@ -11,6 +11,8 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../notifications/domain/entities/adhan_preferences.dart';
 import '../../../notifications/presentation/cubit/adhan_notifications_cubit.dart';
+import '../../../tracker/domain/entities/tracking_position.dart';
+import '../../../tracker/presentation/cubit/tracker_cubit.dart';
 import '../../domain/entities/prayer.dart';
 import '../../domain/entities/prayer_schedule.dart';
 import '../prayer_display.dart';
@@ -20,8 +22,8 @@ import '../prayer_display.dart';
 /// Phone: the rows in a [PrayerRowGroup] (the "Today" title sits above it).
 /// Tablet: a full-height card with the title inside and larger rows.
 ///
-/// The bells switch each prayer's adhan notification. Prayed checks are
-/// display-only until the tracker exists.
+/// The bells switch each prayer's adhan notification. The checks mark a
+/// prayer as prayed once its time has begun (see [prayerSlots]).
 class PrayerList extends StatelessWidget {
   const PrayerList({super.key, required this.schedule, this.tablet = false});
 
@@ -35,10 +37,13 @@ class PrayerList extends StatelessWidget {
       (cubit) => cubit.state.preferences,
     );
     final notifications = context.read<AdhanNotificationsCubit>();
+    final slots = prayerSlots(schedule);
+    final tracker = context.watch<TrackerCubit>();
 
     Widget row(PrayerTime entry) {
       final prayer = entry.prayer;
       final clock = format.clock(entry.time);
+      final slot = slots[prayer];
       return PrayerRow(
         icon: prayer.icon,
         name: prayer.localizedName,
@@ -48,6 +53,11 @@ class PrayerList extends StatelessWidget {
         // Sunrise has no adhan.
         onToggleAdhan: prayer.isObligatory
             ? (on) => notifications.setAdhan(prayer, on: on)
+            : null,
+        prayed:
+            slot != null && tracker.state.prayedOn(slot.day).contains(prayer),
+        onTogglePrayed: slot != null && slot.open
+            ? (prayed) => tracker.setPrayed(slot.day, prayer, prayed: prayed)
             : null,
         isCurrent: prayer == schedule.current.prayer,
         trackable: prayer.isObligatory,

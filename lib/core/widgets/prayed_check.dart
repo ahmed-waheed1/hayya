@@ -6,6 +6,8 @@ import 'hayya_icon.dart';
 import 'tap_target.dart';
 
 /// "Prayed" check box. 30 px standalone, 26 px inside a [PrayerRow].
+///
+/// A null [onChanged] (a prayer whose time hasn't come) dims the empty box.
 class PrayedCheck extends StatelessWidget {
   const PrayedCheck({
     super.key,
@@ -45,7 +47,12 @@ class PrayedCheck extends StatelessWidget {
             borderRadius: BorderRadius.circular((compact ? 9 : 10).r),
             border: value
                 ? null
-                : Border.all(color: outlineColor ?? c.faint, width: 2),
+                : Border.all(
+                    color: (outlineColor ?? c.faint).withValues(
+                      alpha: onChanged == null ? 0.4 : 1,
+                    ),
+                    width: 2,
+                  ),
           ),
           child: value
               ? Center(

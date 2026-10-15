@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/notifications/data/adhan_preferences_repository_impl.dart';
@@ -20,6 +21,10 @@ import '../../features/qibla/domain/compass_sensor.dart';
 import '../../features/qibla/presentation/cubit/qibla_cubit.dart';
 import '../../features/settings/presentation/cubit/location_settings_cubit.dart';
 import '../../features/settings/presentation/cubit/prayer_settings_cubit.dart';
+import '../../features/tracker/data/hive_tracker_repository.dart';
+import '../../features/tracker/domain/repositories/tracker_repository.dart';
+import '../../features/tracker/domain/usecases/get_tracking_position.dart';
+import '../../features/tracker/presentation/cubit/tracker_cubit.dart';
 import '../preferences/app_preferences.dart';
 import '../preferences/display_preferences.dart';
 import '../services/device_location_service.dart';
@@ -30,8 +35,12 @@ import '../theme/theme_mode_cubit.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> configureDependencies() async {
+/// [openTrackerBox] lets tests keep the tracker in memory.
+Future<void> configureDependencies({
+  Future<Box<dynamic>> Function() openTrackerBox = _openTrackerBox,
+}) async {
   final prefs = await SharedPreferences.getInstance();
+  final tracker = await HiveTrackerRepository.open(await openTrackerBox());
   getIt
     ..registerSingleton<AppPreferences>(AppPreferences(prefs))
     ..registerLazySingleton<ThemeModeCubit>(
@@ -108,5 +117,23 @@ Future<void> configureDependencies() async {
         locationService: getIt<LocationService>(),
         scheduler: getIt<AdhanScheduler>(),
       ),
+    )
+    // Tracker
+    ..registerSingleton<TrackerRepository>(tracker)
+    ..registerLazySingleton<TrackerCubit>(
+      () => TrackerCubit(getIt<TrackerRepository>()),
+    )
+    ..registerFactory<GetTrackingPosition>(
+      () => GetTrackingPosition(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        getSchedule: getIt<GetPrayerSchedule>(),
+      ),
     );
+}
+
+/// The tracker's box in the app's private documents directory.
+Future<Box<dynamic>> _openTrackerBox() async {
+  await Hive.initFlutter();
+  return Hive.openBox<dynamic>(HiveTrackerRepository.boxName);
 }

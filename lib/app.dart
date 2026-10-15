@@ -12,6 +12,7 @@ import 'core/utils/responsive.dart';
 import 'features/notifications/domain/adhan_scheduler.dart';
 import 'features/notifications/presentation/adhan_notifications_sync.dart';
 import 'features/notifications/presentation/cubit/adhan_notifications_cubit.dart';
+import 'features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'generated/locale_keys.g.dart';
 
 /// [HayyaApp] inside EasyLocalization, starting in [languageCode] (the
@@ -60,6 +61,7 @@ class _HayyaAppState extends State<HayyaApp> {
         BlocProvider.value(value: getIt<ThemeModeCubit>()),
         BlocProvider.value(value: getIt<DisplayPreferencesCubit>()),
         BlocProvider.value(value: getIt<AdhanNotificationsCubit>()),
+        BlocProvider.value(value: getIt<TrackerCubit>()),
       ],
       child: BlocBuilder<DisplayPreferencesCubit, DisplayPreferences>(
         builder: (context, display) => DisplayPreferencesScope(

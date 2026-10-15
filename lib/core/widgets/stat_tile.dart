@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../theme/hayya_radius.dart';
 import '../theme/theme_context.dart';
 import 'hayya_card.dart';
 import 'hayya_icon.dart';
@@ -16,6 +17,7 @@ class StatTile extends StatelessWidget {
     required this.value,
     this.unit,
     this.tone = StatTone.primary,
+    this.progress,
   });
 
   final HayyaIconData icon;
@@ -23,6 +25,9 @@ class StatTile extends StatelessWidget {
   final String value;
   final String? unit;
   final StatTone tone;
+
+  /// 0–1: adds a progress bar under the value.
+  final double? progress;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +75,16 @@ class StatTile extends StatelessWidget {
                 .style(30, FontWeight.w800, tabular: true, height: 1.1)
                 .copyWith(color: c.text),
           ),
+          if (progress != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(HayyaRadius.full),
+              child: LinearProgressIndicator(
+                value: progress!.clamp(0.0, 1.0),
+                minHeight: 6.r,
+                color: tone == StatTone.gold ? c.gold : c.primary,
+                backgroundColor: c.surface2,
+              ),
+            ),
         ],
       ),
     );
