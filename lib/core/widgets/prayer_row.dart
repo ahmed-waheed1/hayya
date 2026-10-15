@@ -66,15 +66,23 @@ class PrayerRow extends StatelessWidget {
         ? (c.text, c.muted, FontWeight.w700)
         : (c.muted, c.muted, FontWeight.w600);
 
-    final nameText = Text(
-      name,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: type.style(m.name, weight).copyWith(color: ink),
+    final nameStyle = type.style(m.name, weight).copyWith(color: ink);
+    final timeSpan = TextSpan(
+      text: time,
+      style: type.style(m.time, weight, tabular: true).copyWith(color: ink),
+      children: [
+        if (meridiem.isNotEmpty)
+          TextSpan(
+            text: ' $meridiem',
+            style: type.style(m.meridiem, weight).copyWith(color: meridiemInk),
+          ),
+      ],
     );
 
     return Container(
-      height: large ? 76.r : HayyaSpacing.listRowHeight,
+      constraints: BoxConstraints(
+        minHeight: large ? 76.r : HayyaSpacing.listRowHeight,
+      ),
       padding: EdgeInsetsDirectional.only(start: m.start.r, end: m.end.r),
       decoration: BoxDecoration(
         color: isCurrent ? c.primarySoft : null,
@@ -93,44 +101,14 @@ class PrayerRow extends StatelessWidget {
             ),
             child: HayyaIcon(icon, size: m.icon, color: tileFg),
           ),
-          // NOW sits under the name, not beside it: inline, the current row
-          // needs 336–376 px and a phone row is ~338 px.
           Expanded(
-            child: isCurrent
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 2.r,
-                    children: [
-                      nameText,
-                      _NowBadge(fontSize: m.badge),
-                    ],
-                  )
-                : nameText,
-          ),
-          // Capped and scaled down rather than squeezing the name to nothing
-          // under large accessibility text sizes.
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: m.timeMaxWidth.r),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text.rich(
-                TextSpan(
-                  text: time,
-                  children: [
-                    if (meridiem.isNotEmpty)
-                      TextSpan(
-                        text: ' $meridiem',
-                        style: type
-                            .style(m.meridiem, weight)
-                            .copyWith(color: meridiemInk),
-                      ),
-                  ],
-                ),
-                style: type
-                    .style(m.time, weight, tabular: true)
-                    .copyWith(color: ink),
-              ),
+            child: _NameAndTime(
+              name: name,
+              nameStyle: nameStyle,
+              time: timeSpan,
+              isCurrent: isCurrent,
+              badgeSize: m.badge,
+              gap: m.gap.r,
             ),
           ),
           AdhanToggle(
@@ -157,6 +135,69 @@ class PrayerRow extends StatelessWidget {
                 child: Container(width: 12.r, height: 2, color: c.faint),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The name (with NOW under it on the current row) and the time.
+///
+/// Side by side, as designed, when both fit. With text too large for that,
+/// the time wraps under the name and the row grows taller. Either one
+/// shrinks only if it can't fit a line on its own.
+class _NameAndTime extends StatelessWidget {
+  const _NameAndTime({
+    required this.name,
+    required this.nameStyle,
+    required this.time,
+    required this.isCurrent,
+    required this.badgeSize,
+    required this.gap,
+  });
+
+  final String name;
+  final TextStyle nameStyle;
+  final TextSpan time;
+  final bool isCurrent;
+  final double badgeSize;
+  final double gap;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget fit(Widget child) => FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: AlignmentDirectional.centerStart,
+      child: child,
+    );
+
+    final nameText = fit(
+      Text(name, maxLines: 1, softWrap: false, style: nameStyle),
+    );
+
+    return Padding(
+      padding: EdgeInsetsDirectional.symmetric(vertical: 6.r),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: gap,
+        runSpacing: 2.r,
+        children: [
+          // NOW sits under the name, not beside it: inline, the current
+          // row needs 336–376 px and a phone row is ~338 px.
+          if (isCurrent)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2.r,
+              children: [
+                nameText,
+                _NowBadge(fontSize: badgeSize),
+              ],
+            )
+          else
+            nameText,
+          fit(Text.rich(time, maxLines: 1, softWrap: false)),
         ],
       ),
     );
@@ -195,13 +236,12 @@ class _RowMetrics {
     required this.badge,
     required this.time,
     required this.meridiem,
-    required this.timeMaxWidth,
     required this.bell,
     required this.check,
   });
 
   final double start, end, gap, tile, tileRadius, icon, name, badge;
-  final double time, meridiem, timeMaxWidth, bell, check;
+  final double time, meridiem, bell, check;
 
   static const regular = _RowMetrics(
     start: 12,
@@ -214,7 +254,6 @@ class _RowMetrics {
     badge: 11,
     time: 17,
     meridiem: 12,
-    timeMaxWidth: 88,
     bell: 21,
     check: 26,
   );
@@ -230,7 +269,6 @@ class _RowMetrics {
     badge: 12,
     time: 24,
     meridiem: 14,
-    timeMaxWidth: 124,
     bell: 23,
     check: 28,
   );

@@ -48,23 +48,27 @@ class HayyaNavBar extends StatelessWidget {
           8.r,
           bottomInset > 18.r ? bottomInset : 18.r,
         ),
-        child: SizedBox(
-          height: 60.r,
-          child: Row(
-            children: [
-              for (final (i, item) in items.indexed)
-                Expanded(
-                  child: _NavDestination(
-                    item: item,
-                    selected: i == selectedIndex,
-                    onTap: () => onSelect(i),
-                    pillSize: Size(60.r, 32.r),
-                    iconSize: 22,
-                    gap: 4.r,
-                    labelSize: 12,
+        // Taller than the design's 60 px only when large text needs it.
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 60.r),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (i, item) in items.indexed)
+                  Expanded(
+                    child: _NavDestination(
+                      item: item,
+                      selected: i == selectedIndex,
+                      onTap: () => onSelect(i),
+                      pillSize: Size(60.r, 32.r),
+                      iconSize: 22,
+                      gap: 4.r,
+                      labelSize: 12,
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -112,9 +116,9 @@ class HayyaNavRail extends StatelessWidget {
                   child: const _BrandMark(),
                 ),
                 for (final (i, item) in items.indexed)
-                  SizedBox(
-                    width: 88.r,
-                    height: 68.r,
+                  ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(width: 88.r)
+                        .copyWith(minHeight: 68.r),
                     child: _NavDestination(
                       item: item,
                       selected: i == selectedIndex,
@@ -149,12 +153,16 @@ class _BrandMark extends StatelessWidget {
           color: c.primary,
           borderRadius: BorderRadius.circular(HayyaRadius.lg),
         ),
-        child: Text(
-          LocaleKeys.brand_mark.tr(),
-          textDirection: TextDirection.rtl,
-          style: context.type
-              .arabic(20, FontWeight.w800)
-              .copyWith(color: c.onPrimary),
+        // A logo, not body text: it shrinks back into its tile.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            LocaleKeys.brand_mark.tr(),
+            textDirection: TextDirection.rtl,
+            style: context.type
+                .arabic(20, FontWeight.w800)
+                .copyWith(color: c.onPrimary),
+          ),
         ),
       ),
     );
@@ -191,6 +199,7 @@ class _NavDestination extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: gap,
           children: [
@@ -210,17 +219,21 @@ class _NavDestination extends StatelessWidget {
                 strokeWidth: 1.9,
               ),
             ),
-            Text(
-              item.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.type
-                  .style(
-                    labelSize,
-                    selected ? FontWeight.w800 : FontWeight.w600,
-                    height: 1.2,
-                  )
-                  .copyWith(color: ink),
+            // Shrinks rather than cutting the label short.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                item.label,
+                maxLines: 1,
+                softWrap: false,
+                style: context.type
+                    .style(
+                      labelSize,
+                      selected ? FontWeight.w800 : FontWeight.w600,
+                      height: 1.2,
+                    )
+                    .copyWith(color: ink),
+              ),
             ),
           ],
         ),

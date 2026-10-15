@@ -22,6 +22,7 @@ import 'widgets/home_header.dart';
 import 'widgets/home_skeleton.dart';
 import 'widgets/location_status_view.dart';
 import 'widgets/next_prayer_card.dart';
+import 'widgets/overlap_layout.dart';
 import 'widgets/prayer_list.dart';
 import 'widgets/timetable_link.dart';
 
@@ -202,17 +203,18 @@ class _TodayTitle extends StatelessWidget {
         0,
         HayyaSpacing.s1,
       ),
-      child: Row(
+      // With large text the link moves under the title.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(
-                LocaleKeys.home_today.tr(),
-                style: context.type
-                    .style(18, FontWeight.w800)
-                    .copyWith(color: context.colors.text),
-              ),
+          Semantics(
+            header: true,
+            child: Text(
+              LocaleKeys.home_today.tr(),
+              style: context.type
+                  .style(18, FontWeight.w800)
+                  .copyWith(color: context.colors.text),
             ),
           ),
           const TimetableLink(),
@@ -223,7 +225,8 @@ class _TodayTitle extends StatelessWidget {
 }
 
 /// Phone Home: the header under the status bar, the hero card overlapping
-/// its bottom 92 px, then the "Today" list.
+/// its bottom 92 px, then the "Today" list. The header grows past its
+/// 200 px with large text.
 class _PhoneFrame extends StatelessWidget {
   const _PhoneFrame({
     required this.header,
@@ -239,37 +242,30 @@ class _PhoneFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headerHeight = MediaQuery.paddingOf(context).top + 200.r;
     return SingleChildScrollView(
-      child: Stack(
-        children: [
-          PositionedDirectional(
-            top: 0,
-            start: 0,
-            end: 0,
-            height: headerHeight,
-            child: header,
+      child: OverlapLayout(
+        minHeaderHeight: MediaQuery.paddingOf(context).top + 200.r,
+        overlap: 92.r,
+        header: header,
+        body: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(
+            HayyaSpacing.s4,
+            0,
+            HayyaSpacing.s4,
+            HayyaSpacing.s6,
           ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              HayyaSpacing.s4,
-              headerHeight - 92.r,
-              HayyaSpacing.s4,
-              HayyaSpacing.s6,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [hero, list, ?footer],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [hero, list, ?footer],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
 /// Tablet Home: a shorter header with the hero and list side by side
-/// over it. When the space is too narrow for both columns (portrait), the
+/// over it (the header grows with large text). When the space is too narrow for both columns (portrait), the
 /// list moves under the hero.
 class _TabletFrame extends StatelessWidget {
   const _TabletFrame({
@@ -322,25 +318,19 @@ class _TabletFrame extends StatelessWidget {
               );
 
         return SingleChildScrollView(
-          child: Stack(
-            children: [
-              PositionedDirectional(
-                top: 0,
-                start: 0,
-                end: 0,
-                height: headerHeight,
-                child: header,
+          child: OverlapLayout(
+            minHeaderHeight: headerHeight,
+            overlap: headerHeight - contentTop,
+            header: header,
+            body: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(
+                gutter,
+                0,
+                gutter,
+                gutter,
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(
-                  gutter,
-                  contentTop,
-                  gutter,
-                  gutter,
-                ),
-                child: content,
-              ),
-            ],
+              child: content,
+            ),
           ),
         );
       },
