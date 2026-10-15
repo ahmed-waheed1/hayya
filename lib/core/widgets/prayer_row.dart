@@ -89,12 +89,18 @@ class PrayerRow extends StatelessWidget {
             ),
             child: HayyaIcon(icon, size: 20, color: tileFg),
           ),
-          if (isCurrent) ...[
-            Flexible(child: nameText),
-            const _NowBadge(),
-            const Spacer(),
-          ] else
-            Expanded(child: nameText),
+          // NOW sits under the name, not beside it: inline, the current row
+          // needs 336–376 px and a phone row is ~338 px.
+          Expanded(
+            child: isCurrent
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 2.r,
+                    children: [nameText, const _NowBadge()],
+                  )
+                : nameText,
+          ),
           // Capped and scaled down rather than squeezing the name to nothing
           // under large accessibility text sizes.
           ConstrainedBox(
@@ -176,7 +182,7 @@ class _NowBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.r, vertical: 4.r),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 6.r, vertical: 1.r),
       decoration: BoxDecoration(
         color: c.primary,
         borderRadius: BorderRadius.circular(HayyaRadius.full),
@@ -184,7 +190,7 @@ class _NowBadge extends StatelessWidget {
       child: Text(
         LocaleKeys.prayers_now.tr(),
         style: context.type
-            .style(11, FontWeight.w800, trackingEm: 0.06, height: 1.2)
+            .style(11, FontWeight.w800, trackingEm: 0.06)
             .copyWith(color: c.onPrimary),
       ),
     );
