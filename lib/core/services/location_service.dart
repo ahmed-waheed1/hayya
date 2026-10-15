@@ -38,6 +38,9 @@ abstract interface class LocationService {
   /// The most recent successful [locate] result, from any session.
   UserLocation? get lastKnown;
 
+  /// Emits each location [locate] finds and caches.
+  Stream<UserLocation> get changes;
+
   /// Finds the current location and caches it.
   ///
   /// With [requestPermission] false, a missing permission fails straight

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/hayya_radius.dart';
@@ -8,6 +9,8 @@ import '../../../../core/theme/theme_context.dart';
 import '../../../../core/utils/localized_format.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../notifications/domain/entities/adhan_preferences.dart';
+import '../../../notifications/presentation/cubit/adhan_notifications_cubit.dart';
 import '../../domain/entities/prayer.dart';
 import '../../domain/entities/prayer_schedule.dart';
 import '../prayer_display.dart';
@@ -17,8 +20,8 @@ import '../prayer_display.dart';
 /// Phone: the rows in a [PrayerRowGroup] (the "Today" title sits above it).
 /// Tablet: a full-height card with the title inside and larger rows.
 ///
-/// Adhan bells and prayed checks are display-only until notifications and
-/// the tracker exist.
+/// The bells switch each prayer's adhan notification. Prayed checks are
+/// display-only until the tracker exists.
 class PrayerList extends StatelessWidget {
   const PrayerList({super.key, required this.schedule, this.tablet = false});
 
@@ -29,6 +32,10 @@ class PrayerList extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = context.locale;
     final use24Hour = MediaQuery.alwaysUse24HourFormatOf(context);
+    final adhan = context.select<AdhanNotificationsCubit, AdhanPreferences>(
+      (cubit) => cubit.state.preferences,
+    );
+    final notifications = context.read<AdhanNotificationsCubit>();
 
     Widget row(PrayerTime entry) {
       final prayer = entry.prayer;
@@ -42,8 +49,11 @@ class PrayerList extends StatelessWidget {
         name: prayer.localizedName,
         time: clock.time,
         meridiem: clock.meridiem,
-        adhanOn: prayer.isObligatory,
-        onToggleAdhan: null,
+        adhanOn: adhan.isEnabled(prayer),
+        // Sunrise has no adhan.
+        onToggleAdhan: prayer.isObligatory
+            ? (on) => notifications.setAdhan(prayer, on: on)
+            : null,
         isCurrent: prayer == schedule.current.prayer,
         trackable: prayer.isObligatory,
         large: tablet,

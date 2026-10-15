@@ -46,6 +46,21 @@ abstract class LocaleKeys {
   static const settings_adhan_notification = 'settings.adhan_notification';
   static const settings_language_english = 'settings.language_english';
   static const settings_language_arabic = 'settings.language_arabic';
+  static const settings_notifications = 'settings.notifications';
+  static const settings_pre_adhan_reminder = 'settings.pre_adhan_reminder';
+  static const settings_pre_adhan_reminder_sub =
+      'settings.pre_adhan_reminder_sub';
+  static const settings_reminder_minutes = 'settings.reminder_minutes';
+  static const settings_notifications_off_title =
+      'settings.notifications_off_title';
+  static const settings_notifications_off_body =
+      'settings.notifications_off_body';
+  static const settings_turn_on = 'settings.turn_on';
+  static const settings_exact_alarms_title = 'settings.exact_alarms_title';
+  static const settings_exact_alarms_body = 'settings.exact_alarms_body';
+  static const settings_allow = 'settings.allow';
+  static const settings_test_adhan = 'settings.test_adhan';
+  static const settings_test_adhan_scheduled = 'settings.test_adhan_scheduled';
   static const settings = 'settings';
   static const home_today = 'home.today';
   static const home_remaining = 'home.remaining';
@@ -129,4 +144,16 @@ abstract class LocaleKeys {
   static const design_preview_light = 'design_preview.light';
   static const design_preview_dark = 'design_preview.dark';
   static const design_preview = 'design_preview';
+  static const notifications_adhan_title = 'notifications.adhan_title';
+  static const notifications_adhan_body = 'notifications.adhan_body';
+  static const notifications_reminder_title = 'notifications.reminder_title';
+  static const notifications_reminder_body = 'notifications.reminder_body';
+  static const notifications_adhan_channel = 'notifications.adhan_channel';
+  static const notifications_adhan_channel_description =
+      'notifications.adhan_channel_description';
+  static const notifications_reminder_channel =
+      'notifications.reminder_channel';
+  static const notifications_reminder_channel_description =
+      'notifications.reminder_channel_description';
+  static const notifications = 'notifications';
 }

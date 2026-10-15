@@ -7,6 +7,10 @@ import 'package:hayya/app.dart';
 import 'package:hayya/core/di/injection.dart';
 import 'package:hayya/core/preferences/app_preferences.dart';
 import 'package:hayya/core/services/location_service.dart';
+import 'package:hayya/core/services/notification_service.dart';
+import 'package:hayya/features/notifications/domain/adhan_scheduler.dart';
+import 'package:hayya/features/notifications/domain/repositories/adhan_preferences_repository.dart';
+import 'package:hayya/features/notifications/domain/usecases/plan_adhan_notifications.dart';
 import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_repository.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
@@ -14,6 +18,7 @@ import 'package:hayya/features/prayer_times/presentation/cubit/prayer_times_cubi
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_location_service.dart';
+import 'fake_notification_service.dart';
 
 const phoneSize = Size(390, 844);
 const tabletSize = Size(1194, 834);
@@ -58,13 +63,16 @@ Future<void> loadFonts(WidgetTester tester) async {
 /// Boots the full app (DI, preferences, translations, router) at [size].
 ///
 /// Location comes from [location] (by default Cairo, cached and found).
-/// [now] fixes the clock Home calculates with.
+/// [now] fixes the clock Home and the adhan schedule use. Notifications go to
+/// [notifications] (by default a fresh fake), never the plugin.
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
   Map<String, Object> prefs = const {},
   LocationService? location,
   DateTime Function()? now,
+  NotificationService? notifications,
+  AssetLoader? assetLoader,
 }) async {
   tester.view
     ..physicalSize = size
@@ -82,6 +90,21 @@ Future<void> pumpHayyaApp(
     ..registerSingleton<LocationService>(
       location ?? FakeLocationService(lastKnown: cairo),
     )
+    ..unregister<NotificationService>()
+    ..registerSingleton<NotificationService>(
+      notifications ?? FakeNotificationService(),
+    )
+    ..unregister<AdhanScheduler>()
+    ..registerLazySingleton<AdhanScheduler>(
+      () => AdhanScheduler(
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        preferencesRepository: getIt<AdhanPreferencesRepository>(),
+        notifications: getIt<NotificationService>(),
+        plan: getIt<PlanAdhanNotifications>(),
+        clock: now ?? DateTime.now,
+      ),
+    )
     ..unregister<PrayerTimesCubit>()
     ..registerFactory<PrayerTimesCubit>(
       () => PrayerTimesCubit(
@@ -95,6 +118,11 @@ Future<void> pumpHayyaApp(
   await EasyLocalization.ensureInitialized();
 
   await loadFonts(tester);
-  await tester.pumpWidget(localizedApp(getIt<AppPreferences>().languageCode));
+  await tester.pumpWidget(
+    localizedApp(
+      getIt<AppPreferences>().languageCode,
+      assetLoader: assetLoader ?? const RootBundleAssetLoader(),
+    ),
+  );
   await settle(tester);
 }

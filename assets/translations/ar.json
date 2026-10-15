@@ -53,7 +53,19 @@
     "method_egyptian": "الهيئة المصرية العامة للمساحة",
     "adhan_notification": "إشعار الأذان",
     "language_english": "English",
-    "language_arabic": "العربية"
+    "language_arabic": "العربية",
+    "notifications": "الإشعارات",
+    "pre_adhan_reminder": "تذكير قبل الأذان",
+    "pre_adhan_reminder_sub": "نغمة هادئة قبل كل صلاة",
+    "reminder_minutes": "{} د",
+    "notifications_off_title": "الإشعارات متوقفة",
+    "notifications_off_body": "فعّلها لتسمع الأذان عند كل صلاة.",
+    "turn_on": "تفعيل",
+    "exact_alarms_title": "قد يتأخر الأذان",
+    "exact_alarms_body": "اسمح بالمنبّهات والتذكيرات ليُرفع الأذان في وقته.",
+    "allow": "سماح",
+    "test_adhan": "تجربة الأذان بعد دقيقة",
+    "test_adhan_scheduled": "تمت جدولة تجربة الأذان. اقفل الهاتف وانتظر دقيقة."
   },
   "home": {
     "today": "اليوم",
@@ -154,5 +166,21 @@
     "icons": "الأيقونات",
     "light": "فاتح",
     "dark": "داكن"
+  },
+  "notifications": {
+    "adhan_title": "حان الآن موعد صلاة {}",
+    "adhan_body": "حيّ على الصلاة",
+    "reminder_title": {
+      "one": "بقيت دقيقة على أذان {prayer}",
+      "two": "بقيت دقيقتان على أذان {prayer}",
+      "few": "بقيت {minutes} دقائق على أذان {prayer}",
+      "many": "بقيت {minutes} دقيقة على أذان {prayer}",
+      "other": "بقيت {minutes} دقيقة على أذان {prayer}"
+    },
+    "reminder_body": "استعد للصلاة، الأذان الساعة {}.",
+    "adhan_channel": "الأذان",
+    "adhan_channel_description": "يُرفع الأذان عند دخول وقت كل صلاة.",
+    "reminder_channel": "التذكير قبل الأذان",
+    "reminder_channel_description": "نغمة هادئة قبل كل صلاة."
   }
 }

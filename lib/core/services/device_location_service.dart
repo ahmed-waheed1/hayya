@@ -19,6 +19,7 @@ class DeviceLocationService implements LocationService {
 
   final SharedPreferences _prefs;
   final Geocoding _geocoding;
+  final _changes = StreamController<UserLocation>.broadcast();
 
   static const _cacheKey = 'last_location';
 
@@ -52,6 +53,9 @@ class DeviceLocationService implements LocationService {
   }
 
   @override
+  Stream<UserLocation> get changes => _changes.stream;
+
+  @override
   Future<LocationResult> locate({bool requestPermission = true}) async {
     final permission = await _ensurePermission(request: requestPermission);
     if (permission != null) return LocationFailed(permission);
@@ -82,6 +86,7 @@ class DeviceLocationService implements LocationService {
       placeNames: await _placeNames(position),
     );
     await _prefs.setString(_cacheKey, jsonEncode(location.toJson()));
+    _changes.add(location);
     return LocationFound(location);
   }
 

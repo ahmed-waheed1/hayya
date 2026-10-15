@@ -23,6 +23,10 @@ class FakeLocationService implements LocationService {
   UserLocation? lastKnown;
 
   final Queue<LocationResult> _results;
+  final _changes = StreamController<UserLocation>.broadcast(sync: true);
+
+  @override
+  Stream<UserLocation> get changes => _changes.stream;
 
   /// When set, [locate] waits for it before answering.
   Completer<void>? gate;
@@ -38,7 +42,10 @@ class FakeLocationService implements LocationService {
     final result = _results.length > 1
         ? _results.removeFirst()
         : _results.first;
-    if (result case LocationFound(:final location)) lastKnown = location;
+    if (result case LocationFound(:final location)) {
+      lastKnown = location;
+      _changes.add(location);
+    }
     return result;
   }
 

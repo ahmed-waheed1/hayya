@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/di/injection.dart';
 import '../../../core/preferences/language_switcher.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/hayya_spacing.dart';
@@ -12,9 +13,11 @@ import '../../../core/theme/theme_context.dart';
 import '../../../core/theme/theme_mode_cubit.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../../notifications/domain/adhan_scheduler.dart';
+import '../../notifications/presentation/widgets/notification_settings_group.dart';
 
-/// Settings, so far only the "General" group (language, theme) from the
-/// design. The other groups come with their features.
+/// Settings, so far the "General" (language, theme) and "Notifications"
+/// groups from the design. The other groups come with their features.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -55,13 +58,27 @@ class SettingsScreen extends StatelessWidget {
               title: LocaleKeys.settings_general.tr(),
               child: const _GeneralGroup(),
             ),
+            SizedBox(height: 22.r),
+            _Section(
+              title: LocaleKeys.settings_notifications.tr(),
+              child: const NotificationSettingsGroup(),
+            ),
             if (kDebugMode) ...[
               SizedBox(height: 22.r),
               _Section(
                 title: LocaleKeys.settings_developer.tr(),
-                child: SettingsTile(
-                  title: LocaleKeys.design_preview_title.tr(),
-                  onTap: () => context.push(AppRoutes.designPreview),
+                child: Column(
+                  spacing: HayyaSpacing.s2,
+                  children: [
+                    SettingsTile(
+                      title: LocaleKeys.design_preview_title.tr(),
+                      onTap: () => context.push(AppRoutes.designPreview),
+                    ),
+                    SettingsTile(
+                      title: LocaleKeys.settings_test_adhan.tr(),
+                      onTap: () => _testAdhan(context),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -70,6 +87,14 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Debug only: a real adhan notification one minute from now.
+Future<void> _testAdhan(BuildContext context) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final message = LocaleKeys.settings_test_adhan_scheduled.tr();
+  await getIt<AdhanScheduler>().scheduleTest();
+  messenger.showSnackBar(SnackBar(content: Text(message)));
 }
 
 class _Section extends StatelessWidget {

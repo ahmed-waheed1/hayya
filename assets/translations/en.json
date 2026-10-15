@@ -50,7 +50,19 @@
     "method_egyptian": "Egyptian General Authority",
     "adhan_notification": "Adhan notification",
     "language_english": "English",
-    "language_arabic": "العربية"
+    "language_arabic": "العربية",
+    "notifications": "NOTIFICATIONS",
+    "pre_adhan_reminder": "Pre-adhan reminder",
+    "pre_adhan_reminder_sub": "A gentle tone before each prayer",
+    "reminder_minutes": "{} min",
+    "notifications_off_title": "Notifications are off",
+    "notifications_off_body": "Turn them on to hear the adhan at each prayer time.",
+    "turn_on": "Turn on",
+    "exact_alarms_title": "The adhan may be late",
+    "exact_alarms_body": "Allow alarms & reminders so the adhan plays on time.",
+    "allow": "Allow",
+    "test_adhan": "Test adhan in 1 minute",
+    "test_adhan_scheduled": "Test adhan scheduled. Lock the phone and wait a minute."
   },
   "home": {
     "today": "Today",
@@ -142,5 +154,18 @@
     "icons": "Icons",
     "light": "Light",
     "dark": "Dark"
+  },
+  "notifications": {
+    "adhan_title": "It’s time for {}",
+    "adhan_body": "Hayya ‘ala as-salah — come to prayer.",
+    "reminder_title": {
+      "one": "{prayer} in 1 minute",
+      "other": "{prayer} in {minutes} minutes"
+    },
+    "reminder_body": "Get ready — the adhan is at {}.",
+    "adhan_channel": "Adhan",
+    "adhan_channel_description": "Plays the adhan when each prayer time begins.",
+    "reminder_channel": "Pre-adhan reminders",
+    "reminder_channel_description": "A gentle tone before each prayer."
   }
 }
