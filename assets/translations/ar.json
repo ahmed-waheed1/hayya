@@ -308,7 +308,8 @@
       "shawwal": "شوال",
       "dhu_al_qadah": "ذو القعدة",
       "dhu_al_hijjah": "ذو الحجة"
-    }
+    },
+    "month_pattern": "MMMM y"
   },
   "compass": {
     "n": "شمال",
@@ -397,5 +398,32 @@
     "no_sensor_title": "لا يوجد مستشعر بوصلة",
     "no_sensor_body": "لا يستطيع جهازك تحديد الاتجاه. اتجه نحو الشمال ثم استدر {}° باتجاه عقارب الساعة — الكعبة على امتداد الخط الذهبي.",
     "retry": "إعادة المحاولة"
+  },
+  "timetable": {
+    "title": "جدول الشهر",
+    "back": "رجوع إلى الرئيسية",
+    "previous_month": "الشهر السابق",
+    "next_month": "الشهر التالي",
+    "day": "اليوم",
+    "hijri": "هجري",
+    "hijri_month": "{} {}",
+    "hijri_range_same_year": "{} – {} {}",
+    "hijri_range": "{} {} – {} {}",
+    "meta": "{} · {} · {}",
+    "row_label": "{}، {}",
+    "row_label_today": "اليوم، {}، {}",
+    "time_label": "{} {}",
+    "list_separator": "، ",
+    "no_location_title": "لا يوجد موقع بعد",
+    "no_location_body": "افتح الرئيسية لتحديد موقعك، ثم عد لترى مواقيت الشهر.",
+    "weekdays": {
+      "mon": "إثن",
+      "tue": "ثلا",
+      "wed": "أرب",
+      "thu": "خمي",
+      "fri": "جمع",
+      "sat": "سبت",
+      "sun": "أحد"
+    }
   }
 }

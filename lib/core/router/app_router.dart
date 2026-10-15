@@ -6,11 +6,13 @@ import '../../features/design_preview/presentation/design_preview_screen.dart';
 import '../../features/prayer_times/presentation/home_screen.dart';
 import '../../features/qibla/presentation/qibla_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/timetable/presentation/timetable_screen.dart';
 import '../../features/tracker/presentation/tracker_screen.dart';
 import 'app_shell.dart';
 
 abstract final class AppRoutes {
   static const home = '/home';
+  static const timetable = '/home/timetable';
   static const qibla = '/qibla';
   static const tracker = '/tracker';
   static const settings = '/settings';
@@ -35,6 +37,13 @@ GoRouter createAppRouter() {
               GoRoute(
                 path: AppRoutes.home,
                 builder: (context, state) => const HomeScreen(),
+                routes: [
+                  // Inside the Home branch: the bar/rail stays, Home selected.
+                  GoRoute(
+                    path: 'timetable',
+                    builder: (context, state) => const TimetableScreen(),
+                  ),
+                ],
               ),
             ],
           ),

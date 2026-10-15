@@ -69,6 +69,11 @@ abstract final class HayyaIcons {
   static const calendar = HayyaIconData(
     'M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 9.5h16M8 2.5v3M16 2.5v3M8 13.5h2M14 13.5h2M8 17h2M14 17h2',
   );
+
+  /// Calendar without day marks: the monthly timetable link.
+  static const timetable = HayyaIconData(
+    'M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 9.5h16M8 2.5v3M16 2.5v3',
+  );
   static const search = HayyaIconData(
     'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4',
   );
@@ -120,9 +125,10 @@ abstract final class HayyaIcons {
 
   static const all = [
     home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
-    bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, search, //
-    language, theme, sound, streak, calibrate, reminder, retry, add, minus,
-    numerals, turn, compassOff, qiblaOff, back, chevron, insight,
+    bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, //
+    timetable, search, language, theme, sound, streak, calibrate, reminder, //
+    retry, add, minus, numerals, turn, compassOff, qiblaOff, back, chevron,
+    insight,
   ];
 }
 

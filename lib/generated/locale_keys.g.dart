@@ -281,6 +281,7 @@ abstract class LocaleKeys {
   static const dates_hijri_months_dhu_al_hijjah =
       'dates.hijri_months.dhu_al_hijjah';
   static const dates_hijri_months = 'dates.hijri_months';
+  static const dates_month_pattern = 'dates.month_pattern';
   static const dates = 'dates';
   static const compass_n = 'compass.n';
   static const compass_ne = 'compass.ne';
@@ -362,4 +363,30 @@ abstract class LocaleKeys {
   static const qibla_no_sensor_body = 'qibla.no_sensor_body';
   static const qibla_retry = 'qibla.retry';
   static const qibla = 'qibla';
+  static const timetable_title = 'timetable.title';
+  static const timetable_back = 'timetable.back';
+  static const timetable_previous_month = 'timetable.previous_month';
+  static const timetable_next_month = 'timetable.next_month';
+  static const timetable_day = 'timetable.day';
+  static const timetable_hijri = 'timetable.hijri';
+  static const timetable_hijri_month = 'timetable.hijri_month';
+  static const timetable_hijri_range_same_year =
+      'timetable.hijri_range_same_year';
+  static const timetable_hijri_range = 'timetable.hijri_range';
+  static const timetable_meta = 'timetable.meta';
+  static const timetable_row_label = 'timetable.row_label';
+  static const timetable_row_label_today = 'timetable.row_label_today';
+  static const timetable_time_label = 'timetable.time_label';
+  static const timetable_list_separator = 'timetable.list_separator';
+  static const timetable_no_location_title = 'timetable.no_location_title';
+  static const timetable_no_location_body = 'timetable.no_location_body';
+  static const timetable_weekdays_mon = 'timetable.weekdays.mon';
+  static const timetable_weekdays_tue = 'timetable.weekdays.tue';
+  static const timetable_weekdays_wed = 'timetable.weekdays.wed';
+  static const timetable_weekdays_thu = 'timetable.weekdays.thu';
+  static const timetable_weekdays_fri = 'timetable.weekdays.fri';
+  static const timetable_weekdays_sat = 'timetable.weekdays.sat';
+  static const timetable_weekdays_sun = 'timetable.weekdays.sun';
+  static const timetable_weekdays = 'timetable.weekdays';
+  static const timetable = 'timetable';
 }

@@ -97,6 +97,15 @@ class LocalizedFormat extends Equatable {
     return digits(format.format(date));
   }
 
+  /// "October 2026"; the pattern lives in the translations.
+  String monthYear(DateTime month) {
+    final format = DateFormat(
+      LocaleKeys.dates_month_pattern.tr(),
+      locale.toLanguageTag(),
+    )..useNativeDigits = false;
+    return digits(format.format(month));
+  }
+
   /// "30.04°N 31.24°E".
   String coordinates(GeoCoordinates at) {
     String part(double value, String positive, String negative) =>
