@@ -20,7 +20,7 @@ Resources.
 | --- | --- | --- | --- |
 | Android | `android/app/src/main/res/raw/adhan.mp3` | MP3 (or OGG as `adhan.ogg`, never both) | Lower-case letters, digits and `_` only. Plays in full. |
 | iOS | `ios/Runner/adhan.caf`, in the Runner target's resources | CAF, Linear PCM or IMA4, **30 s or less** | Longer or missing files play the default sound instead. |
-| In-app preview (later) | `assets/sounds/adhan.mp3` | MP3 | Not used for notifications. Nothing reads it yet. |
+| Source / in-app preview (later) | `assets/sounds/adhan.mp3` | MP3 | The source recording. **Not bundled**: `assets/sounds/` is left out of `pubspec.yaml` until the preview exists, so the app doesn't ship an unused 1.5 MB copy. Add it back then. |
 
 ## Changing a sound later
 
