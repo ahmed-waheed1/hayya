@@ -1,5 +1,13 @@
 {
   "app_name": "حيّ",
+  "brand_mark": "حيّ",
+  "nav": {
+    "label": "التنقل الرئيسي",
+    "home": "الرئيسية",
+    "qibla": "القبلة",
+    "tracker": "المتابعة",
+    "settings": "الإعدادات"
+  },
   "prayers": {
     "fajr": "الفجر",
     "sunrise": "الشروق",
@@ -33,6 +41,11 @@
     }
   },
   "settings": {
+    "title": "الإعدادات",
+    "general": "عام",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "developer": "المطوّر",
     "theme_light": "فاتح",
     "theme_dark": "داكن",
     "theme_system": "النظام",
@@ -45,7 +58,8 @@
   "common": {
     "disabled": "معطّل",
     "on": "تشغيل",
-    "off": "إيقاف"
+    "off": "إيقاف",
+    "coming_soon": "قريبًا"
   },
   "design_preview": {
     "title": "نظام التصميم",

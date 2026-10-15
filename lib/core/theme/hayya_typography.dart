@@ -98,6 +98,18 @@ class HayyaTypography extends ThemeExtension<HayyaTypography> {
     tabular: tabular,
   );
 
+  /// Cairo in every locale, for Arabic text that doesn't follow the UI
+  /// language (the "حيّ" brand mark).
+  TextStyle arabic(double size, FontWeight weight, {double height = 1.2}) =>
+      _font(
+        true,
+        size: size,
+        height: height,
+        weight: weight,
+        trackingEm: 0,
+        tabular: false,
+      );
+
   static TextStyle _font(
     bool isArabic, {
     required double size,

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app.dart';
 import 'core/di/injection.dart';
+import 'core/preferences/app_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,14 +18,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await configureDependencies();
 
-  runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      path: 'assets/translations',
-      fallbackLocale: const Locale('en'),
-      child: const HayyaApp(),
-    ),
-  );
+  runApp(localizedApp(getIt<AppPreferences>().languageCode));
 }
 
 /// Bundled fonts are SIL OFL; their licenses must ship with the app and

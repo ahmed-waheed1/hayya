@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/preferences/language_switcher.dart';
 import '../../../core/theme/hayya_spacing.dart';
 import '../../../core/theme/theme_mode_cubit.dart';
 import '../../../core/widgets/widgets.dart';
@@ -72,7 +73,7 @@ class _PreviewControls extends StatelessWidget {
             ),
           ],
           value: context.locale.languageCode,
-          onChanged: (code) => context.setLocale(Locale(code)),
+          onChanged: context.switchLanguage,
         ),
         BlocBuilder<ThemeModeCubit, ThemeMode>(
           builder: (context, mode) => SegmentedPicker<ThemeMode>(

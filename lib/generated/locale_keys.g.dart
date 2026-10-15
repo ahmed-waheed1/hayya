@@ -4,6 +4,13 @@
 
 abstract class LocaleKeys {
   static const app_name = 'app_name';
+  static const brand_mark = 'brand_mark';
+  static const nav_label = 'nav.label';
+  static const nav_home = 'nav.home';
+  static const nav_qibla = 'nav.qibla';
+  static const nav_tracker = 'nav.tracker';
+  static const nav_settings = 'nav.settings';
+  static const nav = 'nav';
   static const prayers_fajr = 'prayers.fajr';
   static const prayers_sunrise = 'prayers.sunrise';
   static const prayers_dhuhr = 'prayers.dhuhr';
@@ -26,6 +33,11 @@ abstract class LocaleKeys {
   static const tracker_current_streak = 'tracker.current_streak';
   static const tracker_days = 'tracker.days';
   static const tracker = 'tracker';
+  static const settings_title = 'settings.title';
+  static const settings_general = 'settings.general';
+  static const settings_language = 'settings.language';
+  static const settings_theme = 'settings.theme';
+  static const settings_developer = 'settings.developer';
   static const settings_theme_light = 'settings.theme_light';
   static const settings_theme_dark = 'settings.theme_dark';
   static const settings_theme_system = 'settings.theme_system';
@@ -38,6 +50,7 @@ abstract class LocaleKeys {
   static const common_disabled = 'common.disabled';
   static const common_on = 'common.on';
   static const common_off = 'common.off';
+  static const common_coming_soon = 'common.coming_soon';
   static const common = 'common';
   static const design_preview_title = 'design_preview.title';
   static const design_preview_colors = 'design_preview.colors';

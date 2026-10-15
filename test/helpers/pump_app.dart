@@ -1,0 +1,73 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hayya/app.dart';
+import 'package:hayya/core/di/injection.dart';
+import 'package:hayya/core/preferences/app_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const phoneSize = Size(390, 844);
+const tabletSize = Size(1194, 834);
+
+/// Lets real async work (asset loading, fonts, translations) finish.
+/// `GoogleFonts.pendingFonts()` hangs inside the fake-async zone.
+Future<void> settle(WidgetTester tester, {int rounds = 6}) async {
+  for (var i = 0; i < rounds; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump(const Duration(milliseconds: 250));
+  }
+}
+
+/// Renders every bundled family and weight once so later layouts measure
+/// with the real fonts, not the 1-em placeholder.
+Future<void> loadFonts(WidgetTester tester) async {
+  GoogleFonts.config.allowRuntimeFetching = false;
+  const weights = [
+    FontWeight.w400,
+    FontWeight.w500,
+    FontWeight.w600,
+    FontWeight.w700,
+    FontWeight.w800,
+  ];
+  await tester.pumpWidget(
+    Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        children: [
+          for (final family in ['Manrope', 'Cairo'])
+            for (final w in weights)
+              Text('Aa حيّ', style: GoogleFonts.getFont(family, fontWeight: w)),
+        ],
+      ),
+    ),
+  );
+  await settle(tester);
+}
+
+/// Boots the full app (DI, preferences, translations, router) at [size].
+Future<void> pumpHayyaApp(
+  WidgetTester tester, {
+  Size size = phoneSize,
+  Map<String, Object> prefs = const {},
+}) async {
+  tester.view
+    ..physicalSize = size
+    ..devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+
+  // A cached asset future from an earlier test never completes in this
+  // test's zone, so translations would hang on the second boot.
+  rootBundle.clear();
+  SharedPreferences.setMockInitialValues(prefs);
+  await getIt.reset();
+  await configureDependencies();
+  await EasyLocalization.ensureInitialized();
+
+  await loadFonts(tester);
+  await tester.pumpWidget(localizedApp(getIt<AppPreferences>().languageCode));
+  await settle(tester);
+}

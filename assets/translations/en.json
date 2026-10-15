@@ -1,5 +1,13 @@
 {
   "app_name": "Hayya",
+  "brand_mark": "حيّ",
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "qibla": "Qibla",
+    "tracker": "Tracker",
+    "settings": "Settings"
+  },
   "prayers": {
     "fajr": "Fajr",
     "sunrise": "Sunrise",
@@ -30,6 +38,11 @@
     }
   },
   "settings": {
+    "title": "Settings",
+    "general": "GENERAL",
+    "language": "Language",
+    "theme": "Theme",
+    "developer": "DEVELOPER",
     "theme_light": "Light",
     "theme_dark": "Dark",
     "theme_system": "System",
@@ -42,7 +55,8 @@
   "common": {
     "disabled": "Disabled",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "coming_soon": "Coming soon"
   },
   "design_preview": {
     "title": "Design system",
