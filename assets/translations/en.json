@@ -1,1 +1,65 @@
-{}
+{
+  "app_name": "Hayya",
+  "prayers": {
+    "fajr": "Fajr",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha",
+    "now": "NOW",
+    "next_prayer": "NEXT PRAYER",
+    "mark_as_prayed": "Mark as prayed",
+    "adhan_for": "Adhan for {}",
+    "mark_prayed_for": "Mark {} as prayed"
+  },
+  "onboarding": {
+    "allow_location": "Allow location",
+    "not_now": "Not now",
+    "skip": "Skip",
+    "location_rationale": "Your location is used only to calculate accurate prayer times."
+  },
+  "tracker": {
+    "title": "Prayer tracker",
+    "log_prayer": "Log prayer",
+    "current_streak": "Current streak",
+    "days": {
+      "zero": "days",
+      "one": "day",
+      "other": "days"
+    }
+  },
+  "settings": {
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System",
+    "calculation_method": "Calculation method",
+    "method_egyptian": "Egyptian General Authority",
+    "adhan_notification": "Adhan notification",
+    "language_english": "English",
+    "language_arabic": "العربية"
+  },
+  "common": {
+    "disabled": "Disabled",
+    "on": "On",
+    "off": "Off"
+  },
+  "design_preview": {
+    "title": "Design system",
+    "colors": "Color",
+    "times_of_day": "Time-of-day headers",
+    "heatmap": "Tracker heatmap",
+    "typography": "Typography",
+    "spacing": "Spacing",
+    "radius": "Radius",
+    "elevation": "Elevation",
+    "components": "Components",
+    "buttons": "Buttons",
+    "toggles": "Toggles",
+    "prayer_rows": "Prayer rows",
+    "tiles": "Tiles",
+    "icons": "Icons",
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

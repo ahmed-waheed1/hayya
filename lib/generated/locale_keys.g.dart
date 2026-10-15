@@ -1,0 +1,59 @@
+// DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
+
+// ignore_for_file: constant_identifier_names
+
+abstract class LocaleKeys {
+  static const app_name = 'app_name';
+  static const prayers_fajr = 'prayers.fajr';
+  static const prayers_sunrise = 'prayers.sunrise';
+  static const prayers_dhuhr = 'prayers.dhuhr';
+  static const prayers_asr = 'prayers.asr';
+  static const prayers_maghrib = 'prayers.maghrib';
+  static const prayers_isha = 'prayers.isha';
+  static const prayers_now = 'prayers.now';
+  static const prayers_next_prayer = 'prayers.next_prayer';
+  static const prayers_mark_as_prayed = 'prayers.mark_as_prayed';
+  static const prayers_adhan_for = 'prayers.adhan_for';
+  static const prayers_mark_prayed_for = 'prayers.mark_prayed_for';
+  static const prayers = 'prayers';
+  static const onboarding_allow_location = 'onboarding.allow_location';
+  static const onboarding_not_now = 'onboarding.not_now';
+  static const onboarding_skip = 'onboarding.skip';
+  static const onboarding_location_rationale = 'onboarding.location_rationale';
+  static const onboarding = 'onboarding';
+  static const tracker_title = 'tracker.title';
+  static const tracker_log_prayer = 'tracker.log_prayer';
+  static const tracker_current_streak = 'tracker.current_streak';
+  static const tracker_days = 'tracker.days';
+  static const tracker = 'tracker';
+  static const settings_theme_light = 'settings.theme_light';
+  static const settings_theme_dark = 'settings.theme_dark';
+  static const settings_theme_system = 'settings.theme_system';
+  static const settings_calculation_method = 'settings.calculation_method';
+  static const settings_method_egyptian = 'settings.method_egyptian';
+  static const settings_adhan_notification = 'settings.adhan_notification';
+  static const settings_language_english = 'settings.language_english';
+  static const settings_language_arabic = 'settings.language_arabic';
+  static const settings = 'settings';
+  static const common_disabled = 'common.disabled';
+  static const common_on = 'common.on';
+  static const common_off = 'common.off';
+  static const common = 'common';
+  static const design_preview_title = 'design_preview.title';
+  static const design_preview_colors = 'design_preview.colors';
+  static const design_preview_times_of_day = 'design_preview.times_of_day';
+  static const design_preview_heatmap = 'design_preview.heatmap';
+  static const design_preview_typography = 'design_preview.typography';
+  static const design_preview_spacing = 'design_preview.spacing';
+  static const design_preview_radius = 'design_preview.radius';
+  static const design_preview_elevation = 'design_preview.elevation';
+  static const design_preview_components = 'design_preview.components';
+  static const design_preview_buttons = 'design_preview.buttons';
+  static const design_preview_toggles = 'design_preview.toggles';
+  static const design_preview_prayer_rows = 'design_preview.prayer_rows';
+  static const design_preview_tiles = 'design_preview.tiles';
+  static const design_preview_icons = 'design_preview.icons';
+  static const design_preview_light = 'design_preview.light';
+  static const design_preview_dark = 'design_preview.dark';
+  static const design_preview = 'design_preview';
+}

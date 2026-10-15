@@ -1,1 +1,68 @@
-{}
+{
+  "app_name": "حيّ",
+  "prayers": {
+    "fajr": "الفجر",
+    "sunrise": "الشروق",
+    "dhuhr": "الظهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء",
+    "now": "الآن",
+    "next_prayer": "الصلاة القادمة",
+    "mark_as_prayed": "تمّت الصلاة",
+    "adhan_for": "الأذان لصلاة {}",
+    "mark_prayed_for": "تسجيل صلاة {}"
+  },
+  "onboarding": {
+    "allow_location": "السماح بالموقع",
+    "not_now": "ليس الآن",
+    "skip": "تخطٍّ",
+    "location_rationale": "يُستخدم موقعك فقط لحساب مواقيت الصلاة بدقة."
+  },
+  "tracker": {
+    "title": "متابعة الصلوات",
+    "log_prayer": "تسجيل صلاة",
+    "current_streak": "السلسلة الحالية",
+    "days": {
+      "zero": "يوم",
+      "one": "يوم",
+      "two": "يومان",
+      "few": "أيام",
+      "many": "يومًا",
+      "other": "يوم"
+    }
+  },
+  "settings": {
+    "theme_light": "فاتح",
+    "theme_dark": "داكن",
+    "theme_system": "النظام",
+    "calculation_method": "طريقة الحساب",
+    "method_egyptian": "الهيئة المصرية العامة للمساحة",
+    "adhan_notification": "إشعار الأذان",
+    "language_english": "English",
+    "language_arabic": "العربية"
+  },
+  "common": {
+    "disabled": "معطّل",
+    "on": "تشغيل",
+    "off": "إيقاف"
+  },
+  "design_preview": {
+    "title": "نظام التصميم",
+    "colors": "الألوان",
+    "times_of_day": "ترويسات أوقات اليوم",
+    "heatmap": "خريطة المتابعة",
+    "typography": "الخطوط",
+    "spacing": "المسافات",
+    "radius": "الزوايا",
+    "elevation": "الارتفاع",
+    "components": "المكوّنات",
+    "buttons": "الأزرار",
+    "toggles": "المفاتيح",
+    "prayer_rows": "صفوف الصلاة",
+    "tiles": "البطاقات",
+    "icons": "الأيقونات",
+    "light": "فاتح",
+    "dark": "داكن"
+  }
+}

@@ -1,30 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:hayya/main.dart';
+import 'package:hayya/core/theme/hayya_colors.dart';
+import 'package:hayya/core/utils/responsive.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('HayyaColors', () {
+    test('lerp hits both endpoints', () {
+      const light = HayyaColors.light;
+      const dark = HayyaColors.dark;
+      expect(light.lerp(dark, 0).primary, light.primary);
+      expect(light.lerp(dark, 1).primary, dark.primary);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('every prayer period has a palette in both themes', () {
+      for (final palette in [HayyaColors.light, HayyaColors.dark]) {
+        expect(palette.periods.keys, containsAll(PrayerPeriod.values));
+        expect(palette.heatmap, hasLength(6));
+      }
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('dark theme drops card shadows', () {
+      expect(HayyaColors.dark.cardShadow, isEmpty);
+      expect(HayyaColors.light.cardShadow, isNotEmpty);
+    });
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('tablet breakpoint is 600', () {
+    expect(const BoxConstraints(maxWidth: 599).isTablet, isFalse);
+    expect(const BoxConstraints(maxWidth: 600).isTablet, isTrue);
   });
 }
