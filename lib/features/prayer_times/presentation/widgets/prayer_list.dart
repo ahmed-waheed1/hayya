@@ -84,17 +84,19 @@ class PrayerList extends StatelessWidget {
               HayyaSpacing.s2,
               HayyaSpacing.s2,
             ),
-            child: Row(
+            // With large text the link moves under the title.
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: HayyaSpacing.s2,
               children: [
-                Expanded(
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      LocaleKeys.home_today.tr(),
-                      style: context.type
-                          .style(22, FontWeight.w800)
-                          .copyWith(color: context.colors.text),
-                    ),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    LocaleKeys.home_today.tr(),
+                    style: context.type
+                        .style(22, FontWeight.w800)
+                        .copyWith(color: context.colors.text),
                   ),
                 ),
                 const TimetableLink(tablet: true),

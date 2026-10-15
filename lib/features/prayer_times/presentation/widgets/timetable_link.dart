@@ -53,7 +53,7 @@ class TimetableLink extends StatelessWidget {
                     strokeWidth: 1.9,
                     color: c.primaryInk,
                   ),
-                  label,
+                  Flexible(child: label),
                   if (!tablet)
                     HayyaIcon(
                       HayyaIcons.chevron,

@@ -61,7 +61,12 @@ class CountdownRing extends StatelessWidget {
                 ),
               ),
             ),
-            child,
+            // The ring is a fixed graphic: with large text, what's inside
+            // shrinks to stay within the stroke.
+            Padding(
+              padding: EdgeInsetsDirectional.all(stroke.r + 6.r),
+              child: FittedBox(fit: BoxFit.scaleDown, child: child),
+            ),
           ],
         ),
       ),

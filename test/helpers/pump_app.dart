@@ -64,7 +64,8 @@ Future<void> loadFonts(WidgetTester tester) async {
   await tester.pumpWidget(
     Directionality(
       textDirection: TextDirection.ltr,
-      child: Column(
+      // Stacked, so no text scale or view size can make it overflow.
+      child: Stack(
         children: [
           for (final family in ['Manrope', 'Cairo'])
             for (final w in weights)

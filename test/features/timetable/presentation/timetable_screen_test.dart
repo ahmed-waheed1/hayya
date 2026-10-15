@@ -20,11 +20,6 @@ const tabletPortrait = Size(834, 1194);
 const phoneLandscape = Size(844, 390);
 
 /// Boots the app at [now] and opens the timetable from Home's link.
-///
-/// [homeMayOverflow] drops an overflow Home itself reports before the
-/// timetable opens: Home's PrayerRow is a few pixels too short in Arabic
-/// in phone landscape and with large text (as on master), which is
-/// outside this screen.
 Future<void> openTimetable(
   WidgetTester tester, {
   DateTime? now,
@@ -32,7 +27,6 @@ Future<void> openTimetable(
   String theme = 'light',
   Size size = phoneSize,
   Map<String, Object> prefs = const {},
-  bool homeMayOverflow = false,
 }) async {
   final clock = now ?? DateTime(2026, 10, 28, 13);
   await pumpHayyaApp(
@@ -41,10 +35,6 @@ Future<void> openTimetable(
     prefs: {'language_code': lang, 'theme_mode': theme, ...prefs},
     now: () => clock,
   );
-  if (homeMayOverflow) {
-    final error = tester.takeException();
-    expect(error, anyOf(isNull, predicate((e) => '$e'.contains('overflowed'))));
-  }
   await tapVisible(tester, find.byType(TimetableLink));
   await settle(tester, rounds: 3);
   expect(find.byType(TimetableScreen), findsOneWidget);
@@ -272,13 +262,7 @@ void main() {
           testWidgets('$name · $lang · $theme fits without overflow', (
             tester,
           ) async {
-            await openTimetable(
-              tester,
-              size: size,
-              lang: lang,
-              theme: theme,
-              homeMayOverflow: size == phoneLandscape,
-            );
+            await openTimetable(tester, size: size, lang: lang, theme: theme);
             expect(tester.takeException(), isNull);
             expect(todayRow, findsOneWidget);
             // Every cell fits at full size, or close to it on the smallest
@@ -297,7 +281,7 @@ void main() {
     testWidgets('large text keeps rows readable', (tester) async {
       tester.platformDispatcher.textScaleFactorTestValue = 1.6;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-      await openTimetable(tester, lang: 'ar', homeMayOverflow: true);
+      await openTimetable(tester, lang: 'ar');
       expect(tester.takeException(), isNull);
       expect(todayRow, findsOneWidget);
     });
