@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hayya/core/di/injection.dart';
 import 'package:hayya/core/preferences/app_preferences.dart';
 import 'package:hayya/core/widgets/widgets.dart';
-import 'package:hayya/features/design_preview/presentation/design_preview_screen.dart';
 import 'package:hayya/features/prayer_times/presentation/home_screen.dart';
 import 'package:hayya/features/qibla/presentation/qibla_screen.dart';
 import 'package:hayya/features/settings/presentation/settings_screen.dart';
@@ -83,16 +82,20 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('design preview opens from Settings in debug', (tester) async {
+    testWidgets('the debug Developer section only has the adhan test', (
+      tester,
+    ) async {
       await pumpHayyaApp(tester);
       await tester.tap(find.text('Settings'));
       await settle(tester, rounds: 2);
 
-      await tapVisible(tester, find.text('Design system'));
-      await settle(tester);
-      expect(find.byType(DesignPreviewScreen), findsOneWidget);
-      // Full screen: the bar is covered.
-      expect(find.byType(HayyaNavBar).hitTestable(), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('Test adhan in 1 minute'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('DEVELOPER'), findsOneWidget);
+      expect(find.text('Design system'), findsNothing);
     });
   });
 

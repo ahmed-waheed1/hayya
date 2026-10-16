@@ -3,10 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
-import '../../../core/router/app_router.dart';
 import '../../../core/theme/hayya_spacing.dart';
 import '../../../core/theme/theme_context.dart';
 import '../../../core/utils/responsive.dart';
@@ -177,10 +175,6 @@ class _DeveloperGroup extends StatelessWidget {
     return Column(
       spacing: HayyaSpacing.s2,
       children: [
-        SettingsTile(
-          title: LocaleKeys.design_preview_title.tr(),
-          onTap: () => context.push(AppRoutes.designPreview),
-        ),
         SettingsTile(
           title: LocaleKeys.settings_test_adhan.tr(),
           onTap: () => _testAdhan(context),

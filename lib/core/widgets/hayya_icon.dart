@@ -122,14 +122,6 @@ abstract final class HayyaIcons {
   );
   static const back = HayyaIconData('M15 5l-7 7 7 7', mirrorInRtl: true);
   static const chevron = HayyaIconData('M9 5l7 7-7 7', mirrorInRtl: true);
-
-  static const all = [
-    home, qibla, tracker, settings, fajr, sunrise, dhuhr, asr, maghrib, isha, //
-    bell, bellOff, check, kaaba, location, pinOff, gpsOff, calendar, //
-    timetable, search, language, theme, sound, streak, calibrate, reminder, //
-    retry, add, minus, numerals, turn, compassOff, qiblaOff, back, chevron,
-    insight,
-  ];
 }
 
 class HayyaIcon extends StatelessWidget {
