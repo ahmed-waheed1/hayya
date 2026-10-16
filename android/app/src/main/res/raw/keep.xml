@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Notification sounds are referenced only by name from Dart, so resource
-     shrinking in release builds would otherwise remove them. -->
+<!-- Resources referenced only by name from Dart (the notification sound and
+     the notification icon), so resource shrinking in release builds would
+     otherwise remove them. -->
 <resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@raw/adhan" />
+    tools:keep="@raw/adhan,@mipmap/ic_launcher" />

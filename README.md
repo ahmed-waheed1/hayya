@@ -49,4 +49,5 @@ flutter test
   workflow. Read this before contributing.
 - [docs/](docs/): details on specific topics, such as the
   [magnetic declination model](docs/magnetic-declination.md) behind the Qibla
-  compass and the [adhan notification sounds](docs/adhan-sounds.md).
+  compass, the [adhan notification sounds](docs/adhan-sounds.md) and the
+  [release process](docs/release.md).

@@ -48,3 +48,8 @@ app.*.map.json
 .widget_preview/
 design/
 CLAUDE.md
+
+# Signing keys (android/.gitignore covers android/; this covers the rest)
+key.properties
+*.jks
+*.keystore
