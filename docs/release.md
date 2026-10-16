@@ -127,3 +127,8 @@ them. Run it in the Africa/Cairo time zone, since the sample is in Cairo.
   PNGs.
 - The Developer section is hidden (`showDeveloperTools = false`), and there
   is no debug banner.
+- Shadows are blurred as on a device: flutter_test draws them as solid
+  bands (`debugDisableShadows`), so each shot turns that off for its
+  duration.
+- Settings is scrolled so neither screen edge cuts a row in half, in
+  either tablet column, preferably ending after a whole section.
