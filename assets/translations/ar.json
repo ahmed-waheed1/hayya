@@ -351,24 +351,6 @@
     "off": "إيقاف",
     "coming_soon": "قريبًا"
   },
-  "design_preview": {
-    "title": "نظام التصميم",
-    "colors": "الألوان",
-    "times_of_day": "ترويسات أوقات اليوم",
-    "heatmap": "خريطة المتابعة",
-    "typography": "الخطوط",
-    "spacing": "المسافات",
-    "radius": "الزوايا",
-    "elevation": "الارتفاع",
-    "components": "المكوّنات",
-    "buttons": "الأزرار",
-    "toggles": "المفاتيح",
-    "prayer_rows": "صفوف الصلاة",
-    "tiles": "البطاقات",
-    "icons": "الأيقونات",
-    "light": "فاتح",
-    "dark": "داكن"
-  },
   "notifications": {
     "adhan_title": "حان الآن موعد صلاة {}",
     "adhan_body": "حيّ على الصلاة",

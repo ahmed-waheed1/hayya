@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/design_preview/presentation/design_preview_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/prayer_times/presentation/home_screen.dart';
 import '../../features/qibla/presentation/qibla_screen.dart';
@@ -18,10 +16,6 @@ abstract final class AppRoutes {
   static const qibla = '/qibla';
   static const tracker = '/tracker';
   static const settings = '/settings';
-
-  // TEMPORARY, debug builds only: opened from Settings. Remove with
-  // lib/features/design_preview/.
-  static const designPreview = '/settings/design-preview';
 }
 
 /// Builds a fresh router; [HayyaApp] creates one for its lifetime. It
@@ -77,15 +71,6 @@ GoRouter createAppRouter({bool onboarding = false}) {
               GoRoute(
                 path: AppRoutes.settings,
                 builder: (context, state) => const SettingsScreen(),
-                routes: [
-                  if (kDebugMode)
-                    GoRoute(
-                      path: 'design-preview',
-                      // Full screen, above the navigation bar/rail.
-                      parentNavigatorKey: rootKey,
-                      builder: (context, state) => const DesignPreviewScreen(),
-                    ),
-                ],
               ),
             ],
           ),

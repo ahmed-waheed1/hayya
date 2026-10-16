@@ -64,9 +64,9 @@ The app must work at every system font size, up to 2.0×.
   Read them with `context.colors` and `context.type`. Don't hardcode colors or
   sizes.
 - Reusable widgets live in `lib/core/widgets/` (import `widgets.dart`).
-- `lib/features/design_preview/` is a **temporary** preview screen, reachable
-  from Settings in debug builds only (`AppRoutes.designPreview`). Delete the
-  folder, its route and the Settings tile once real screens exist.
+- Settings has a **Developer** section in debug builds only (`kDebugMode`),
+  with "Test adhan in 1 minute" for checking notifications on a device. Put
+  any other debug-only tools there, never in release builds.
 
 ## Fonts
 

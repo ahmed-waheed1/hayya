@@ -327,24 +327,6 @@
     "off": "Off",
     "coming_soon": "Coming soon"
   },
-  "design_preview": {
-    "title": "Design system",
-    "colors": "Color",
-    "times_of_day": "Time-of-day headers",
-    "heatmap": "Tracker heatmap",
-    "typography": "Typography",
-    "spacing": "Spacing",
-    "radius": "Radius",
-    "elevation": "Elevation",
-    "components": "Components",
-    "buttons": "Buttons",
-    "toggles": "Toggles",
-    "prayer_rows": "Prayer rows",
-    "tiles": "Tiles",
-    "icons": "Icons",
-    "light": "Light",
-    "dark": "Dark"
-  },
   "notifications": {
     "adhan_title": "It’s time for {}",
     "adhan_body": "Hayya ‘ala as-salah — come to prayer.",
