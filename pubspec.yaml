@@ -63,6 +63,7 @@ dependencies:
   fl_chart: ^1.2.0
   package_info_plus: ^10.1.0
   workmanager: ^0.10.10
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,8 @@ dev_dependencies:
   hive_ce_generator: ^1.11.3
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.8
+  url_launcher_platform_interface: ^2.3.2
+  plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

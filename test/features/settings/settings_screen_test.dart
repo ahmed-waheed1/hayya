@@ -20,6 +20,9 @@ import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_
 import 'package:hayya/features/prayer_times/presentation/widgets/home_header.dart';
 import 'package:hayya/features/settings/presentation/widgets/location_group.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../helpers/fake_location_service.dart';
 import '../../helpers/fake_notification_service.dart';
@@ -567,6 +570,46 @@ void main() {
         expect(find.text(name), findsOneWidget, reason: name);
       }
     });
+
+    for (final (lang, title, url) in [
+      (
+        'en',
+        'Privacy policy',
+        'https://ahmed-waheed1.github.io/hayya-privacy/',
+      ),
+      (
+        'ar',
+        'سياسة الخصوصية',
+        'https://ahmed-waheed1.github.io/hayya-privacy/ar.html',
+      ),
+    ]) {
+      testWidgets('opens the privacy policy in the browser ($lang)', (
+        tester,
+      ) async {
+        final launcher = FakeUrlLauncher();
+        await pumpSettings(tester, lang: lang);
+        await tapVisible(tester, find.text(title));
+        await settle(tester, rounds: 2);
+        expect(launcher.launched, [
+          (url, PreferredLaunchMode.externalApplication),
+        ]);
+        expect(find.byType(SnackBar), findsNothing);
+      });
+    }
+
+    testWidgets('shows the policy URL when no browser opens', (tester) async {
+      FakeUrlLauncher(opens: false);
+      await pumpSettings(tester);
+      await tapVisible(tester, find.text('Privacy policy'));
+      await settle(tester, rounds: 2);
+      expect(
+        find.text(
+          'Couldn’t open the browser. The policy is at '
+          'https://ahmed-waheed1.github.io/hayya-privacy/',
+        ),
+        findsOneWidget,
+      );
+    });
   });
 }
 
@@ -577,4 +620,29 @@ Future<void> goTo(WidgetTester tester, String label) async {
   );
   await tester.tap(find.descendant(of: nav, matching: find.text(label)));
   await settle(tester, rounds: 2);
+}
+
+/// Records what url_launcher was asked to open, and installs itself for
+/// the current test.
+class FakeUrlLauncher extends UrlLauncherPlatform
+    with MockPlatformInterfaceMixin {
+  FakeUrlLauncher({this.opens = true}) {
+    final original = UrlLauncherPlatform.instance;
+    UrlLauncherPlatform.instance = this;
+    addTearDown(() => UrlLauncherPlatform.instance = original);
+  }
+
+  /// What [launchUrl] returns.
+  final bool opens;
+
+  final launched = <(String, PreferredLaunchMode)>[];
+
+  @override
+  LinkDelegate? get linkDelegate => null;
+
+  @override
+  Future<bool> launchUrl(String url, LaunchOptions options) async {
+    launched.add((url, options.mode));
+    return opens;
+  }
 }

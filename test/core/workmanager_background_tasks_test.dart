@@ -14,10 +14,19 @@ class _FakeWorkmanager implements Workmanager {
           Duration? frequency,
           Duration? initialDelay,
           ExistingPeriodicWorkPolicy? policy,
+          bool foreground,
         })
       >[];
   final oneOff =
-      <({String uniqueName, String taskName, ExistingWorkPolicy? policy})>[];
+      <
+        ({
+          String uniqueName,
+          String taskName,
+          ExistingWorkPolicy? policy,
+          bool foreground,
+          bool expedited,
+        })
+      >[];
   Object? failWith;
 
   @override
@@ -49,6 +58,7 @@ class _FakeWorkmanager implements Workmanager {
     frequency: frequency,
     initialDelay: initialDelay,
     policy: existingWorkPolicy,
+    foreground: foregroundServiceConfig != null,
   ));
 
   @override
@@ -69,6 +79,8 @@ class _FakeWorkmanager implements Workmanager {
     uniqueName: uniqueName,
     taskName: taskName,
     policy: existingWorkPolicy,
+    foreground: foregroundServiceConfig != null,
+    expedited: expedited,
   ));
 
   @override
@@ -128,5 +140,15 @@ void main() {
     expect(run.uniqueName, isNot(WorkmanagerBackgroundTasks.rescheduleTask));
     expect(run.taskName, WorkmanagerBackgroundTasks.rescheduleTask);
     expect(run.policy, ExistingWorkPolicy.replace);
+  });
+
+  // AndroidManifest.xml removes workmanager's FOREGROUND_SERVICE
+  // permissions; a foreground or expedited worker would need them back.
+  test('never runs as a foreground service', () async {
+    await tasks.ensureRegistered();
+    await tasks.runRescheduleNow();
+    expect(workmanager.periodic.single.foreground, isFalse);
+    expect(workmanager.oneOff.single.foreground, isFalse);
+    expect(workmanager.oneOff.single.expedited, isFalse);
   });
 }
