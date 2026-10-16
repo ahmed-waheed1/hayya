@@ -16,6 +16,7 @@ library;
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hayya/core/router/app_router.dart';
@@ -23,6 +24,7 @@ import 'package:hayya/features/prayer_times/data/adhan_prayer_times_repository.d
 import 'package:hayya/features/prayer_times/domain/entities/prayer.dart';
 import 'package:hayya/features/prayer_times/domain/entities/prayer_calculation_settings.dart';
 import 'package:hayya/features/prayer_times/presentation/home_screen.dart';
+import 'package:hayya/core/widgets/widgets.dart';
 import 'package:hayya/features/qibla/domain/compass_sensor.dart';
 import 'package:hayya/features/settings/presentation/settings_screen.dart';
 import 'package:image/image.dart' as img;
@@ -116,6 +118,79 @@ void main() {
 const _skipReason =
     'Run with --dart-define=STORE_SCREENSHOTS=true to write store screenshots';
 
+/// [testWidgets] with real, blurred shadows. flutter_test draws them as
+/// solid bands by default (`debugDisableShadows`) and checks after each
+/// test that the flag is back, so it is restored before the test ends.
+void _shot(String description, WidgetTesterCallback body) {
+  testWidgets(description, (tester) async {
+    final disabled = debugDisableShadows;
+    debugDisableShadows = false;
+    try {
+      await body(tester);
+    } finally {
+      debugDisableShadows = disabled;
+    }
+  });
+}
+
+/// Scrolls Settings so neither edge of the screen cuts a row in half,
+/// in either column: no edge runs through a row, a picker, a button or
+/// any text. Prefers the bottom edge falling between sections (the screen
+/// ends after a whole section), and takes the smallest such scroll.
+Future<void> _endOnWholeSection(WidgetTester tester) async {
+  final list = find
+      .descendant(
+        of: find.byType(SettingsScreen),
+        matching: find.byType(Scrollable),
+      )
+      .first;
+  final position = tester.state<ScrollableState>(list).position;
+  final view = tester.getRect(list);
+  // Rects in scroll content coordinates.
+  List<Rect> rects(Type type) => [
+    for (final element
+        in find.descendant(of: list, matching: find.byType(type)).evaluate())
+      () {
+        final box = element.renderObject! as RenderBox;
+        final rect = box.localToGlobal(Offset.zero) & box.size;
+        return rect.shift(Offset(0, position.pixels - view.top));
+      }(),
+  ];
+  final sections = rects(SettingsSection);
+  final rows = [
+    for (final type in [
+      SettingsTile,
+      SettingsPickerRow,
+      SettingsStepperRow,
+      SettingsRadioRow,
+      AdaptiveRow,
+      SegmentedPicker,
+      HayyaButton,
+    ])
+      ...rects(type),
+    // Text outside those rows (the location), with a little room.
+    for (final r in rects(RichText)) r.inflate(2),
+  ];
+  bool through(double y, Iterable<Rect> rects) =>
+      rects.any((r) => y > r.top + 1 && y < r.bottom - 1);
+  bool clean(double y) => !through(y, rows);
+  // Below a card (clear of most of its shadow), above the next header.
+  bool betweenSections(double y) =>
+      sections.every((r) => y <= r.top - 2 || y >= r.bottom + 4);
+
+  final max = position.maxScrollExtent.floor();
+  final offsets = [for (var o = 0; o <= max; o++) o.toDouble()];
+  bool top(double o) => o == 0 || clean(o);
+  final offset =
+      offsets
+          .where((o) => top(o) && betweenSections(o + view.height))
+          .firstOrNull ??
+      offsets.where((o) => top(o) && clean(o + view.height)).firstOrNull ??
+      position.maxScrollExtent;
+  position.jumpTo(offset);
+  await tester.pump();
+}
+
 void _screenshots() {
   setUpAll(() {
     showDeveloperTools = false;
@@ -182,45 +257,46 @@ void _screenshots() {
       }
 
       group('${device.name} $lang', () {
-        testWidgets('01 home', (tester) async {
+        _shot('01 home', (tester) async {
           await boot(tester);
           await shoot(tester, '01-home');
         });
 
-        testWidgets('02 qibla', (tester) async {
+        _shot('02 qibla', (tester) async {
           await qibla(tester, await boot(tester));
           await shoot(tester, '02-qibla');
         });
 
-        testWidgets('03 tracker', (tester) async {
+        _shot('03 tracker', (tester) async {
           await boot(tester);
           await go(tester, AppRoutes.tracker);
           await shoot(tester, '03-tracker');
         });
 
-        testWidgets('04 timetable', (tester) async {
+        _shot('04 timetable', (tester) async {
           await boot(tester);
           await go(tester, AppRoutes.timetable);
           await shoot(tester, '04-timetable');
         });
 
-        testWidgets('05 settings', (tester) async {
+        _shot('05 settings', (tester) async {
           await boot(tester);
           await go(tester, AppRoutes.settings);
+          await _endOnWholeSection(tester);
           await shoot(tester, '05-settings');
         });
 
-        testWidgets('06 onboarding', (tester) async {
+        _shot('06 onboarding', (tester) async {
           await boot(tester, onboarding: true);
           await shoot(tester, '06-onboarding');
         });
 
-        testWidgets('07 home dark', (tester) async {
+        _shot('07 home dark', (tester) async {
           await boot(tester, theme: 'dark');
           await shoot(tester, '07-home-dark');
         });
 
-        testWidgets('08 qibla dark', (tester) async {
+        _shot('08 qibla dark', (tester) async {
           await qibla(tester, await boot(tester, theme: 'dark'));
           await shoot(tester, '08-qibla-dark');
         });
