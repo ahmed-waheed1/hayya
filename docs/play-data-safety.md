@@ -41,6 +41,22 @@ Things that don't send data:
 - **Compass**, `flutter_timezone`, `package_info_plus` and `workmanager`
   only read device state.
 
+## Permissions
+
+The merged release manifest, and what uses each permission:
+
+| Permission | Used by | Needed |
+| --- | --- | --- |
+| `ACCESS_COARSE_LOCATION` | `DeviceLocationService` (geolocator, `LocationAccuracy.low`) | Yes |
+| `POST_NOTIFICATIONS` | Adhan and reminder notifications (Android 13+) | Yes |
+| `SCHEDULE_EXACT_ALARM` | On-time adhan. Falls back to inexact alarms without it | Yes |
+| `RECEIVE_BOOT_COMPLETED` | flutter_local_notifications' boot receiver and WorkManager's reschedule receiver | Yes |
+| `VIBRATE` | flutter_local_notifications. Notifications vibrate by default, and the plugin calls `setVibrate` | Kept: before Android 8 (minSdk is 24), notification vibration may need it. It's an install-time permission with no prompt |
+| `WAKE_LOCK` | WorkManager, which holds wake locks while it runs work | Yes |
+| `ACCESS_NETWORK_STATE` | WorkManager's network constraint tracking. Our task has no network constraint | Kept: it's an install-time permission with no prompt and no Play declaration. Removing it risks a `SecurityException` inside WorkManager for no user-visible gain |
+| `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` | androidx.core, an app-private signature permission for non-exported receivers | Yes |
+| ~~`FOREGROUND_SERVICE`~~, ~~`FOREGROUND_SERVICE_SHORT_SERVICE`~~ | workmanager_android, only for workers given a `foregroundServiceConfig` or registered as expedited | **Removed** with `tools:node="remove"` in `AndroidManifest.xml`. `workmanager_background_tasks_test.dart` checks that neither task uses those options |
+
 ## The form
 
 ### Data collection and security
@@ -101,11 +117,11 @@ doesn't count on-device data as collected. ⚠️ See *Unsure* for backups.
    `android:allowBackup="false"`, or restrict it with
    `dataExtractionRules`/`fullBackupContent`. The policy would then need its
    backup section updated.
-4. **Permission declarations outside Data safety.** The release manifest
-   includes `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_SHORT_SERVICE`
-   (from `workmanager_android`) and `SCHEDULE_EXACT_ALARM`. Play Console may
-   ask for a foreground service declaration or exact alarm justification
-   when you upload. Those are separate forms from Data safety.
+4. **Exact alarms.** The release manifest includes `SCHEDULE_EXACT_ALARM`.
+   Play Console may ask you to justify it (on-time adhan) when you upload.
+   That's a separate form from Data safety. There's no foreground service
+   declaration: `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_SHORT_SERVICE`
+   from `workmanager_android` are removed (see *Permissions* below).
 5. **iOS.** This audit covers Android. On iOS the geocoder is Apple's
    (`CLGeocoder`), backups go to iCloud, and the permission list differs.
    Update the policy before shipping on the App Store.

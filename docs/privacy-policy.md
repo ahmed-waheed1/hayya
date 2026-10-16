@@ -67,7 +67,7 @@ Hayya asks for these permissions on Android:
 | Alarms & reminders | To show the adhan exactly on time. Without it, notifications may arrive a few minutes late. |
 | Run at startup | To set the adhan notifications again after your phone restarts. |
 | Vibration | For notifications. |
-| Background work (keep awake, foreground service, network state) | These come with Android's WorkManager library, which Hayya uses once a day to plan upcoming adhans. That task uses only the location you saved; it never locates you or uses the network. |
+| Background work (keep awake, network state) | These come with Android's WorkManager library, which Hayya uses once a day to plan upcoming adhans. That task uses only the location you saved; it never locates you or uses the network. |
 
 The Qibla compass uses your phone's motion sensors. Their readings are
 used live and never saved.

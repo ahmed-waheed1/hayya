@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- City-level location is enough for prayer times and the Qibla. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Adhan notifications: the prompt on Android 13+, on-time alarms
@@ -7,6 +8,14 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- workmanager_android declares these for workers promoted to a
+         foreground service (a foregroundServiceConfig or expedited work).
+         The daily adhan reschedule is neither, so they're removed. Add
+         them back before using either. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE"
+        tools:node="remove" />
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
