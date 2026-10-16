@@ -17,15 +17,12 @@
     "isha": "العشاء",
     "now": "الآن",
     "next_prayer": "الصلاة القادمة",
-    "mark_as_prayed": "تمّت الصلاة",
     "adhan_for": "الأذان لصلاة {}",
     "mark_prayed_for": "تسجيل صلاة {}"
   },
   "onboarding": {
     "allow_location": "السماح بالموقع",
-    "not_now": "ليس الآن",
     "skip": "تخطٍّ",
-    "location_rationale": "يُستخدم موقعك فقط لحساب مواقيت الصلاة بدقة.",
     "language_label": "اللغة",
     "back": "رجوع",
     "step": "الخطوة {} من {}",
@@ -53,7 +50,6 @@
   },
   "tracker": {
     "title": "متابعة الصلوات",
-    "log_prayer": "تسجيل صلاة",
     "current_streak": "السلسلة الحالية",
     "days": {
       "zero": "يوم",
@@ -137,7 +133,6 @@
     "theme_dark": "داكن",
     "theme_system": "النظام",
     "calculation_method": "طريقة الحساب",
-    "adhan_notification": "إشعار الأذان",
     "language_english": "English",
     "language_arabic": "العربية",
     "notifications": "الإشعارات",
@@ -344,12 +339,6 @@
     "sw": "جنوب غرب",
     "w": "غرب",
     "nw": "شمال غرب"
-  },
-  "common": {
-    "disabled": "معطّل",
-    "on": "تشغيل",
-    "off": "إيقاف",
-    "coming_soon": "قريبًا"
   },
   "notifications": {
     "adhan_title": "حان الآن موعد صلاة {}",

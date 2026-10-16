@@ -17,15 +17,12 @@
     "isha": "Isha",
     "now": "NOW",
     "next_prayer": "NEXT PRAYER",
-    "mark_as_prayed": "Mark as prayed",
     "adhan_for": "Adhan for {}",
     "mark_prayed_for": "Mark {} as prayed"
   },
   "onboarding": {
     "allow_location": "Allow location",
-    "not_now": "Not now",
     "skip": "Skip",
-    "location_rationale": "Your location is used only to calculate accurate prayer times.",
     "language_label": "Language",
     "back": "Back",
     "step": "STEP {} OF {}",
@@ -53,7 +50,6 @@
   },
   "tracker": {
     "title": "Prayer tracker",
-    "log_prayer": "Log prayer",
     "current_streak": "Current streak",
     "days": {
       "zero": "days",
@@ -126,7 +122,6 @@
     "theme_dark": "Dark",
     "theme_system": "System",
     "calculation_method": "Calculation method",
-    "adhan_notification": "Adhan notification",
     "language_english": "English",
     "language_arabic": "العربية",
     "notifications": "NOTIFICATIONS",
@@ -320,12 +315,6 @@
     "sw": "SW",
     "w": "W",
     "nw": "NW"
-  },
-  "common": {
-    "disabled": "Disabled",
-    "on": "On",
-    "off": "Off",
-    "coming_soon": "Coming soon"
   },
   "notifications": {
     "adhan_title": "It’s time for {}",

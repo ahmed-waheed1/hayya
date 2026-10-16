@@ -1,6 +1,5 @@
 export 'adaptive_row.dart';
 export 'adhan_toggle.dart';
-export 'coming_soon.dart';
 export 'hayya_button.dart';
 export 'hayya_card.dart';
 export 'hayya_icon.dart';
