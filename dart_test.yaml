@@ -1,0 +1,5 @@
+tags:
+  # test/text_scale_test.dart: every screen at 1.0-2.0x text, en/ar, five
+  # screen sizes (280 cases, about 5 minutes). Skip it while working with
+  # `flutter test --exclude-tags text-scale`; the full suite runs it.
+  text-scale:
