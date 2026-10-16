@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/hayya_spacing.dart';
 import '../theme/theme_context.dart';
+import 'adaptive_row.dart';
 import 'hayya_card.dart';
 import 'hayya_icon.dart';
 
@@ -40,45 +41,40 @@ class SettingsTile extends StatelessWidget {
       padding: EdgeInsetsDirectional.fromSTEB(18.r, 6.r, 6.r, 6.r),
       child: ConstrainedBox(
         constraints: BoxConstraints(minHeight: 52.r),
-        child: Row(
-          spacing: HayyaSpacing.s3,
-          children: [
-            ?leading,
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 2.r,
-                children: [
-                  Text(
-                    title,
-                    style: type
-                        .style(15, FontWeight.w700)
-                        .copyWith(color: c.text),
-                  ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: type
-                          .style(13, FontWeight.w500)
-                          .copyWith(color: c.muted),
-                    ),
-                ],
+        child: AdaptiveRow(
+          gap: HayyaSpacing.s3,
+          leading: leading,
+          label: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 2.r,
+            children: [
+              Text(
+                title,
+                style: type.style(15, FontWeight.w700).copyWith(color: c.text),
               ),
-            ),
-            trailing ??
-                SizedBox.square(
-                  dimension: 44.r,
-                  child: Center(
-                    child: HayyaIcon(
-                      HayyaIcons.chevron,
-                      size: 20,
-                      color: c.faint,
-                      strokeWidth: 2,
-                    ),
+              if (subtitle != null)
+                Text(
+                  subtitle!,
+                  style: type
+                      .style(13, FontWeight.w500)
+                      .copyWith(color: c.muted),
+                ),
+            ],
+          ),
+          trailing:
+              trailing ??
+              SizedBox.square(
+                dimension: 44.r,
+                child: Center(
+                  child: HayyaIcon(
+                    HayyaIcons.chevron,
+                    size: 20,
+                    color: c.faint,
+                    strokeWidth: 2,
                   ),
                 ),
-          ],
+              ),
         ),
       ),
     );

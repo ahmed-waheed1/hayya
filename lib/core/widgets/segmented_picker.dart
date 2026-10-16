@@ -17,8 +17,8 @@ class SegmentOption<T> {
   final T value;
   final String label;
 
-  /// A smaller second line ("Later Asr"). With any, every segment is 44
-  /// tall instead of 40.
+  /// A smaller second line ("Later Asr"). With any, every segment is at
+  /// least 44 tall instead of 40.
   final String? sublabel;
 }
 
@@ -28,7 +28,10 @@ class SegmentOption<T> {
 /// With a bounded width the segments fill it: equal widths when every label
 /// fits that way, otherwise each keeps its natural width plus an equal share
 /// of what is left. When even the natural widths don't fit, segments shrink
-/// in proportion and ellipsize. Unbounded, it sizes to its content.
+/// in proportion and their labels wrap; if that would break a word (large
+/// text), the options stack one per line instead. Unbounded, it sizes to
+/// its content. Segments grow taller with large text, all to the same
+/// height.
 class SegmentedPicker<T> extends StatelessWidget {
   const SegmentedPicker({
     super.key,
@@ -74,40 +77,55 @@ class SegmentedPicker<T> extends StatelessWidget {
                     gap * (options.length - 1),
               )
             : null;
+        Widget segment(SegmentOption<T> option) => _Segment(
+          label: option.label,
+          selected: option.value == value,
+          onTap: () => onChanged(option.value),
+          selectedStyle: selectedStyle,
+          idleStyle: idleStyle,
+          sublabel: option.sublabel,
+          subStyle: subStyle,
+          minHeight: twoLines ? 44.r : 40.r,
+          selectedColor: c.selectedSurface,
+          padding: segmentPadding,
+        );
+        final decoration = BoxDecoration(
+          color: c.surface2,
+          borderRadius: BorderRadius.circular(HayyaRadius.md),
+        );
+
+        if (constraints.hasBoundedWidth && widths == null) {
+          return Container(
+            padding: EdgeInsetsDirectional.all(trackPadding),
+            decoration: decoration,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: gap,
+              children: [for (final option in options) segment(option)],
+            ),
+          );
+        }
         return Container(
           padding: EdgeInsetsDirectional.all(trackPadding),
-          decoration: BoxDecoration(
-            color: c.surface2,
-            borderRadius: BorderRadius.circular(HayyaRadius.md),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: gap,
-            children: [
-              for (final (i, option) in options.indexed)
-                SizedBox(
-                  width: widths?[i],
-                  child: _Segment(
-                    label: option.label,
-                    selected: option.value == value,
-                    onTap: () => onChanged(option.value),
-                    selectedStyle: selectedStyle,
-                    idleStyle: idleStyle,
-                    sublabel: option.sublabel,
-                    subStyle: subStyle,
-                    height: twoLines ? 44.r : 40.r,
-                    selectedColor: c.selectedSurface,
-                    padding: segmentPadding,
-                  ),
-                ),
-            ],
+          decoration: decoration,
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: gap,
+              children: [
+                for (final (i, option) in options.indexed)
+                  SizedBox(width: widths?[i], child: segment(option)),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  List<double> _segmentWidths(
+  /// Null when the segments can't share a line without breaking a word.
+  List<double>? _segmentWidths(
     BuildContext context, {
     required TextStyle style,
     required TextStyle subStyle,
@@ -133,17 +151,38 @@ class SegmentedPicker<T> extends StatelessWidget {
       final extra = (available - total) / n;
       return [for (final w in natural) w + extra];
     }
-    return [for (final w in natural) available * w / total];
+    final shares = [for (final w in natural) available * w / total];
+    for (final (i, option) in options.indexed) {
+      final longestWord = math.max(
+        _textWidth(context, option.label, style, longestWord: true),
+        option.sublabel == null
+            ? 0.0
+            : _textWidth(
+                context,
+                option.sublabel!,
+                subStyle,
+                longestWord: true,
+              ),
+      );
+      if (longestWord + 2 * padding > shares[i]) return null;
+    }
+    return shares;
   }
 
-  static double _textWidth(BuildContext context, String text, TextStyle style) {
+  /// One line's width, or with [longestWord] the widest single word.
+  static double _textWidth(
+    BuildContext context,
+    String text,
+    TextStyle style, {
+    bool longestWord = false,
+  }) {
     final painter = TextPainter(
       text: TextSpan(text: text, style: style),
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
-      maxLines: 1,
+      maxLines: longestWord ? null : 1,
     )..layout();
-    final width = painter.width;
+    final width = longestWord ? painter.minIntrinsicWidth : painter.width;
     painter.dispose();
     // Round up so sub-pixel layout differences never force an ellipsis.
     return width.ceilToDouble();
@@ -159,7 +198,7 @@ class _Segment extends StatelessWidget {
     required this.idleStyle,
     required this.sublabel,
     required this.subStyle,
-    required this.height,
+    required this.minHeight,
     required this.selectedColor,
     required this.padding,
   });
@@ -171,7 +210,7 @@ class _Segment extends StatelessWidget {
   final TextStyle idleStyle;
   final String? sublabel;
   final TextStyle subStyle;
-  final double height;
+  final double minHeight;
   final Color selectedColor;
   final double padding;
 
@@ -186,8 +225,11 @@ class _Segment extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          height: height,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: padding),
+          constraints: BoxConstraints(minHeight: minHeight),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: padding,
+            vertical: 4.r,
+          ),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? selectedColor : Colors.transparent,
@@ -207,17 +249,11 @@ class _Segment extends StatelessWidget {
             children: [
               Text(
                 label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
                 style: selected ? selectedStyle : idleStyle,
               ),
               if (sublabel != null)
-                Text(
-                  sublabel!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: subStyle,
-                ),
+                Text(sublabel!, textAlign: TextAlign.center, style: subStyle),
             ],
           ),
         ),

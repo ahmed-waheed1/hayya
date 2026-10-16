@@ -97,7 +97,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
                 ? width.clamp(0.0, _singleColumnMaxWidth)
                 : width;
             // The heatmap card has 16 px padding on both sides.
-            final weeks = PrayerHeatmap.weeksFor(columnWidth - 32.r);
+            final weeks = PrayerHeatmap.weeksFor(context, columnWidth - 32.r);
 
             final parts = _Parts(
               data: data,
@@ -214,36 +214,30 @@ class _Header extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: HayyaSpacing.minTouchTarget),
       child: Padding(
         padding: EdgeInsetsDirectional.symmetric(horizontal: HayyaSpacing.s1),
-        child: Row(
-          spacing: HayyaSpacing.s3,
-          children: [
-            Expanded(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  LocaleKeys.tracker_title.tr(),
-                  style: type
-                      .style(26, FontWeight.w800)
-                      .copyWith(color: c.text),
-                ),
-              ),
+        child: AdaptiveRow(
+          gap: HayyaSpacing.s3,
+          label: Semantics(
+            header: true,
+            child: Text(
+              LocaleKeys.tracker_title.tr(),
+              style: type.style(26, FontWeight.w800).copyWith(color: c.text),
             ),
-            Container(
-              constraints: BoxConstraints(minHeight: 36.r),
-              alignment: Alignment.center,
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 12.r),
-              decoration: BoxDecoration(
-                color: c.surface2,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Text(
-                context.format.digits(
-                  LocaleKeys.tracker_range_weeks.plural(weeks),
-                ),
-                style: type.style(13, FontWeight.w700).copyWith(color: c.muted),
-              ),
+          ),
+          trailing: Container(
+            constraints: BoxConstraints(minHeight: 36.r),
+            alignment: Alignment.center,
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 12.r),
+            decoration: BoxDecoration(
+              color: c.surface2,
+              borderRadius: BorderRadius.circular(12.r),
             ),
-          ],
+            child: Text(
+              context.format.digits(
+                LocaleKeys.tracker_range_weeks.plural(weeks),
+              ),
+              style: type.style(13, FontWeight.w700).copyWith(color: c.muted),
+            ),
+          ),
         ),
       ),
     );

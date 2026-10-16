@@ -85,35 +85,29 @@ class _PermissionWarning extends StatelessWidget {
     final type = context.type;
     return Padding(
       padding: EdgeInsetsDirectional.symmetric(vertical: HayyaSpacing.s3),
-      child: Row(
-        spacing: 10.r,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 2.r,
-              children: [
-                Text(
-                  title,
-                  style: type
-                      .style(15, FontWeight.w700)
-                      .copyWith(color: c.text),
-                ),
-                Text(
-                  body,
-                  style: type
-                      .style(12.5, FontWeight.w600)
-                      .copyWith(color: c.muted),
-                ),
-              ],
+      // With large text the button moves under the message.
+      child: AdaptiveRow(
+        gap: 10.r,
+        runGap: HayyaSpacing.s2,
+        label: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 2.r,
+          children: [
+            Text(
+              title,
+              style: type.style(15, FontWeight.w700).copyWith(color: c.text),
             ),
-          ),
-          HayyaButton(
-            label: action,
-            onPressed: onAction,
-            variant: HayyaButtonVariant.soft,
-          ),
-        ],
+            Text(
+              body,
+              style: type.style(12.5, FontWeight.w600).copyWith(color: c.muted),
+            ),
+          ],
+        ),
+        trailing: HayyaButton(
+          label: action,
+          onPressed: onAction,
+          variant: HayyaButtonVariant.soft,
+        ),
       ),
     );
   }
@@ -277,8 +271,9 @@ class _MinutesChip extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: radius,
-          child: SizedBox(
-            height: 44.r,
+          child: Container(
+            constraints: BoxConstraints(minHeight: 44.r),
+            padding: EdgeInsetsDirectional.symmetric(vertical: 6.r),
             child: Center(
               child: FittedBox(
                 fit: BoxFit.scaleDown,

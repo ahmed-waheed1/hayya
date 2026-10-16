@@ -20,7 +20,8 @@ enum HayyaButtonVariant {
   gold,
 }
 
-/// HayyaButton: 52 tall, radius lg, label 16/700.
+/// HayyaButton: 52 tall (taller when large text wraps the label), radius
+/// lg, label 16/700.
 /// Passing a null [onPressed] renders the disabled style.
 class HayyaButton extends StatelessWidget {
   const HayyaButton({
@@ -69,8 +70,11 @@ class HayyaButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: radius,
           child: Container(
-            height: 52.r,
-            padding: EdgeInsetsDirectional.symmetric(horizontal: padding.r),
+            constraints: BoxConstraints(minHeight: 52.r),
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: padding.r,
+              vertical: HayyaSpacing.s2,
+            ),
             child: Row(
               mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -81,8 +85,7 @@ class HayyaButton extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                     style: context.type
                         .style(16, FontWeight.w700, height: 1.2)
                         .copyWith(color: fg),
