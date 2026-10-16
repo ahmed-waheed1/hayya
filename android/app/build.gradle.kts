@@ -1,8 +1,22 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Release signing reads android/key.properties (gitignored, see
+// docs/release.md). Without it, release builds fail instead of falling back
+// to the debug key.
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties =
+    Properties().apply {
+        if (keystorePropertiesFile.exists()) {
+            keystorePropertiesFile.inputStream().use { load(it) }
+        }
+    }
+val hasReleaseKeystore = keystorePropertiesFile.exists()
 
 android {
     namespace = "com.ahmedwaheed.hayya"
@@ -30,11 +44,44 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                fun property(name: String): String =
+                    keystoreProperties.getProperty(name)
+                        ?: throw GradleException("android/key.properties is missing '$name'.")
+                keyAlias = property("keyAlias")
+                keyPassword = property("keyPassword")
+                storeFile = file(property("storeFile"))
+                storePassword = property("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
+            // R8: shrink and obfuscate code, then drop unused resources.
+            // Resources referenced only by name are listed in res/raw/keep.xml.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
+    }
+}
+
+// Fail release builds early when the upload key isn't configured. Debug
+// builds don't need it.
+tasks.matching { it.name.startsWith("pre") && it.name.endsWith("ReleaseBuild") }.configureEach {
+    doFirst {
+        if (!hasReleaseKeystore) {
+            throw GradleException(
+                "Release signing is not configured: android/key.properties is missing. " +
+                    "See docs/release.md.",
+            )
         }
     }
 }
