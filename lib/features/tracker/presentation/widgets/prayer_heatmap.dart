@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -38,12 +40,39 @@ class PrayerHeatmap extends StatelessWidget {
   static double get _cell => 15.r;
   static double get _gap => 3.r;
   static double get _pitch => _cell + _gap;
-  static double get _labelsWidth => 26.r;
   static double get _labelsGap => 6.r;
 
+  static TextStyle _labelStyle(BuildContext context) => context.type
+      .style(10.5, FontWeight.w700, height: 1)
+      .copyWith(color: context.colors.muted);
+
+  static List<String> get _weekdayLabels => [
+    LocaleKeys.tracker_weekday_mon.tr(),
+    LocaleKeys.tracker_weekday_wed.tr(),
+    LocaleKeys.tracker_weekday_fri.tr(),
+  ];
+
+  /// The weekday label column: the design's 26 px, or wider when large
+  /// text needs it.
+  static double _labelsWidth(BuildContext context) {
+    final style = _labelStyle(context);
+    var widest = 0.0;
+    for (final label in _weekdayLabels) {
+      final painter = TextPainter(
+        text: TextSpan(text: label, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      widest = math.max(widest, painter.width);
+      painter.dispose();
+    }
+    return math.max(26.r, widest.ceilToDouble());
+  }
+
   /// How many week columns fit in [width].
-  static int weeksFor(double width) =>
-      ((width - _labelsWidth - _labelsGap + _gap) / _pitch).floor().clamp(
+  static int weeksFor(BuildContext context, double width) =>
+      ((width - _labelsWidth(context) - _labelsGap) / _pitch).floor().clamp(
         1,
         53,
       );
@@ -88,18 +117,25 @@ class PrayerHeatmap extends StatelessWidget {
     final c = context.colors;
     final direction = Directionality.of(context);
     final start = firstDay(today, weeks);
-    final labelStyle = context.type
-        .style(10.5, FontWeight.w700, height: 1)
-        .copyWith(color: c.muted);
+    final labelStyle = _labelStyle(context);
+    // The month names' line: the design's 12 px, or taller for large text.
+    final monthsHeight = math.max(
+      12.r,
+      MediaQuery.textScalerOf(context).scale(labelStyle.fontSize!),
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       spacing: _labelsGap,
       children: [
         SizedBox(
-          width: _labelsWidth,
+          width: _labelsWidth(context),
           height: 7 * _pitch,
-          child: _WeekdayLabels(pitch: _pitch, style: labelStyle),
+          child: _WeekdayLabels(
+            labels: _weekdayLabels,
+            pitch: _pitch,
+            style: labelStyle,
+          ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +143,7 @@ class PrayerHeatmap extends StatelessWidget {
           children: [
             SizedBox(
               width: weeks * _pitch,
-              height: 12.r,
+              height: monthsHeight,
               child: _MonthLabels(
                 start: start,
                 weeks: weeks,
@@ -144,28 +180,31 @@ class PrayerHeatmap extends StatelessWidget {
 }
 
 class _WeekdayLabels extends StatelessWidget {
-  const _WeekdayLabels({required this.pitch, required this.style});
+  const _WeekdayLabels({
+    required this.labels,
+    required this.pitch,
+    required this.style,
+  });
 
+  /// Monday, Wednesday and Friday.
+  final List<String> labels;
   final double pitch;
   final TextStyle style;
 
   @override
   Widget build(BuildContext context) {
-    // Rows run Sunday (0) to Saturday (6); every other row is labelled.
-    final labels = {
-      1: LocaleKeys.tracker_weekday_mon.tr(),
-      3: LocaleKeys.tracker_weekday_wed.tr(),
-      5: LocaleKeys.tracker_weekday_fri.tr(),
-    };
+    // Rows run Sunday (0) to Saturday (6); every other row is labelled,
+    // so a label can take half of each unlabelled row beside it when
+    // large text makes it taller than a row.
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        for (final MapEntry(key: row, value: label) in labels.entries)
+        for (final (i, label) in labels.indexed)
           PositionedDirectional(
-            top: row * pitch,
+            top: (2 * i + 1) * pitch - pitch / 2,
             start: 0,
             end: 0,
-            height: pitch,
+            height: 2 * pitch,
             child: Align(
               alignment: AlignmentDirectional.centerStart,
               child: Text(

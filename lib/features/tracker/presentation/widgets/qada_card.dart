@@ -253,10 +253,13 @@ class _QadaOption extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: radius,
-          child: SizedBox(
-            height: 58.r,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 58.r),
             child: Padding(
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 4.r),
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: 4.r,
+                vertical: 6.r,
+              ),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Column(

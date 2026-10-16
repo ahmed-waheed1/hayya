@@ -150,8 +150,13 @@ class _DayPrayerRow extends StatelessWidget {
     final c = context.colors;
     final enabled = onChanged != null;
     return Container(
-      height: 56.r,
-      padding: EdgeInsetsDirectional.only(start: 12.r, end: 6.r),
+      constraints: BoxConstraints(minHeight: 56.r),
+      padding: EdgeInsetsDirectional.only(
+        start: 12.r,
+        end: 6.r,
+        top: 4.r,
+        bottom: 4.r,
+      ),
       decoration: BoxDecoration(
         color: c.surface2,
         borderRadius: BorderRadius.circular(HayyaRadius.md),
@@ -163,8 +168,6 @@ class _DayPrayerRow extends StatelessWidget {
           Expanded(
             child: Text(
               prayer.localizedName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: context.type
                   .style(16, FontWeight.w700)
                   .copyWith(color: enabled ? c.text : c.faint),

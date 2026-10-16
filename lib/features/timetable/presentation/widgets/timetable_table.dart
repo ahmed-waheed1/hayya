@@ -128,7 +128,7 @@ class _Metrics {
   late final double rowHeight;
 
   double get dayWidth => (tablet ? 84 : 54).r;
-  double get hijriWidth => (tablet ? 60 : 34).r;
+  double get hijriWidth => (tablet ? 60 : 38).r;
   double get timeSize => tablet ? 16 : 13;
   double get smallSize => tablet ? 12 : 10.5;
   double get headerSize => tablet ? 13 : 11;

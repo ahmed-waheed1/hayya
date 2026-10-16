@@ -1,3 +1,4 @@
+export 'adaptive_row.dart';
 export 'adhan_toggle.dart';
 export 'coming_soon.dart';
 export 'hayya_button.dart';

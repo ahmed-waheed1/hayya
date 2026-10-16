@@ -130,74 +130,76 @@ class _CountRow extends StatelessWidget {
     final name = prayer.localizedName;
 
     return Container(
-      height: 64.r,
-      padding: EdgeInsetsDirectional.only(start: 14.r, end: 6.r),
+      constraints: BoxConstraints(minHeight: 64.r),
+      padding: EdgeInsetsDirectional.fromSTEB(14.r, 6.r, 6.r, 6.r),
       decoration: BoxDecoration(
         color: c.surface2,
         borderRadius: BorderRadius.circular(HayyaRadius.md),
       ),
-      child: Row(
-        spacing: HayyaSpacing.s2,
-        children: [
-          HayyaIcon(prayer.icon, size: 20, color: c.muted),
-          Expanded(
-            child: Text(
-              name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: type.style(16, FontWeight.w700).copyWith(color: c.text),
+      // With large text the − count + controls move under the name.
+      child: AdaptiveRow(
+        gap: HayyaSpacing.s2,
+        leading: HayyaIcon(prayer.icon, size: 20, color: c.muted),
+        label: Text(
+          name,
+          style: type.style(16, FontWeight.w700).copyWith(color: c.text),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: HayyaSpacing.s2,
+          children: [
+            _StepButton(
+              icon: HayyaIcons.minus,
+              label: LocaleKeys.tracker_qada_fewer.tr(args: [name]),
+              onTap: count == 0 ? null : () => onStep(-1),
             ),
-          ),
-          _StepButton(
-            icon: HayyaIcons.minus,
-            label: LocaleKeys.tracker_qada_fewer.tr(args: [name]),
-            onTap: count == 0 ? null : () => onStep(-1),
-          ),
-          SizedBox(
-            width: 72.r,
-            child: Semantics(
-              label: LocaleKeys.tracker_qada_count_for.tr(args: [name]),
-              child: TextField(
-                controller: controller,
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp('[0-9٠-٩]')),
-                  LengthLimitingTextInputFormatter(5),
-                ],
-                style: type
-                    .style(18, FontWeight.w800, tabular: true)
-                    .copyWith(color: c.text),
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: c.surface,
-                  contentPadding: EdgeInsetsDirectional.symmetric(
-                    vertical: 10.r,
+            SizedBox(
+              // Room for five digits at any text size.
+              width: MediaQuery.textScalerOf(context).scale(72.r),
+              child: Semantics(
+                label: LocaleKeys.tracker_qada_count_for.tr(args: [name]),
+                child: TextField(
+                  controller: controller,
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp('[0-9٠-٩]')),
+                    LengthLimitingTextInputFormatter(5),
+                  ],
+                  style: type
+                      .style(18, FontWeight.w800, tabular: true)
+                      .copyWith(color: c.text),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: c.surface,
+                    contentPadding: EdgeInsetsDirectional.symmetric(
+                      vertical: 10.r,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(HayyaRadius.sm),
+                      borderSide: BorderSide(color: c.line),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(HayyaRadius.sm),
+                      borderSide: BorderSide(color: c.line),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(HayyaRadius.sm),
+                      borderSide: BorderSide(color: c.primaryInk, width: 2),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(HayyaRadius.sm),
-                    borderSide: BorderSide(color: c.line),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(HayyaRadius.sm),
-                    borderSide: BorderSide(color: c.line),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(HayyaRadius.sm),
-                    borderSide: BorderSide(color: c.primaryInk, width: 2),
-                  ),
+                  onChanged: (text) => onTyped(parseDigits(text)),
                 ),
-                onChanged: (text) => onTyped(parseDigits(text)),
               ),
             ),
-          ),
-          _StepButton(
-            icon: HayyaIcons.add,
-            label: LocaleKeys.tracker_qada_more.tr(args: [name]),
-            onTap: () => onStep(1),
-          ),
-        ],
+            _StepButton(
+              icon: HayyaIcons.add,
+              label: LocaleKeys.tracker_qada_more.tr(args: [name]),
+              onTap: () => onStep(1),
+            ),
+          ],
+        ),
       ),
     );
   }

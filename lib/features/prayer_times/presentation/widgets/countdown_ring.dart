@@ -1,12 +1,16 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/theme_context.dart';
 
 /// Progress ring around the countdown: a primary arc from the top with a
 /// gold dot at its end. Fills clockwise in LTR, counter-clockwise in RTL.
+///
+/// [size] across, or larger when large text makes [child] wider or taller
+/// than the space inside the stroke.
 class CountdownRing extends StatelessWidget {
   const CountdownRing({
     super.key,
@@ -22,7 +26,8 @@ class CountdownRing extends StatelessWidget {
   /// 0–1.
   final double progress;
 
-  /// Design sizes, scaled with ScreenUtil.
+  /// Design sizes, scaled with ScreenUtil. [size] is the smallest the
+  /// ring gets.
   final double size;
   final double stroke;
   final double dotRadius;
@@ -39,8 +44,9 @@ class CountdownRing extends StatelessWidget {
       container: true,
       label: semanticLabel,
       excludeSemantics: true,
-      child: SizedBox.square(
-        dimension: size.r,
+      child: _SquareAround(
+        minSide: size.r,
+        inset: stroke.r,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -61,12 +67,7 @@ class CountdownRing extends StatelessWidget {
                 ),
               ),
             ),
-            // The ring is a fixed graphic: with large text, what's inside
-            // shrinks to stay within the stroke.
-            Padding(
-              padding: EdgeInsetsDirectional.all(stroke.r + 6.r),
-              child: FittedBox(fit: BoxFit.scaleDown, child: child),
-            ),
+            child,
           ],
         ),
       ),
@@ -138,4 +139,80 @@ class _RingPainter extends CustomPainter {
       old.arc != arc ||
       old.dot != dot ||
       old.dotOutline != dotOutline;
+}
+
+/// A square at least [minSide] across, grown so its [child]'s content
+/// (the Stack's non-positioned child) fits with [inset] on every side.
+class _SquareAround extends SingleChildRenderObjectWidget {
+  const _SquareAround({
+    required this.minSide,
+    required this.inset,
+    required super.child,
+  });
+
+  final double minSide;
+  final double inset;
+
+  @override
+  _RenderSquareAround createRenderObject(BuildContext context) =>
+      _RenderSquareAround(minSide, inset);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderSquareAround renderObject,
+  ) => renderObject
+    ..minSide = minSide
+    ..inset = inset;
+}
+
+class _RenderSquareAround extends RenderProxyBox {
+  _RenderSquareAround(this._minSide, this._inset);
+
+  double _minSide;
+  set minSide(double value) {
+    if (value == _minSide) return;
+    _minSide = value;
+    markNeedsLayout();
+  }
+
+  double _inset;
+  set inset(double value) {
+    if (value == _inset) return;
+    _inset = value;
+    markNeedsLayout();
+  }
+
+  double _side() {
+    // The Stack sizes to its non-positioned child when given no minimum.
+    final content = child!.getDryLayout(BoxConstraints.loose(Size.infinite));
+    return math.max(
+      _minSide,
+      math.max(content.width, content.height) + 2 * _inset,
+    );
+  }
+
+  // The ring is square: its intrinsic sizes are its side either way.
+  @override
+  double computeMinIntrinsicWidth(double height) => _side();
+
+  @override
+  double computeMaxIntrinsicWidth(double height) => _side();
+
+  @override
+  double computeMinIntrinsicHeight(double width) => _side();
+
+  @override
+  double computeMaxIntrinsicHeight(double width) => _side();
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) =>
+      constraints.constrain(Size.square(_side()));
+
+  @override
+  void performLayout() {
+    final side = _side();
+    child!.layout(BoxConstraints.tight(Size.square(side)));
+    size = constraints.constrain(Size.square(side));
+  }
 }

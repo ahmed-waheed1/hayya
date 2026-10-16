@@ -261,8 +261,12 @@ class _UpdateButton extends StatelessWidget {
         child: InkWell(
           onTap: locating ? null : onPressed,
           borderRadius: radius,
-          child: SizedBox(
-            height: 48.r,
+          child: Container(
+            constraints: BoxConstraints(minHeight: 48.r),
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: HayyaSpacing.s3,
+              vertical: HayyaSpacing.s2,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: HayyaSpacing.s2,
@@ -285,8 +289,7 @@ class _UpdateButton extends StatelessWidget {
                 Flexible(
                   child: Text(
                     LocaleKeys.home_update_location.tr(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                     style: context.type
                         .style(15, FontWeight.w800)
                         .copyWith(color: c.primaryInk),
@@ -312,8 +315,11 @@ class _SearchField extends StatelessWidget {
     final c = context.colors;
     final style = context.type.style(16, FontWeight.w600);
     return Container(
-      height: 50.r,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 14.r),
+      constraints: BoxConstraints(minHeight: 50.r),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 14.r,
+        vertical: HayyaSpacing.s3,
+      ),
       decoration: BoxDecoration(
         color: c.background,
         borderRadius: BorderRadius.circular(14.r),

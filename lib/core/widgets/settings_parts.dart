@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/hayya_spacing.dart';
 import '../theme/theme_context.dart';
+import 'adaptive_row.dart';
 import 'hayya_icon.dart';
 import 'hayya_radio.dart';
 
@@ -174,36 +175,39 @@ class SettingsStepperRow extends StatelessWidget {
       constraints: BoxConstraints(minHeight: 56.r),
       child: Padding(
         padding: EdgeInsetsDirectional.symmetric(vertical: HayyaSpacing.s1),
-        child: Row(
-          spacing: HayyaSpacing.s2,
-          children: [
-            Expanded(
-              child: SettingsLabel(title: label, subtitle: subtitle),
-            ),
-            _StepButton(
-              icon: HayyaIcons.minus,
-              semanticLabel: decreaseLabel,
-              onTap: onDecrease,
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(minWidth: 64.r),
-              child: Text(
-                value,
-                textAlign: TextAlign.center,
-                style: context.type
-                    .style(15, FontWeight.w800)
-                    .copyWith(
-                      color: highlighted ? c.primaryInk : c.muted,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
+        // With large text the − value + controls move under the label.
+        child: AdaptiveRow(
+          gap: HayyaSpacing.s2,
+          label: SettingsLabel(title: label, subtitle: subtitle),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: HayyaSpacing.s2,
+            children: [
+              _StepButton(
+                icon: HayyaIcons.minus,
+                semanticLabel: decreaseLabel,
+                onTap: onDecrease,
               ),
-            ),
-            _StepButton(
-              icon: HayyaIcons.add,
-              semanticLabel: increaseLabel,
-              onTap: onIncrease,
-            ),
-          ],
+              ConstrainedBox(
+                constraints: BoxConstraints(minWidth: 64.r),
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: context.type
+                      .style(15, FontWeight.w800)
+                      .copyWith(
+                        color: highlighted ? c.primaryInk : c.muted,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                ),
+              ),
+              _StepButton(
+                icon: HayyaIcons.add,
+                semanticLabel: increaseLabel,
+                onTap: onIncrease,
+              ),
+            ],
+          ),
         ),
       ),
     );
