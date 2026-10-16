@@ -51,3 +51,6 @@ flutter test
   [magnetic declination model](docs/magnetic-declination.md) behind the Qibla
   compass, the [adhan notification sounds](docs/adhan-sounds.md) and the
   [release process](docs/release.md).
+- [Privacy policy](docs/privacy-policy.md) ([Arabic](docs/privacy-policy.ar.md)),
+  published at <https://ahmed-waheed1.github.io/hayya-privacy/>, and the
+  [Play Data safety answers](docs/play-data-safety.md).

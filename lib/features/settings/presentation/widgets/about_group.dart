@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/theme/hayya_spacing.dart';
 import '../../../../core/theme/theme_context.dart';
@@ -9,8 +10,9 @@ import '../../../../core/utils/localized_format.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../generated/locale_keys.g.dart';
 
-/// Settings → About: the app's version and the licenses page (packages,
-/// the bundled fonts and the adhan recording, see `app_licenses.dart`).
+/// Settings → About: the app's version, the privacy policy (opened in the
+/// browser) and the licenses page (packages, the bundled fonts and the
+/// adhan recording, see `app_licenses.dart`).
 ///
 /// Not in the design.
 class AboutGroup extends StatefulWidget {
@@ -56,6 +58,11 @@ class _AboutGroupState extends State<AboutGroup> {
               ),
             ),
             SettingsTile(
+              title: LocaleKeys.settings_privacy_policy.tr(),
+              subtitle: LocaleKeys.settings_privacy_policy_sub.tr(),
+              onTap: () => _openPrivacyPolicy(context),
+            ),
+            SettingsTile(
               title: LocaleKeys.settings_licenses.tr(),
               subtitle: LocaleKeys.settings_licenses_sub.tr(),
               onTap: () => showLicensePage(
@@ -70,4 +77,21 @@ class _AboutGroupState extends State<AboutGroup> {
       },
     );
   }
+}
+
+/// The published policy (the `hayya-privacy` repository on GitHub Pages),
+/// in the app's language.
+Uri privacyPolicyUrl(String languageCode) => Uri.https(
+  'ahmed-waheed1.github.io',
+  languageCode == 'ar' ? '/hayya-privacy/ar.html' : '/hayya-privacy/',
+);
+
+Future<void> _openPrivacyPolicy(BuildContext context) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final url = privacyPolicyUrl(context.locale.languageCode);
+  final failed = LocaleKeys.settings_privacy_policy_failed.tr(
+    args: [url.toString()],
+  );
+  final opened = await launchUrl(url, mode: LaunchMode.externalApplication);
+  if (!opened) messenger.showSnackBar(SnackBar(content: Text(failed)));
 }

@@ -191,6 +191,9 @@
     "about": "ABOUT",
     "version": "Version",
     "version_value": "{} ({})",
+    "privacy_policy": "Privacy policy",
+    "privacy_policy_sub": "What Hayya stores and why. Opens in your browser.",
+    "privacy_policy_failed": "Couldn’t open the browser. The policy is at {}",
     "licenses": "Licenses",
     "licenses_sub": "Fonts, the adhan recording and open-source packages",
     "methods": {

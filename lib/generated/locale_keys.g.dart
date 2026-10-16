@@ -194,6 +194,10 @@ abstract class LocaleKeys {
   static const settings_about = 'settings.about';
   static const settings_version = 'settings.version';
   static const settings_version_value = 'settings.version_value';
+  static const settings_privacy_policy = 'settings.privacy_policy';
+  static const settings_privacy_policy_sub = 'settings.privacy_policy_sub';
+  static const settings_privacy_policy_failed =
+      'settings.privacy_policy_failed';
   static const settings_licenses = 'settings.licenses';
   static const settings_licenses_sub = 'settings.licenses_sub';
   static const settings_methods_muslim_world_league_name =

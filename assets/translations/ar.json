@@ -206,6 +206,9 @@
     "about": "حول التطبيق",
     "version": "الإصدار",
     "version_value": "{} ({})",
+    "privacy_policy": "سياسة الخصوصية",
+    "privacy_policy_sub": "ما يحفظه «حيّ» ولماذا. تُفتح في المتصفح.",
+    "privacy_policy_failed": "تعذّر فتح المتصفح. السياسة على {}",
     "licenses": "التراخيص",
     "licenses_sub": "الخطوط وتسجيل الأذان والحزم مفتوحة المصدر",
     "methods": {
