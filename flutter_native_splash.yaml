@@ -1,0 +1,20 @@
+# Regenerate with: dart run flutter_native_splash:create
+flutter_native_splash:
+  # Emerald from the icon background (#11695E → #0A4A42); light uses the
+  # primary token #0D5C52, dark the deeper end of the gradient.
+  color: "#0D5C52"
+  color_dark: "#0A4A42"
+  image: assets/icon/icon_foreground_padded.png
+  image_dark: assets/icon/icon_foreground_padded.png
+
+  # Android 12+ splash screen API: the icon must fit a circle 2/3 of the
+  # image, which the padded foreground does.
+  android_12:
+    color: "#0D5C52"
+    color_dark: "#0A4A42"
+    image: assets/icon/icon_foreground_padded.png
+    image_dark: assets/icon/icon_foreground_padded.png
+
+  android: true
+  ios: true
+  web: false
