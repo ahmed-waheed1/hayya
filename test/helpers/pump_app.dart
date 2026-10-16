@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hayya/app.dart';
 import 'package:hayya/core/di/injection.dart';
 import 'package:hayya/core/preferences/app_preferences.dart';
+import 'package:hayya/core/services/background_tasks.dart';
 import 'package:hayya/core/services/location_service.dart';
 import 'package:hayya/core/services/notification_service.dart';
 import 'package:hayya/features/notifications/domain/adhan_scheduler.dart';
@@ -27,6 +28,7 @@ import 'package:hayya/features/tracker/domain/usecases/get_tracking_position.dar
 import 'package:hive_ce/hive_ce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fake_background_tasks.dart';
 import 'fake_compass_sensor.dart';
 import 'fake_location_service.dart';
 import 'fake_notification_service.dart';
@@ -85,7 +87,8 @@ Future<void> loadFonts(WidgetTester tester) async {
 /// Location comes from [location] (by default Cairo, cached and found).
 /// [now] fixes the clock Home, Settings, onboarding, the timetable and the
 /// adhan schedule use. Notifications go to [notifications] (by default a
-/// fresh fake), never the plugin. The compass is [compass] (by default a
+/// fresh fake), never the plugin, and background work to [backgroundTasks]
+/// (by default a fake), never workmanager. The compass is [compass] (by default a
 /// fake that never sends anything). The tracker box lives in memory and
 /// starts with [tracker] (see `HiveTrackerRepository` for the keys).
 /// Onboarding counts as done, so the app opens on Home, unless
@@ -97,6 +100,7 @@ Future<void> pumpHayyaApp(
   LocationService? location,
   DateTime Function()? now,
   NotificationService? notifications,
+  BackgroundTasks? backgroundTasks,
   CompassSensor? compass,
   AssetLoader? assetLoader,
   Map<String, Object> tracker = const {},
@@ -126,6 +130,10 @@ Future<void> pumpHayyaApp(
     ..unregister<NotificationService>()
     ..registerSingleton<NotificationService>(
       notifications ?? FakeNotificationService(),
+    )
+    ..unregister<BackgroundTasks>()
+    ..registerSingleton<BackgroundTasks>(
+      backgroundTasks ?? FakeBackgroundTasks(),
     )
     ..unregister<CompassSensor>()
     ..registerSingleton<CompassSensor>(compass ?? FakeCompassSensor())

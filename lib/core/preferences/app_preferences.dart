@@ -14,6 +14,7 @@ class AppPreferences {
   static const _numeralsKey = 'numerals';
   static const _timeFormatKey = 'time_format';
   static const _onboardingDoneKey = 'onboarding_done';
+  static const _deviceUses24HourKey = 'device_uses_24_hour';
 
   ThemeMode get themeMode =>
       ThemeMode.values.asNameMap()[_prefs.getString(_themeModeKey)] ??
@@ -45,6 +46,16 @@ class AppPreferences {
 
   Future<void> setTimeFormat(TimeFormat format) async {
     await _prefs.setString(_timeFormatKey, format.name);
+  }
+
+  /// The device's 12/24-hour setting as the app last saw it, or null if it
+  /// hasn't run yet. A background isolate has no view to read it from, so
+  /// the adhan reschedule there uses this one.
+  bool? get deviceUses24Hour => _prefs.getBool(_deviceUses24HourKey);
+
+  Future<void> setDeviceUses24Hour(bool value) async {
+    if (deviceUses24Hour == value) return;
+    await _prefs.setBool(_deviceUses24HourKey, value);
   }
 
   /// Onboarding was finished or skipped.

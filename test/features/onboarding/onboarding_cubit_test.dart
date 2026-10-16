@@ -11,12 +11,14 @@ import 'package:hayya/features/prayer_times/domain/entities/prayer.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_prayer_schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/fake_background_tasks.dart';
 import '../../helpers/fake_location_service.dart';
 
 void main() {
   late SharedPreferences prefs;
   late AppPreferences appPreferences;
   late AdhanPreferencesRepositoryImpl adhanPreferences;
+  late FakeBackgroundTasks backgroundTasks;
 
   Future<void> prefsWith(Map<String, Object> values) async {
     SharedPreferences.setMockInitialValues(values);
@@ -25,12 +27,16 @@ void main() {
     adhanPreferences = AdhanPreferencesRepositoryImpl(prefs);
   }
 
-  setUp(() => prefsWith({}));
+  setUp(() {
+    backgroundTasks = FakeBackgroundTasks();
+    return prefsWith({});
+  });
 
   OnboardingStatus statusWith(FakeLocationService location) => OnboardingStatus(
     preferences: appPreferences,
     locationService: location,
     adhanPreferences: adhanPreferences,
+    backgroundTasks: backgroundTasks,
   );
 
   /// [notificationsAllowed] is what the permission prompt answers.
@@ -64,6 +70,11 @@ void main() {
       await status.complete();
       expect(status.shouldShow, isFalse);
       expect(prefs.getBool('onboarding_done'), isTrue);
+    });
+
+    test('finishing registers the background reschedule', () async {
+      await statusWith(FakeLocationService(lastKnown: cairo)).complete();
+      expect(backgroundTasks.registrations, 1);
     });
 
     test(

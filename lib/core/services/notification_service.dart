@@ -77,6 +77,11 @@ abstract interface class NotificationService {
   /// 64 soonest and silently drops the rest.
   int get maxPending;
 
+  /// How many days ahead the adhan is planned. Android tops the schedule
+  /// up in the background every day, so a week is plenty. iOS can't count
+  /// on background runs, so it plans as far ahead as [maxPending] allows.
+  int get planDays;
+
   /// Whether the user lets the app post notifications at all.
   Future<bool> areNotificationsAllowed();
 

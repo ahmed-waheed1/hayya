@@ -1,9 +1,11 @@
 import 'package:hayya/core/services/notification_service.dart';
+import 'package:hayya/features/notifications/domain/usecases/plan_adhan_notifications.dart';
 
 /// [NotificationService] that records what would be pending.
 class FakeNotificationService implements NotificationService {
   FakeNotificationService({
     this.maxPending = 64,
+    this.planDays = PlanAdhanNotifications.days,
     this.allowed = true,
     this.exact = true,
     this.grantOnRequest = true,
@@ -11,6 +13,9 @@ class FakeNotificationService implements NotificationService {
 
   @override
   final int maxPending;
+
+  @override
+  final int planDays;
 
   bool allowed;
   bool exact;

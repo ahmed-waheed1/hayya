@@ -58,6 +58,12 @@ class LocalNotificationService implements NotificationService {
   @override
   int get maxPending => _isIOS ? 64 : 500;
 
+  /// A week on Android, topped up daily in the background. On iOS
+  /// [maxPending] cuts the plan short: even one notification a day fills
+  /// the 64 slots.
+  @override
+  int get planDays => _isIOS ? maxPending : 7;
+
   @override
   Future<bool> areNotificationsAllowed() async {
     await _ensureInitialized();

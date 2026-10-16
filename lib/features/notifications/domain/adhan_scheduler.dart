@@ -130,6 +130,7 @@ class AdhanScheduler {
               preferences: preferences,
               // Leave room for the test adhan under iOS's cap.
               limit: _notifications.maxPending - (_testAt == null ? 0 : 1),
+              days: _notifications.planDays,
             );
       final scheduled = [
         for (final n in planned)

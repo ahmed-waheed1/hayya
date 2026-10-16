@@ -40,6 +40,24 @@ void main() {
     expect(planned.every((n) => n.at.isAfter(midday)), isTrue);
   });
 
+  test('a longer horizon plans further ahead, still capped by the limit', () {
+    List<PlannedNotification> over(int days, {int limit = 500}) => plan(
+      now: midday,
+      coordinates: coordinates,
+      settings: const PrayerCalculationSettings(),
+      preferences: const AdhanPreferences(),
+      limit: limit,
+      days: days,
+    );
+
+    expect(over(14), hasLength(3 + 13 * 5));
+    expect(over(14).last.at, DateTime(2026, 10, 28, 19, 30));
+    // iOS: 64 days asked for, the 64 slots run out after under 13 days.
+    final capped = over(64, limit: 64);
+    expect(capped, hasLength(64));
+    expect(capped.last.at.isAfter(DateTime(2026, 10, 27)), isTrue);
+  });
+
   test('results are soonest first', () {
     final planned = planAt(
       midday,

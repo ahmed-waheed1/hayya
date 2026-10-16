@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hayya/core/di/injection.dart';
+import 'package:hayya/core/preferences/app_preferences.dart';
 import 'package:hayya/core/services/location_service.dart';
 import 'package:hayya/core/services/notification_service.dart';
 import 'package:hayya/core/widgets/widgets.dart';
@@ -59,6 +60,15 @@ void main() {
     );
     expect(notifications.channels[NotificationSound.adhan]!.name, 'Adhan');
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('keeps the device clock for the background reschedule', (
+    tester,
+  ) async {
+    tester.platformDispatcher.alwaysUse24HourFormatTestValue = true;
+    addTearDown(tester.platformDispatcher.clearAlwaysUse24HourTestValue);
+    await pump(tester);
+    expect(getIt<AppPreferences>().deviceUses24Hour, isTrue);
   });
 
   testWidgets('nothing is ever scheduled before translations load', (

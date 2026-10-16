@@ -147,6 +147,8 @@
     "allow": "سماح",
     "test_adhan": "تجربة الأذان بعد دقيقة",
     "test_adhan_scheduled": "تمت جدولة تجربة الأذان. اقفل الهاتف وانتظر دقيقة.",
+    "background_reschedule": "تشغيل إعادة الجدولة في الخلفية الآن",
+    "background_reschedule_queued": "طُلبت إعادة الجدولة في الخلفية. تعمل خلال دقيقة؛ راجع السجلات.",
     "numerals": "الأرقام",
     "numerals_arabic": "١٢٣ عربية",
     "numerals_western": "123 غربية",

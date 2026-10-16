@@ -7,24 +7,27 @@ import '../entities/planned_notification.dart';
 /// Which notifications should be pending at [now]: each enabled prayer's
 /// adhan, and its reminder when on, over the next [days] days.
 ///
-/// The app reschedules whenever it opens, so the horizon only has to last
-/// until the next visit.
+/// The app reschedules whenever it opens, and on Android once a day in the
+/// background (see docs/background-reschedule.md), so the horizon only has
+/// to last until then.
 class PlanAdhanNotifications {
   const PlanAdhanNotifications(this._repository);
 
   final PrayerTimesRepository _repository;
 
-  /// Today plus the six days after it.
+  /// The default horizon: today plus the six days after it.
   static const days = 7;
 
-  /// Soonest first, all after [now], at most [limit] long. If [limit] cuts
-  /// between a reminder and its adhan, the lone reminder is dropped too.
+  /// Soonest first, all after [now], at most [limit] long, over today and
+  /// the [days] − 1 days after it. If [limit] cuts between a reminder and
+  /// its adhan, the lone reminder is dropped too.
   List<PlannedNotification> call({
     required DateTime now,
     required GeoCoordinates coordinates,
     required PrayerCalculationSettings settings,
     required AdhanPreferences preferences,
     required int limit,
+    int days = days,
   }) {
     final reminder = preferences.reminder;
     final planned = <PlannedNotification>[];
