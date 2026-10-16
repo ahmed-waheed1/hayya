@@ -19,14 +19,11 @@ abstract class LocaleKeys {
   static const prayers_isha = 'prayers.isha';
   static const prayers_now = 'prayers.now';
   static const prayers_next_prayer = 'prayers.next_prayer';
-  static const prayers_mark_as_prayed = 'prayers.mark_as_prayed';
   static const prayers_adhan_for = 'prayers.adhan_for';
   static const prayers_mark_prayed_for = 'prayers.mark_prayed_for';
   static const prayers = 'prayers';
   static const onboarding_allow_location = 'onboarding.allow_location';
-  static const onboarding_not_now = 'onboarding.not_now';
   static const onboarding_skip = 'onboarding.skip';
-  static const onboarding_location_rationale = 'onboarding.location_rationale';
   static const onboarding_language_label = 'onboarding.language_label';
   static const onboarding_back = 'onboarding.back';
   static const onboarding_step = 'onboarding.step';
@@ -60,7 +57,6 @@ abstract class LocaleKeys {
   static const onboarding_continue = 'onboarding.continue';
   static const onboarding = 'onboarding';
   static const tracker_title = 'tracker.title';
-  static const tracker_log_prayer = 'tracker.log_prayer';
   static const tracker_current_streak = 'tracker.current_streak';
   static const tracker_days = 'tracker.days';
   static const tracker_range_weeks = 'tracker.range_weeks';
@@ -122,7 +118,6 @@ abstract class LocaleKeys {
   static const settings_theme_dark = 'settings.theme_dark';
   static const settings_theme_system = 'settings.theme_system';
   static const settings_calculation_method = 'settings.calculation_method';
-  static const settings_adhan_notification = 'settings.adhan_notification';
   static const settings_language_english = 'settings.language_english';
   static const settings_language_arabic = 'settings.language_arabic';
   static const settings_notifications = 'settings.notifications';
@@ -323,11 +318,6 @@ abstract class LocaleKeys {
   static const compass_w = 'compass.w';
   static const compass_nw = 'compass.nw';
   static const compass = 'compass';
-  static const common_disabled = 'common.disabled';
-  static const common_on = 'common.on';
-  static const common_off = 'common.off';
-  static const common_coming_soon = 'common.coming_soon';
-  static const common = 'common';
   static const notifications_adhan_title = 'notifications.adhan_title';
   static const notifications_adhan_body = 'notifications.adhan_body';
   static const notifications_reminder_title = 'notifications.reminder_title';
