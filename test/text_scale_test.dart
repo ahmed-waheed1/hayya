@@ -4,6 +4,11 @@
 //
 // Run with --dart-define=PROBE=true to print every issue instead of
 // failing on the first.
+//
+// Tagged so day-to-day runs can skip it: flutter test --exclude-tags
+// text-scale. The full suite runs it (see docs/conventions.md).
+@Tags(['text-scale'])
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
