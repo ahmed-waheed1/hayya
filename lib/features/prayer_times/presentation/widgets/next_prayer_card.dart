@@ -80,70 +80,69 @@ class _PhoneCard extends StatelessWidget {
       padding: EdgeInsetsDirectional.fromSTEB(20.r, 18.r, 18.r, 18.r),
       child: ConstrainedBox(
         constraints: BoxConstraints(minHeight: 120.r),
-        child: Row(
-          spacing: 12.r,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 4.r,
-                children: [
-                  Text(
-                    LocaleKeys.prayers_next_prayer.tr(),
-                    style: type.overline.copyWith(color: c.goldInk),
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      text: v.name,
-                      children: [
-                        if (v.tomorrow)
-                          TextSpan(
-                            text: ' · ${LocaleKeys.home_tomorrow.tr()}',
-                            style: type
-                                .style(13, FontWeight.w700)
-                                .copyWith(color: c.muted),
-                          ),
-                      ],
-                    ),
-                    style: type
-                        .style(24, FontWeight.w800, height: 1.25)
-                        .copyWith(color: c.primaryInk),
-                  ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerStart,
-                    child: _TimeText(
-                      time: v.time,
-                      meridiem: v.meridiem,
-                      size: 36,
-                      meridiemSize: 16,
-                    ),
-                  ),
-                ],
+        // With large text, or a ring grown to fit its countdown, the ring
+        // moves under the name instead of squeezing it.
+        child: AdaptiveRow(
+          gap: 12.r,
+          runGap: 12.r,
+          label: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 4.r,
+            children: [
+              Text(
+                LocaleKeys.prayers_next_prayer.tr(),
+                style: type.overline.copyWith(color: c.goldInk),
               ),
-            ),
-            CountdownRing(
-              progress: v.progress,
-              size: 128,
-              stroke: 9,
-              dotRadius: 6.5,
-              dotStroke: 2.5,
-              semanticLabel: v.ringLabel,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 2.r,
-                children: [
-                  _Countdown(v.countdown, size: 19),
-                  Text(
-                    LocaleKeys.home_remaining.tr(),
-                    style: type
-                        .style(12, FontWeight.w700)
-                        .copyWith(color: c.muted),
-                  ),
-                ],
+              Text.rich(
+                TextSpan(
+                  text: v.name,
+                  children: [
+                    if (v.tomorrow)
+                      TextSpan(
+                        text: ' · ${LocaleKeys.home_tomorrow.tr()}',
+                        style: type
+                            .style(13, FontWeight.w700)
+                            .copyWith(color: c.muted),
+                      ),
+                  ],
+                ),
+                style: type
+                    .style(24, FontWeight.w800, height: 1.25)
+                    .copyWith(color: c.primaryInk),
               ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
+                child: _TimeText(
+                  time: v.time,
+                  meridiem: v.meridiem,
+                  size: 36,
+                  meridiemSize: 16,
+                ),
+              ),
+            ],
+          ),
+          trailing: CountdownRing(
+            progress: v.progress,
+            size: 128,
+            stroke: 9,
+            dotRadius: 6.5,
+            dotStroke: 2.5,
+            semanticLabel: v.ringLabel,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 2.r,
+              children: [
+                _Countdown(v.countdown, size: 19),
+                Text(
+                  LocaleKeys.home_remaining.tr(),
+                  style: type
+                      .style(12, FontWeight.w700)
+                      .copyWith(color: c.muted),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -180,32 +179,30 @@ class _TabletCard extends StatelessWidget {
             dotRadius: 10,
             dotStroke: 3.5,
             semanticLabel: v.ringLabel,
-            child: Padding(
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 28.r),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 4.r,
-                children: [
-                  Text(
-                    v.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: type
-                        .style(30, FontWeight.w800, height: 1.2)
-                        .copyWith(color: c.primaryInk),
-                  ),
-                  _Countdown(v.countdown, size: 32),
-                  Text(
-                    v.tomorrow
-                        ? '${LocaleKeys.home_remaining.tr()} · '
-                              '${LocaleKeys.home_tomorrow.tr()}'
-                        : LocaleKeys.home_remaining.tr(),
-                    style: type
-                        .style(14, FontWeight.w700)
-                        .copyWith(color: c.muted),
-                  ),
-                ],
-              ),
+            // The ring keeps its content clear of the stroke.
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 4.r,
+              children: [
+                Text(
+                  v.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: type
+                      .style(30, FontWeight.w800, height: 1.2)
+                      .copyWith(color: c.primaryInk),
+                ),
+                _Countdown(v.countdown, size: 32),
+                Text(
+                  v.tomorrow
+                      ? '${LocaleKeys.home_remaining.tr()} · '
+                            '${LocaleKeys.home_tomorrow.tr()}'
+                      : LocaleKeys.home_remaining.tr(),
+                  style: type
+                      .style(14, FontWeight.w700)
+                      .copyWith(color: c.muted),
+                ),
+              ],
             ),
           ),
           FittedBox(

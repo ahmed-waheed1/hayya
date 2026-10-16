@@ -9,8 +9,9 @@ import '../../../../core/theme/theme_context.dart';
 /// Progress ring around the countdown: a primary arc from the top with a
 /// gold dot at its end. Fills clockwise in LTR, counter-clockwise in RTL.
 ///
-/// [size] across, or larger when large text makes [child] wider or taller
-/// than the space inside the stroke.
+/// [size] across, or larger when [child] doesn't fit inside the stroke:
+/// with large text, or on short screens where the ring scales down with the
+/// height but the text doesn't.
 class CountdownRing extends StatelessWidget {
   const CountdownRing({
     super.key,
@@ -46,7 +47,10 @@ class CountdownRing extends StatelessWidget {
       excludeSemantics: true,
       child: _SquareAround(
         minSide: size.r,
-        inset: stroke.r,
+        // From the edge to the inside of the stroke (see _RingPainter).
+        inset:
+            math.max(stroke.r / 2, dotRadius.r + dotStroke.r / 2) +
+            stroke.r / 2,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -186,10 +190,11 @@ class _RenderSquareAround extends RenderProxyBox {
   double _side() {
     // The Stack sizes to its non-positioned child when given no minimum.
     final content = child!.getDryLayout(BoxConstraints.loose(Size.infinite));
-    return math.max(
-      _minSide,
-      math.max(content.width, content.height) + 2 * _inset,
+    // The content's corners, not just its width, must clear the stroke.
+    final diagonal = math.sqrt(
+      content.width * content.width + content.height * content.height,
     );
+    return math.max(_minSide, diagonal + 2 * _inset);
   }
 
   // The ring is square: its intrinsic sizes are its side either way.
