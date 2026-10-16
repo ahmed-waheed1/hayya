@@ -3,3 +3,7 @@ tags:
   # screen sizes (320 cases, about 7 minutes). Skip it while working with
   # `flutter test --exclude-tags text-scale`; the full suite runs it.
   text-scale:
+  # test/store_screenshots_test.dart: writes the Play Store screenshots to
+  # store/screenshots/. Skipped unless run with
+  # --dart-define=STORE_SCREENSHOTS=true.
+  store-screenshots:

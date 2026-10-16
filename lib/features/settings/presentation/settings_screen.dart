@@ -25,6 +25,12 @@ import 'widgets/prayer_times_group.dart';
 /// and, in debug builds, Developer.
 ///
 /// Phones (and narrow tablet panes) get one column; wider tablets get two.
+
+/// Debug builds show the Developer section; the store screenshot
+/// generator turns it off. Release builds never show it (`kDebugMode`).
+@visibleForTesting
+bool showDeveloperTools = true;
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -48,7 +54,7 @@ class SettingsScreen extends StatelessWidget {
       ),
       _section(LocaleKeys.settings_location, const LocationGroup()),
       _section(LocaleKeys.settings_about, const AboutGroup()),
-      if (kDebugMode)
+      if (kDebugMode && showDeveloperTools)
         _section(LocaleKeys.settings_developer, const _DeveloperGroup()),
     ];
 

@@ -119,7 +119,7 @@ class HayyaTypography extends ThemeExtension<HayyaTypography> {
     required bool tabular,
   }) {
     final fontSize = size.sp;
-    return GoogleFonts.getFont(
+    final style = GoogleFonts.getFont(
       isArabic ? 'Cairo' : 'Manrope',
       fontSize: fontSize,
       height: height,
@@ -127,6 +127,11 @@ class HayyaTypography extends ThemeExtension<HayyaTypography> {
       letterSpacing: isArabic ? 0 : trackingEm * fontSize,
       fontFeatures: tabular ? const [FontFeature.tabularFigures()] : null,
     );
+    if (isArabic) return style;
+    // Arabic inside English text (the "العربية" language option) is set in
+    // Cairo too, not the system's Arabic font.
+    final cairo = GoogleFonts.getFont('Cairo', fontWeight: weight).fontFamily;
+    return style.copyWith(fontFamilyFallback: [?cairo]);
   }
 
   @override
