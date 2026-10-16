@@ -84,12 +84,12 @@ void main() {
     expect(state.locating, isFalse);
   });
 
-  test('without a cache, loads and asks for permission', () async {
+  test('without a cache, loads without prompting (onboarding asks)', () async {
     final cubit = cubitWith(FakeLocationService()..gate = Completer());
     final started = cubit.start();
 
     expect(cubit.state, isA<PrayerTimesLoading>());
-    expect(location.permissionRequests, [true]);
+    expect(location.permissionRequests, [false]);
 
     location.gate!.complete();
     await started;
@@ -149,7 +149,7 @@ void main() {
     expect((cubit.state as PrayerTimesReady).location, cairo);
 
     await cubit.recheck();
-    expect(location.permissionRequests, [true, false]);
+    expect(location.permissionRequests, [false, false]);
   });
 
   test('settings opened for the failure', () async {

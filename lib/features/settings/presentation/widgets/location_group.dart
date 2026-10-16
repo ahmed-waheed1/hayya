@@ -12,6 +12,7 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../prayer_times/presentation/prayer_display.dart';
 import '../cubit/location_settings_cubit.dart';
+import 'city_search.dart';
 
 /// Settings → Location: Automatic shows the device's location with a
 /// refresh; Manual searches for a city to use instead.
@@ -25,20 +26,6 @@ class LocationGroup extends StatefulWidget {
 }
 
 class _LocationGroupState extends State<LocationGroup> {
-  final _query = TextEditingController();
-
-  @override
-  void dispose() {
-    _query.dispose();
-    super.dispose();
-  }
-
-  Future<void> _choose(UserLocation place) async {
-    FocusScope.of(context).unfocus();
-    _query.clear();
-    await context.read<LocationSettingsCubit>().choose(place);
-  }
-
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<LocationSettingsCubit>();
@@ -73,8 +60,7 @@ class _LocationGroupState extends State<LocationGroup> {
                 location: state.location!,
                 detail: LocaleKeys.settings_location_chosen.tr(),
               ),
-            _SearchField(controller: _query, onChanged: cubit.search),
-            _SearchResults(state: state, onChoose: _choose),
+            const CitySearch(),
           ] else ...[
             switch (state.location) {
               final location? => _CurrentPlace(
@@ -293,168 +279,6 @@ class _UpdateButton extends StatelessWidget {
                     style: context.type
                         .style(15, FontWeight.w800)
                         .copyWith(color: c.primaryInk),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SearchField extends StatelessWidget {
-  const _SearchField({required this.controller, required this.onChanged});
-
-  final TextEditingController controller;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    final style = context.type.style(16, FontWeight.w600);
-    return Container(
-      constraints: BoxConstraints(minHeight: 50.r),
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 14.r,
-        vertical: HayyaSpacing.s3,
-      ),
-      decoration: BoxDecoration(
-        color: c.background,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: c.primaryInk, width: 2),
-      ),
-      child: Row(
-        spacing: 10.r,
-        children: [
-          HayyaIcon(
-            HayyaIcons.search,
-            size: 20,
-            color: c.muted,
-            strokeWidth: 2,
-          ),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: onChanged,
-              textInputAction: TextInputAction.search,
-              style: style.copyWith(color: c.text),
-              cursorColor: c.primaryInk,
-              decoration: InputDecoration(
-                isCollapsed: true,
-                border: InputBorder.none,
-                hintText: LocaleKeys.settings_search_city.tr(),
-                hintStyle: style.copyWith(color: c.faint),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SearchResults extends StatelessWidget {
-  const _SearchResults({required this.state, required this.onChoose});
-
-  final LocationSettingsState state;
-  final ValueChanged<UserLocation> onChoose;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    final message = switch (state.searchStatus) {
-      PlaceSearchStatus.idle => null,
-      PlaceSearchStatus.searching => LocaleKeys.settings_searching.tr(),
-      PlaceSearchStatus.failed => LocaleKeys.settings_search_failed.tr(),
-      PlaceSearchStatus.done when state.results.isEmpty =>
-        LocaleKeys.settings_search_no_results.tr(args: [state.query.trim()]),
-      PlaceSearchStatus.done => null,
-    };
-    if (message != null) {
-      return Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 4.r),
-        child: Semantics(
-          liveRegion: true,
-          child: Text(
-            message,
-            style: context.type
-                .style(13, FontWeight.w600)
-                .copyWith(color: c.muted),
-          ),
-        ),
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final (i, place) in state.results.indexed) ...[
-          if (i > 0) Divider(color: c.line, height: 1),
-          _ResultRow(place: place, onTap: () => onChoose(place)),
-        ],
-      ],
-    );
-  }
-}
-
-class _ResultRow extends StatelessWidget {
-  const _ResultRow({required this.place, required this.onTap});
-
-  final UserLocation place;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    final type = context.type;
-    final name = place.placeName(context.locale.languageCode);
-    final coordinates = context.format.coordinates(place.coordinates);
-    return Semantics(
-      button: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12.r),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: 52.r),
-          child: Padding(
-            padding: EdgeInsetsDirectional.symmetric(
-              horizontal: 4.r,
-              vertical: 6.r,
-            ),
-            child: Row(
-              spacing: HayyaSpacing.s3,
-              children: [
-                HayyaIcon(
-                  HayyaIcons.location,
-                  size: 18,
-                  color: c.muted,
-                  strokeWidth: 1.9,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 1.r,
-                    children: [
-                      Text(
-                        name?.city ?? name?.country ?? coordinates,
-                        style: type
-                            .style(15, FontWeight.w700)
-                            .copyWith(color: c.text),
-                      ),
-                      Text(
-                        switch (name) {
-                          PlaceName(city: _?, country: final country?) =>
-                            LocaleKeys.settings_location_detail.tr(
-                              args: [country, coordinates],
-                            ),
-                          _ => coordinates,
-                        },
-                        style: type
-                            .style(12.5, FontWeight.w600)
-                            .copyWith(color: c.muted),
-                      ),
-                    ],
                   ),
                 ),
               ],

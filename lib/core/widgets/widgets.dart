@@ -12,5 +12,6 @@ export 'prayer_row.dart';
 export 'segmented_picker.dart';
 export 'settings_parts.dart';
 export 'settings_tile.dart';
+export 'square_icon_button.dart';
 export 'stat_tile.dart';
 export 'tap_target.dart';

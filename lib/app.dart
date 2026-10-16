@@ -12,6 +12,7 @@ import 'core/utils/responsive.dart';
 import 'features/notifications/domain/adhan_scheduler.dart';
 import 'features/notifications/presentation/adhan_notifications_sync.dart';
 import 'features/notifications/presentation/cubit/adhan_notifications_cubit.dart';
+import 'features/onboarding/domain/onboarding_status.dart';
 import 'features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'generated/locale_keys.g.dart';
 
@@ -42,7 +43,9 @@ class HayyaApp extends StatefulWidget {
 }
 
 class _HayyaAppState extends State<HayyaApp> {
-  final _router = createAppRouter();
+  final _router = createAppRouter(
+    onboarding: getIt<OnboardingStatus>().shouldShow,
+  );
 
   /// Frame sizes from the design export (phone 390 × 844, tablet 834 × 1194).
   static const _phoneDesign = Size(390, 844);

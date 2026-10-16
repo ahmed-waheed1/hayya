@@ -147,7 +147,7 @@ class LocationStatusView extends StatelessWidget {
         Padding(
           padding: EdgeInsetsDirectional.only(bottom: 10.r),
           child: CustomPaint(
-            foregroundPainter: _DashedHalo(color: c.line, gap: 14.r),
+            foregroundPainter: DashedHalo(color: c.line, gap: 14.r),
             child: Container(
               width: 120.r,
               height: 120.r,
@@ -306,8 +306,10 @@ class _Note extends StatelessWidget {
 }
 
 /// Dashed circle [gap] outside the child's bounds.
-class _DashedHalo extends CustomPainter {
-  const _DashedHalo({required this.color, required this.gap});
+/// A dashed circle [gap] outside the painted box, as around the state
+/// illustrations (and onboarding's hero).
+class DashedHalo extends CustomPainter {
+  const DashedHalo({required this.color, required this.gap});
 
   final Color color;
   final double gap;
@@ -329,5 +331,5 @@ class _DashedHalo extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedHalo old) => old.color != color || old.gap != gap;
+  bool shouldRepaint(DashedHalo old) => old.color != color || old.gap != gap;
 }

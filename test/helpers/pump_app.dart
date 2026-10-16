@@ -11,6 +11,9 @@ import 'package:hayya/core/services/notification_service.dart';
 import 'package:hayya/features/notifications/domain/adhan_scheduler.dart';
 import 'package:hayya/features/notifications/domain/repositories/adhan_preferences_repository.dart';
 import 'package:hayya/features/notifications/domain/usecases/plan_adhan_notifications.dart';
+import 'package:hayya/features/onboarding/domain/onboarding_status.dart';
+import 'package:hayya/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:hayya/features/notifications/presentation/cubit/adhan_notifications_cubit.dart';
 import 'package:hayya/features/prayer_times/domain/repositories/hijri_calendar_repository.dart';
 import 'package:hayya/features/prayer_times/domain/repositories/prayer_settings_repository.dart';
 import 'package:hayya/features/prayer_times/domain/usecases/get_hijri_date.dart';
@@ -80,12 +83,13 @@ Future<void> loadFonts(WidgetTester tester) async {
 /// Boots the full app (DI, preferences, translations, router) at [size].
 ///
 /// Location comes from [location] (by default Cairo, cached and found).
-/// [now] fixes the clock Home, Settings, the timetable and the adhan
-/// schedule use. Notifications go to [notifications] (by default a fresh
-/// fake), never the plugin. The compass is [compass] (by default a fake
-/// that never sends anything). The tracker box lives in memory and starts
-/// with [tracker]
-/// (see `HiveTrackerRepository` for the keys).
+/// [now] fixes the clock Home, Settings, onboarding, the timetable and the
+/// adhan schedule use. Notifications go to [notifications] (by default a
+/// fresh fake), never the plugin. The compass is [compass] (by default a
+/// fake that never sends anything). The tracker box lives in memory and
+/// starts with [tracker] (see `HiveTrackerRepository` for the keys).
+/// Onboarding counts as done, so the app opens on Home, unless
+/// [onboarding] is true (a first launch).
 Future<void> pumpHayyaApp(
   WidgetTester tester, {
   Size size = phoneSize,
@@ -96,6 +100,7 @@ Future<void> pumpHayyaApp(
   CompassSensor? compass,
   AssetLoader? assetLoader,
   Map<String, Object> tracker = const {},
+  bool onboarding = false,
 }) async {
   tester.view
     ..physicalSize = size
@@ -105,7 +110,10 @@ Future<void> pumpHayyaApp(
   // A cached asset future from an earlier test never completes in this
   // test's zone, so translations would hang on the second boot.
   rootBundle.clear();
-  SharedPreferences.setMockInitialValues(prefs);
+  SharedPreferences.setMockInitialValues({
+    if (!onboarding) 'onboarding_done': true,
+    ...prefs,
+  });
   await getIt.reset();
   await configureDependencies(
     openTrackerBox: () => openMemoryTrackerBox(tracker),
@@ -149,6 +157,18 @@ Future<void> pumpHayyaApp(
         settingsRepository: getIt<PrayerSettingsRepository>(),
         hijriCalendar: getIt<HijriCalendarRepository>(),
         locationService: getIt<LocationService>(),
+        clock: now ?? DateTime.now,
+      ),
+    )
+    ..unregister<OnboardingCubit>()
+    ..registerFactory<OnboardingCubit>(
+      () => OnboardingCubit(
+        status: getIt<OnboardingStatus>(),
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        getSchedule: getIt<GetPrayerSchedule>(),
+        requestNotifications:
+            getIt<AdhanNotificationsCubit>().allowNotifications,
         clock: now ?? DateTime.now,
       ),
     )

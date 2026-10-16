@@ -162,12 +162,9 @@ void main() {
     expect(bell.onChanged, isNull);
   });
 
-  testWidgets('first launch asks for notification permission once', (
-    tester,
-  ) async {
+  testWidgets('opening the app never prompts; onboarding does', (tester) async {
     await pump(tester, service: FakeNotificationService(allowed: false));
-    expect(notifications.permissionRequests, 1);
-    expect(find.text('Notifications are off'), findsNothing);
+    expect(notifications.permissionRequests, 0);
   });
 
   testWidgets('debug: "Test adhan in 1 minute" schedules one', (tester) async {
@@ -254,7 +251,14 @@ void main() {
       expect(find.text('Notifications are off'), findsOneWidget);
       await tapVisible(tester, find.text('Turn on'));
       await settle(tester, rounds: 2);
-      // Already prompted at first launch, so the settings open instead.
+      // Never asked yet (skipped in onboarding): the system prompt.
+      expect(notifications.permissionRequests, 1);
+      expect(notifications.settingsOpened, 0);
+
+      // Refused there: now the settings open instead.
+      await tapVisible(tester, find.text('Turn on'));
+      await settle(tester, rounds: 2);
+      expect(notifications.permissionRequests, 1);
       expect(notifications.settingsOpened, 1);
     });
 

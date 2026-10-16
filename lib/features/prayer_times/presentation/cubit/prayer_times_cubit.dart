@@ -19,6 +19,10 @@ import 'prayer_times_state.dart';
 ///
 /// A location chosen elsewhere (a city picked in Settings) and changes to
 /// the calculation settings or the Hijri adjustment apply straight away.
+///
+/// The location permission is asked for in onboarding, so opening Home
+/// never prompts; without a location it shows the error view, whose
+/// "Allow location" does.
 class PrayerTimesCubit extends Cubit<PrayerTimesState> {
   PrayerTimesCubit({
     required this._locationService,
@@ -57,7 +61,7 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
 
     final cached = _locationService.lastKnown;
     if (cached != null) _show(cached);
-    await _locate(userAsked: cached == null);
+    await _locate(userAsked: cached == null, requestPermission: false);
   }
 
   /// The user asked for a fresh location (city chip, Try again, Allow).

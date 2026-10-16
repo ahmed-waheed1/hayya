@@ -13,6 +13,7 @@ class AppPreferences {
   static const _languageCodeKey = 'language_code';
   static const _numeralsKey = 'numerals';
   static const _timeFormatKey = 'time_format';
+  static const _onboardingDoneKey = 'onboarding_done';
 
   ThemeMode get themeMode =>
       ThemeMode.values.asNameMap()[_prefs.getString(_themeModeKey)] ??
@@ -44,5 +45,12 @@ class AppPreferences {
 
   Future<void> setTimeFormat(TimeFormat format) async {
     await _prefs.setString(_timeFormatKey, format.name);
+  }
+
+  /// Onboarding was finished or skipped.
+  bool get onboardingDone => _prefs.getBool(_onboardingDoneKey) ?? false;
+
+  Future<void> setOnboardingDone() async {
+    await _prefs.setBool(_onboardingDoneKey, true);
   }
 }

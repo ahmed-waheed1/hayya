@@ -17,6 +17,7 @@ import 'package:hayya/core/router/app_router.dart';
 import 'package:hayya/core/services/location_service.dart';
 import 'package:hayya/core/services/user_location.dart';
 import 'package:hayya/core/widgets/widgets.dart';
+import 'package:hayya/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:hayya/features/prayer_times/presentation/home_screen.dart';
 import 'package:hayya/features/qibla/domain/compass_sensor.dart';
 import 'package:hayya/features/prayer_times/presentation/widgets/timetable_link.dart';
@@ -95,6 +96,7 @@ Future<void> pumpAt(
   FakeCompassSensor? compass,
   Map<String, Object> prefs = const {},
   Map<String, Object> tracker = const {},
+  bool onboarding = false,
 }) => pumpHayyaApp(
   tester,
   size: c.size,
@@ -104,6 +106,7 @@ Future<void> pumpAt(
   notifications: notifications,
   compass: compass,
   tracker: tracker,
+  onboarding: onboarding,
 );
 
 Future<void> goTab(WidgetTester tester, String en, String ar, String lang) =>
@@ -139,7 +142,93 @@ Map<String, Object> history() {
   };
 }
 
+Future<void> tapText(WidgetTester tester, String en, String ar, String lang) =>
+    tapVisible(tester, find.text(lang == 'ar' ? ar : en));
+
+/// Simulates coming back from the system settings.
+Future<void> resume(WidgetTester tester) async {
+  tester.binding
+    ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+    ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+  await settle(tester, rounds: 2);
+}
+
 void main() {
+  textScaleMatrix('Onboarding', (tester, c) async {
+    await pumpAt(
+      tester,
+      c,
+      onboarding: true,
+      // Each failure in turn, then found.
+      location: FakeLocationService(
+        results: const [
+          LocationFailed(LocationFailure.permissionDenied),
+          LocationFailed(LocationFailure.permissionDeniedForever),
+          LocationFailed(LocationFailure.serviceDisabled),
+          LocationFailed(LocationFailure.unavailable),
+        ].cast<LocationResult>().followedBy([LocationFound(cairo)]).toList(),
+        places: [alexandria],
+      ),
+      notifications: FakeNotificationService(
+        allowed: false,
+        grantOnRequest: false,
+      ),
+    );
+    final scrollable = mainScrollable(OnboardingScreen);
+    await checkScrolling(tester, c, 'welcome', scrollable);
+
+    await tapText(tester, 'Get started', 'ابدأ الآن', c.lang);
+    await settle(tester, rounds: 2);
+    await checkScrolling(tester, c, 'location', scrollable);
+
+    // The city sheet with results; closed without choosing.
+    await tapText(
+      tester,
+      'Choose a city manually',
+      'اختيار مدينة يدويًا',
+      c.lang,
+    );
+    await settle(tester, rounds: 2);
+    await tester.enterText(
+      find.byType(TextField),
+      c.lang == 'ar' ? 'الإس' : 'Alex',
+    );
+    await settle(tester, rounds: 3);
+    await check(tester, c, 'city sheet');
+    Navigator.of(tester.element(find.byType(TextField))).pop();
+    await settle(tester, rounds: 2);
+
+    await tapText(tester, 'Allow location', 'السماح بالموقع', c.lang);
+    await settle(tester, rounds: 2);
+    await checkScrolling(tester, c, 'location denied', scrollable);
+    for (final (state, link, arLink) in [
+      ('blocked', 'Open Settings', 'فتح الإعدادات'),
+      ('off', 'Location settings', 'إعدادات الموقع'),
+      ('unavailable', 'Try again', 'حاول مرة أخرى'),
+    ]) {
+      await resume(tester);
+      expect(find.text(c.lang == 'ar' ? arLink : link), findsOneWidget);
+      await checkScrolling(tester, c, 'location $state', scrollable);
+    }
+    await tapText(tester, 'Try again', 'حاول مرة أخرى', c.lang);
+    await settle(tester, rounds: 2);
+    await checkScrolling(tester, c, 'notifications', scrollable);
+
+    final back = find.bySemanticsLabel(c.lang == 'ar' ? 'رجوع' : 'Back');
+    await Scrollable.ensureVisible(tester.element(back), alignment: 0.5);
+    await tester.pump();
+    await tester.tap(back);
+    await settle(tester, rounds: 2);
+    await checkScrolling(tester, c, 'location found', scrollable);
+    await tapText(tester, 'Continue', 'متابعة', c.lang);
+    await settle(tester, rounds: 2);
+
+    await tapText(tester, 'Allow notifications', 'السماح بالإشعارات', c.lang);
+    await settle(tester, rounds: 2);
+    expect(find.text(c.lang == 'ar' ? 'متابعة' : 'Continue'), findsOneWidget);
+    await checkScrolling(tester, c, 'notifications denied', scrollable);
+  });
+
   textScaleMatrix('Home', (tester, c) async {
     await pumpAt(tester, c);
     await checkScrolling(tester, c, 'home', mainScrollable(HomeScreen));

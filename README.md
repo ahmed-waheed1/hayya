@@ -6,6 +6,10 @@ calculated on the device, so they work offline.
 
 ## Features
 
+- **Onboarding** on first launch: pick English or Arabic, then the location
+  and notification permissions, each explained before the system asks. Every
+  step can be skipped or refused; choose a city by hand instead of sharing
+  your location, and turn either on later in Settings.
 - **Prayer times** for your location, with the current and next prayer and a
   live countdown. Choose the calculation method, the Asr madhab, a
   high-latitude rule and per-prayer minute adjustments.
@@ -34,7 +38,7 @@ flutter run
 # While working: everything except the text-scale matrix (about 2.5 min).
 flutter test --exclude-tags text-scale
 
-# Before every commit and PR: the full suite (about 7.5 min).
+# Before every commit and PR: the full suite (about 10 min).
 flutter test
 ```
 

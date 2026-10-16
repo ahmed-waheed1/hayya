@@ -66,7 +66,9 @@ class QiblaCubit extends Cubit<QiblaState> {
     if (cached != null) {
       _show(cached);
     } else {
-      await _locate(requestPermission: true);
+      // Onboarding asks for the permission; the error view's Allow
+      // button asks again.
+      await _locate(requestPermission: false);
     }
   }
 

@@ -212,7 +212,7 @@ void main() {
       await tester.tap(find.text('Allow location'));
       await settle(tester, rounds: 2);
 
-      expect(location.permissionRequests, [true, true]);
+      expect(location.permissionRequests, [false, true]);
       expect(find.byType(NextPrayerCard), findsOneWidget);
     });
 
