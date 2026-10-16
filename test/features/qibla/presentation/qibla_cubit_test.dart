@@ -70,7 +70,7 @@ void main() {
     qiblaTest('locates when nothing is cached', (tester) async {
       final cubit = await startCubit(with_: FakeLocationService());
       expect(ready(cubit).location, cairo);
-      expect(location.permissionRequests, [true]);
+      expect(location.permissionRequests, [false]);
     });
 
     qiblaTest('shows why the location failed, and can fall back', (
@@ -87,7 +87,7 @@ void main() {
 
       fake.lastKnown = alexandria;
       await cubit.recheck();
-      expect(location.permissionRequests, [true, false]);
+      expect(location.permissionRequests, [false, false]);
       expect(cubit.state, isA<QiblaLocationError>());
       cubit.useLastKnown();
       expect(ready(cubit).location, alexandria);

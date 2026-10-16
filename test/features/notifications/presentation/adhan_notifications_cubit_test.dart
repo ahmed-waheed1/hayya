@@ -42,7 +42,6 @@ void main() {
     final cubit = AdhanNotificationsCubit(
       repository: repository,
       notifications: notifications,
-      locationService: location,
       scheduler: scheduler,
     );
     addTearDown(cubit.close);
@@ -151,32 +150,31 @@ void main() {
       expect(repository.preferences.reminder, isNull);
     });
 
-    test('first run asks once, straight away with a known location', () async {
+    test('starting never prompts; onboarding does that', () async {
       await makeCubit().start();
+      expect(notifications.permissionRequests, 0);
+      expect(repository.permissionPrompted, isFalse);
+
+      location = FakeLocationService();
+      await makeCubit().start();
+      await location.locate();
+      await Future<void>.delayed(Duration.zero);
+      expect(notifications.permissionRequests, 0);
+    });
+
+    test('Allow prompts once and reports the answer', () async {
+      final cubit = makeCubit();
+      await cubit.start();
+      expect(await cubit.allowNotifications(), isTrue);
       expect(notifications.permissionRequests, 1);
       expect(repository.permissionPrompted, isTrue);
 
-      await makeCubit().start();
-      expect(notifications.permissionRequests, 1);
-    });
-
-    test('first run without a location waits for one before asking', () async {
-      location = FakeLocationService();
-      await makeCubit().start();
-      expect(notifications.permissionRequests, 0);
-
-      await location.locate();
-      await Future<void>.delayed(Duration.zero);
-      expect(notifications.permissionRequests, 1);
-    });
-
-    test('"Turn on" opens the settings once the prompt was used', () async {
-      final cubit = makeCubit();
-      await cubit.start();
-      notifications.allowed = false;
+      notifications
+        ..allowed = false
+        ..grantOnRequest = false;
       await cubit.refreshPermissions();
-
-      await cubit.allowNotifications();
+      // The prompt was used: now it opens the settings.
+      expect(await cubit.allowNotifications(), isFalse);
       expect(notifications.settingsOpened, 1);
       expect(notifications.permissionRequests, 1);
     });

@@ -92,7 +92,7 @@ iOS must not be corrected twice. See [magnetic-declination.md](magnetic-declinat
 | When | Command | Runs |
 | --- | --- | --- |
 | While working | `flutter test --exclude-tags text-scale` | everything except the text-scale matrix (about 2.5 min) |
-| Before every commit and every PR | `flutter test` | the full suite, matrix included (about 7.5 min) |
+| Before every commit and every PR | `flutter test` | the full suite, matrix included (about 10 min) |
 
 Before committing, also run `dart format lib test` and `flutter analyze`; both
 must be clean.

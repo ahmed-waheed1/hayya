@@ -7,6 +7,8 @@ import '../../features/notifications/domain/adhan_scheduler.dart';
 import '../../features/notifications/domain/repositories/adhan_preferences_repository.dart';
 import '../../features/notifications/domain/usecases/plan_adhan_notifications.dart';
 import '../../features/notifications/presentation/cubit/adhan_notifications_cubit.dart';
+import '../../features/onboarding/domain/onboarding_status.dart';
+import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import '../../features/prayer_times/data/adhan_prayer_times_repository.dart';
 import '../../features/prayer_times/data/hijri_calendar_repository_impl.dart';
 import '../../features/prayer_times/data/prayer_settings_repository_impl.dart';
@@ -131,8 +133,25 @@ Future<void> configureDependencies({
       () => AdhanNotificationsCubit(
         repository: getIt<AdhanPreferencesRepository>(),
         notifications: getIt<NotificationService>(),
-        locationService: getIt<LocationService>(),
         scheduler: getIt<AdhanScheduler>(),
+      ),
+    )
+    // Onboarding
+    ..registerLazySingleton<OnboardingStatus>(
+      () => OnboardingStatus(
+        preferences: getIt<AppPreferences>(),
+        locationService: getIt<LocationService>(),
+        adhanPreferences: getIt<AdhanPreferencesRepository>(),
+      ),
+    )
+    ..registerFactory<OnboardingCubit>(
+      () => OnboardingCubit(
+        status: getIt<OnboardingStatus>(),
+        locationService: getIt<LocationService>(),
+        settingsRepository: getIt<PrayerSettingsRepository>(),
+        getSchedule: getIt<GetPrayerSchedule>(),
+        requestNotifications:
+            getIt<AdhanNotificationsCubit>().allowNotifications,
       ),
     )
     // Tracker

@@ -27,6 +27,37 @@ abstract class LocaleKeys {
   static const onboarding_not_now = 'onboarding.not_now';
   static const onboarding_skip = 'onboarding.skip';
   static const onboarding_location_rationale = 'onboarding.location_rationale';
+  static const onboarding_language_label = 'onboarding.language_label';
+  static const onboarding_back = 'onboarding.back';
+  static const onboarding_step = 'onboarding.step';
+  static const onboarding_badge = 'onboarding.badge';
+  static const onboarding_welcome_over = 'onboarding.welcome_over';
+  static const onboarding_welcome_title = 'onboarding.welcome_title';
+  static const onboarding_welcome_body = 'onboarding.welcome_body';
+  static const onboarding_get_started = 'onboarding.get_started';
+  static const onboarding_location_title = 'onboarding.location_title';
+  static const onboarding_location_body = 'onboarding.location_body';
+  static const onboarding_locating = 'onboarding.locating';
+  static const onboarding_location_denied_body =
+      'onboarding.location_denied_body';
+  static const onboarding_location_blocked_body =
+      'onboarding.location_blocked_body';
+  static const onboarding_location_off_body = 'onboarding.location_off_body';
+  static const onboarding_location_unavailable_body =
+      'onboarding.location_unavailable_body';
+  static const onboarding_choose_city = 'onboarding.choose_city';
+  static const onboarding_choose_city_title = 'onboarding.choose_city_title';
+  static const onboarding_continue_without_location =
+      'onboarding.continue_without_location';
+  static const onboarding_notifications_title =
+      'onboarding.notifications_title';
+  static const onboarding_notifications_body = 'onboarding.notifications_body';
+  static const onboarding_allow_notifications =
+      'onboarding.allow_notifications';
+  static const onboarding_maybe_later = 'onboarding.maybe_later';
+  static const onboarding_notifications_denied_body =
+      'onboarding.notifications_denied_body';
+  static const onboarding_continue = 'onboarding.continue';
   static const onboarding = 'onboarding';
   static const tracker_title = 'tracker.title';
   static const tracker_log_prayer = 'tracker.log_prayer';

@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/services/location_service.dart';
 import '../../../../core/services/notification_service.dart';
 import '../../../prayer_times/domain/entities/prayer.dart';
 import '../../domain/adhan_scheduler.dart';
@@ -12,39 +9,30 @@ import 'adhan_notifications_state.dart';
 
 /// The adhan bells, the reminder and what the system allows.
 ///
+/// The notification permission is first asked for in onboarding
+/// ([allowNotifications]); after that, when the user turns an adhan or the
+/// reminder on while notifications are blocked.
+///
 /// Saving preferences is enough to reschedule: [AdhanScheduler] listens to
 /// the repository.
 class AdhanNotificationsCubit extends Cubit<AdhanNotificationsState> {
   AdhanNotificationsCubit({
     required this._repository,
     required this._notifications,
-    required this._locationService,
     required this._scheduler,
   }) : super(AdhanNotificationsState(preferences: _repository.preferences));
 
   final AdhanPreferencesRepository _repository;
   final NotificationService _notifications;
-  final LocationService _locationService;
   final AdhanScheduler _scheduler;
 
-  StreamSubscription<Object?>? _firstLocation;
   bool _started = false;
 
-  /// Reads the permissions, and on first run asks for notification
-  /// permission once a location is known, so the prompt doesn't collide
-  /// with the location prompt.
+  /// Reads what the system allows. Never prompts: onboarding does that.
   Future<void> start() async {
     if (_started) return;
     _started = true;
     await refreshPermissions();
-    if (_repository.permissionPrompted) return;
-    if (_locationService.lastKnown != null) {
-      await _promptOnce();
-    } else {
-      _firstLocation = _locationService.changes.take(1).listen((_) {
-        _promptOnce();
-      });
-    }
   }
 
   /// Re-reads what the system allows, e.g. back from its settings.
@@ -72,15 +60,17 @@ class AdhanNotificationsCubit extends Cubit<AdhanNotificationsState> {
   Future<void> setVolume(AdhanVolume volume) =>
       _save(state.preferences.copyWith(volume: volume));
 
-  /// "Turn on" in Settings: the system prompt if it may still show,
-  /// otherwise the app's notification settings.
-  Future<void> allowNotifications() async {
+  /// "Allow notifications" in onboarding and "Turn on" in Settings: the
+  /// system prompt if it may still show, otherwise the app's notification
+  /// settings. True when notifications are allowed afterwards.
+  Future<bool> allowNotifications() async {
     if (_repository.permissionPrompted) {
       await _notifications.openNotificationSettings();
     } else {
       await _request();
     }
     await refreshPermissions();
+    return state.notificationsAllowed;
   }
 
   Future<void> allowExactAlarms() async {
@@ -101,21 +91,8 @@ class AdhanNotificationsCubit extends Cubit<AdhanNotificationsState> {
     }
   }
 
-  Future<void> _promptOnce() async {
-    if (_repository.permissionPrompted || isClosed) return;
-    if (state.preferences.enabled.isEmpty) return;
-    await _request();
-    await refreshPermissions();
-  }
-
   Future<void> _request() async {
     await _repository.markPermissionPrompted();
     await _notifications.requestNotificationPermission();
-  }
-
-  @override
-  Future<void> close() async {
-    await _firstLocation?.cancel();
-    return super.close();
   }
 }
