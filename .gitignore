@@ -53,3 +53,6 @@ CLAUDE.md
 key.properties
 *.jks
 *.keystore
+
+# Store screenshots (large binaries; regenerate with test/store_screenshots_test.dart)
+store/

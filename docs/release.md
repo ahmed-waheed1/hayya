@@ -96,3 +96,34 @@ reached only by name or by reflection has to be kept explicitly:
 After changing dependencies, check a release build on a device: the app
 opens, an adhan sounds at prayer time (the debug "Test adhan" tool isn't in
 release builds), and adhans still sound after a reboot.
+
+## Store screenshots
+
+`test/store_screenshots_test.dart` renders the real app (widgets, fonts,
+translations) with fixed sample data and writes Play Store screenshots to
+`store/screenshots/{en,ar}/{phone,tablet}/` (gitignored):
+
+```sh
+TZ=Africa/Cairo flutter test test/store_screenshots_test.dart \
+  --dart-define=STORE_SCREENSHOTS=true
+```
+
+Without the define the test is skipped, so the normal suite doesn't write
+them. Run it in the Africa/Cairo time zone, since the sample is in Cairo.
+
+- **Sample data**: Cairo, Thursday 15 October 2026, 20 minutes before Asr
+  (computed with the app's own prayer times), 34 weeks of tracker history
+  so the tablet heatmap is full (mostly complete, scattered gaps, a 23-day
+  streak, Fajr and Dhuhr ticked today), and 3 qada prayers. Settings → About shows
+  the version from `pubspec.yaml`.
+- **Shots** (8 per device and language, Play's maximum): `01-home`,
+  `02-qibla` (aligned), `03-tracker`, `04-timetable`, `05-settings`,
+  `06-onboarding`, `07-home-dark`, `08-qibla-dark`.
+- **Sizes**: phone 1080 × 1920 (9:16, rendered at 2.75×) and 10-inch tablet
+  2560 × 1440 (16:9 landscape, at 2×). Play requires JPEG or 24-bit PNG
+  without alpha, each side 320–3840 px and at most 2:1. For promotion it
+  wants phone screenshots at 9:16 and at least 1080 × 1920, and large-screen
+  screenshots at 16:9 between 1080 and 7680 px. The generator writes RGB
+  PNGs.
+- The Developer section is hidden (`showDeveloperTools = false`), and there
+  is no debug banner.
