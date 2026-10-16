@@ -1,17 +1,48 @@
-# hayya
+# Hayya (حيّ)
 
-A new Flutter project.
+A prayer times and Qibla app for Android and iOS, built with Flutter, in
+English and Arabic (right-to-left). Prayer times and the Qibla direction are
+calculated on the device, so they work offline.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Prayer times** for your location, with the current and next prayer and a
+  live countdown. Choose the calculation method, the Asr madhab, a
+  high-latitude rule and per-prayer minute adjustments.
+- **Adhan notifications** for each prayer, with an optional reminder before it.
+- **Qibla compass** with true-north correction, plus guidance when the
+  compass needs calibrating or the device has none.
+- **Prayer tracker**: mark prayers as prayed, see your streak, a heatmap and
+  missed prayers per prayer, and keep count of prayers to make up (qada).
+- **Monthly timetable** with Gregorian and Hijri dates.
+- **Settings** for language, theme, numerals (Arabic-Indic or Western),
+  12/24-hour time, location (GPS or a chosen city) and the Hijri date.
 
-A few resources to get you started if this is your first Flutter project:
+Phone and tablet layouts, light and dark themes, and system font sizes up to
+2.0× are all supported.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Running it
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+flutter pub get
+flutter run
+```
+
+## Tests
+
+```sh
+# While working: everything except the text-scale matrix (about 2.5 min).
+flutter test --exclude-tags text-scale
+
+# Before every commit and PR: the full suite (about 7.5 min).
+flutter test
+```
+
+## Documentation
+
+- [docs/conventions.md](docs/conventions.md): the project rules covering
+  architecture, localization, layout and text scaling, testing and the git
+  workflow. Read this before contributing.
+- [docs/](docs/): details on specific topics, such as the
+  [magnetic declination model](docs/magnetic-declination.md) behind the Qibla
+  compass and the [adhan notification sounds](docs/adhan-sounds.md).
