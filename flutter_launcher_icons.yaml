@@ -1,0 +1,16 @@
+# Regenerate with: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  # Legacy (pre-Android 8) icons.
+  android: true
+  image_path_android: "assets/icon/icon_full.png"
+  # Adaptive icon (Android 8+). The padded layers already fit the mark inside
+  # the 66/108 safe zone, so the plugin's default 16% inset is turned off.
+  adaptive_icon_background: "assets/icon/icon_background.png"
+  adaptive_icon_foreground: "assets/icon/icon_foreground_padded.png"
+  adaptive_icon_foreground_inset: 0
+  # Themed icon (Android 13+).
+  adaptive_icon_monochrome: "assets/icon/icon_monochrome_padded.png"
+  min_sdk_android: 21
+  ios: true
+  image_path_ios: "assets/icon/icon_full.png"
+  remove_alpha_ios: true
