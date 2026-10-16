@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/di/injection.dart';
+import 'core/preferences/app_preferences.dart';
 import 'core/preferences/display_preferences.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/hayya_theme.dart';
 import 'core/theme/theme_mode_cubit.dart';
+import 'core/utils/app_locales.dart';
 import 'core/utils/responsive.dart';
 import 'features/notifications/domain/adhan_scheduler.dart';
 import 'features/notifications/presentation/adhan_notifications_sync.dart';
@@ -22,10 +24,10 @@ Widget localizedApp(
   String? languageCode, {
   AssetLoader assetLoader = const RootBundleAssetLoader(),
 }) => EasyLocalization(
-  supportedLocales: const [Locale('en'), Locale('ar')],
-  path: 'assets/translations',
+  supportedLocales: appLocales,
+  path: translationsPath,
   assetLoader: assetLoader,
-  fallbackLocale: const Locale('en'),
+  fallbackLocale: fallbackLocale,
   // AppPreferences persists the language (see language_switcher.dart).
   saveLocale: false,
   // Arabic needs its few/many forms (٣ دقائق, ١١ دقيقة); the default
@@ -96,6 +98,7 @@ class _HayyaAppState extends State<HayyaApp> {
           // child once the translations are loaded.
           builder: (context, child) => AdhanNotificationsSync(
             scheduler: getIt<AdhanScheduler>(),
+            preferences: getIt<AppPreferences>(),
             child: child!,
           ),
         ),

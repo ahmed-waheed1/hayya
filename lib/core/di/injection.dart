@@ -31,10 +31,12 @@ import '../../features/tracker/domain/usecases/get_tracking_position.dart';
 import '../../features/tracker/presentation/cubit/tracker_cubit.dart';
 import '../preferences/app_preferences.dart';
 import '../preferences/display_preferences.dart';
+import '../services/background_tasks.dart';
 import '../services/device_location_service.dart';
 import '../services/local_notification_service.dart';
 import '../services/location_service.dart';
 import '../services/notification_service.dart';
+import '../services/workmanager_background_tasks.dart';
 import '../theme/theme_mode_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -136,12 +138,14 @@ Future<void> configureDependencies({
         scheduler: getIt<AdhanScheduler>(),
       ),
     )
+    ..registerLazySingleton<BackgroundTasks>(WorkmanagerBackgroundTasks.new)
     // Onboarding
     ..registerLazySingleton<OnboardingStatus>(
       () => OnboardingStatus(
         preferences: getIt<AppPreferences>(),
         locationService: getIt<LocationService>(),
         adhanPreferences: getIt<AdhanPreferencesRepository>(),
+        backgroundTasks: getIt<BackgroundTasks>(),
       ),
     )
     ..registerFactory<OnboardingCubit>(

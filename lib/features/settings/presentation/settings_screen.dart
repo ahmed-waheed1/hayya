@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/services/background_tasks.dart';
 import '../../../core/theme/hayya_spacing.dart';
 import '../../../core/theme/theme_context.dart';
 import '../../../core/utils/responsive.dart';
@@ -179,6 +180,10 @@ class _DeveloperGroup extends StatelessWidget {
           title: LocaleKeys.settings_test_adhan.tr(),
           onTap: () => _testAdhan(context),
         ),
+        SettingsTile(
+          title: LocaleKeys.settings_background_reschedule.tr(),
+          onTap: () => _runBackgroundReschedule(context),
+        ),
       ],
     );
   }
@@ -189,5 +194,14 @@ Future<void> _testAdhan(BuildContext context) async {
   final messenger = ScaffoldMessenger.of(context);
   final message = LocaleKeys.settings_test_adhan_scheduled.tr();
   await getIt<AdhanScheduler>().scheduleTest();
+  messenger.showSnackBar(SnackBar(content: Text(message)));
+}
+
+/// Debug only: the daily background reschedule, once, right away, through
+/// the system the same way the daily one runs.
+Future<void> _runBackgroundReschedule(BuildContext context) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final message = LocaleKeys.settings_background_reschedule_queued.tr();
+  await getIt<BackgroundTasks>().runRescheduleNow();
   messenger.showSnackBar(SnackBar(content: Text(message)));
 }

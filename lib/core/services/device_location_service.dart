@@ -16,10 +16,14 @@ import 'user_location.dart';
 /// geocoding.
 class DeviceLocationService implements LocationService {
   DeviceLocationService(this._prefs, {Geocoding? geocoding})
-    : _geocoding = geocoding ?? Geocoding();
+    : _geocodingOverride = geocoding;
 
   final SharedPreferences _prefs;
-  final Geocoding _geocoding;
+  final Geocoding? _geocodingOverride;
+
+  /// Created on first use, so reading the stored location (as the
+  /// background reschedule does) never touches the geocoding plugin.
+  late final Geocoding _geocoding = _geocodingOverride ?? Geocoding();
   final _changes = StreamController<UserLocation>.broadcast();
 
   /// The last device fix.

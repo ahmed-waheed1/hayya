@@ -8,6 +8,7 @@ import 'package:hayya/features/qibla/presentation/qibla_screen.dart';
 import 'package:hayya/features/settings/presentation/settings_screen.dart';
 import 'package:hayya/features/tracker/presentation/tracker_screen.dart';
 
+import '../helpers/fake_background_tasks.dart';
 import '../helpers/pump_app.dart';
 
 void main() {
@@ -82,20 +83,30 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('the debug Developer section only has the adhan test', (
+    testWidgets('the debug Developer section has only the test tools', (
       tester,
     ) async {
-      await pumpHayyaApp(tester);
+      final background = FakeBackgroundTasks();
+      await pumpHayyaApp(tester, backgroundTasks: background);
       await tester.tap(find.text('Settings'));
       await settle(tester, rounds: 2);
 
       await tester.scrollUntilVisible(
-        find.text('Test adhan in 1 minute'),
+        find.text('Run background reschedule now'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       expect(find.text('DEVELOPER'), findsOneWidget);
+      expect(find.text('Test adhan in 1 minute'), findsOneWidget);
       expect(find.text('Design system'), findsNothing);
+
+      await tapVisible(tester, find.text('Run background reschedule now'));
+      await settle(tester, rounds: 2);
+      expect(background.runs, 1);
+      expect(
+        find.textContaining('Background reschedule queued'),
+        findsOneWidget,
+      );
     });
   });
 

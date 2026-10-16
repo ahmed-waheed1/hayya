@@ -62,6 +62,7 @@ dependencies:
   percent_indicator: ^4.2.5
   fl_chart: ^1.2.0
   package_info_plus: ^10.1.0
+  workmanager: ^0.10.10
 
 dev_dependencies:
   flutter_test:

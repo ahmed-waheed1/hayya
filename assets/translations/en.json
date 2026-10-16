@@ -136,6 +136,8 @@
     "allow": "Allow",
     "test_adhan": "Test adhan in 1 minute",
     "test_adhan_scheduled": "Test adhan scheduled. Lock the phone and wait a minute.",
+    "background_reschedule": "Run background reschedule now",
+    "background_reschedule_queued": "Background reschedule queued. It runs within a minute; check the logs.",
     "numerals": "Numerals",
     "numerals_arabic": "١٢٣ Arabic",
     "numerals_western": "123 Western",

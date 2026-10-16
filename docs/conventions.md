@@ -85,6 +85,19 @@ The app must work at every system font size, up to 2.0×.
 True-north correction uses WMM2025, which **expires at the end of 2029**, and
 iOS must not be corrected twice. See [magnetic-declination.md](magnetic-declination.md).
 
+## Background work
+
+A daily background task keeps the adhan scheduled while the app isn't
+opened. See [background-reschedule.md](background-reschedule.md).
+
+- It reuses the app's scheduling (`AdhanScheduler`), never a copy of it.
+- It runs without a `BuildContext`: no UI, no prompts, and only the saved
+  location, never GPS or the network. Text comes from
+  `loadTranslationsWithoutContext` with the saved language, numerals and
+  clock.
+- Anything new it needs must work in a fresh isolate. Read it from
+  `SharedPreferences`; don't use `getIt`, Hive or widgets.
+
 ## Testing
 
 ### Workflow

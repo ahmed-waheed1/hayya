@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import '../../../core/preferences/app_preferences.dart';
+import '../../../core/services/background_tasks.dart';
 import '../../../core/services/location_service.dart';
 import '../../notifications/domain/repositories/adhan_preferences_repository.dart';
 
@@ -13,16 +16,24 @@ class OnboardingStatus {
     required this._preferences,
     required this._locationService,
     required this._adhanPreferences,
+    required this._backgroundTasks,
   });
 
   final AppPreferences _preferences;
   final LocationService _locationService;
   final AdhanPreferencesRepository _adhanPreferences;
+  final BackgroundTasks _backgroundTasks;
 
   bool get shouldShow =>
       !_preferences.onboardingDone &&
       _locationService.lastKnown == null &&
       !_adhanPreferences.permissionPrompted;
 
-  Future<void> complete() => _preferences.setOnboardingDone();
+  /// Marks onboarding done and registers the background reschedule again,
+  /// now that there is a location and a notification choice to keep up.
+  /// Home doesn't wait for the registration.
+  Future<void> complete() async {
+    await _preferences.setOnboardingDone();
+    unawaited(_backgroundTasks.ensureRegistered());
+  }
 }

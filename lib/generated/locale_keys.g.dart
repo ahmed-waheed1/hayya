@@ -135,6 +135,10 @@ abstract class LocaleKeys {
   static const settings_allow = 'settings.allow';
   static const settings_test_adhan = 'settings.test_adhan';
   static const settings_test_adhan_scheduled = 'settings.test_adhan_scheduled';
+  static const settings_background_reschedule =
+      'settings.background_reschedule';
+  static const settings_background_reschedule_queued =
+      'settings.background_reschedule_queued';
   static const settings_numerals = 'settings.numerals';
   static const settings_numerals_arabic = 'settings.numerals_arabic';
   static const settings_numerals_western = 'settings.numerals_western';

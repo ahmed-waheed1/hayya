@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/preferences/app_preferences.dart';
 import '../../../core/utils/localized_format.dart';
 
 import '../domain/adhan_scheduler.dart';
@@ -20,10 +21,15 @@ class AdhanNotificationsSync extends StatefulWidget {
   const AdhanNotificationsSync({
     super.key,
     required this.scheduler,
+    required this.preferences,
     required this.child,
   });
 
   final AdhanScheduler scheduler;
+
+  /// Where the device's 12/24-hour setting is kept for the background
+  /// reschedule, which has no view to read it from.
+  final AppPreferences preferences;
   final Widget child;
 
   @override
@@ -57,6 +63,9 @@ class _AdhanNotificationsSyncState extends State<AdhanNotificationsSync> {
     // The loaded language (not easy_localization's, which can run ahead
     // of the translations), with the user's digits and clock.
     final format = context.format;
+    widget.preferences.setDeviceUses24Hour(
+      MediaQuery.alwaysUse24HourFormatOf(context),
+    );
     final texts = LocalizedFormat(
       Localizations.localeOf(context),
       numerals: format.numerals,
