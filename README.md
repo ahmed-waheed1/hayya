@@ -160,7 +160,7 @@ Published at <https://ahmed-waheed1.github.io/hayya-privacy/>.
 
 ## Author
 
-**Ahmed Waheed**: [GitHub](https://github.com/ahmed-waheed1)
+**Ahmed Waheed**: [GitHub](https://github.com/ahmed-waheed1) · [LinkedIn](https://www.linkedin.com/in/ahmed-waheed11)
 
 ## License
 
