@@ -151,8 +151,8 @@ each state.
 ## Git workflow
 
 - Every change goes on its own branch, created from an up-to-date `master`:
-  `feature/<name>`, `fix/<name>` or `chore/<name>`. Never commit directly to
-  `master`.
+  `feature/<name>`, `fix/<name>`, `chore/<name>` or `docs/<name>`. Never
+  commit directly to `master`.
 - Run the full suite before each commit (see [Workflow](#workflow)).
 - Push the branch (`git push -u origin <branch>`) and open a pull request
   with `gh pr create --base master`.
