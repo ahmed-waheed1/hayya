@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="docs/images/icon.png" width="96" alt="Hayya app icon">
-</p>
+<img src="docs/images/hayya-feature-graphic-en.png" alt="Hayya feature graphic" width="100%">
+
 
 <h1 align="center">Hayya (حيّ)</h1>
 
